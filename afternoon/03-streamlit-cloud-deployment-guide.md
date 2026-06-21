@@ -7,6 +7,9 @@ follow along. By the end you'll have a real web link you can email to a colleagu
 
 > ⏱️ **Time needed:** about 20–30 minutes the first time.
 > 💵 **Cost:** $0. Everything here is free.
+> 🐙 **Never used GitHub?** Read the
+> [GitHub basics primer](04-github-basics-primer.md) first (~15 min) — it explains
+> the words used below (repo, commit, push) in plain language.
 
 ---
 

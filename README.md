@@ -28,6 +28,7 @@ By the end you will have:
 
 - 📘 **Building guide** → `afternoon/02-step-by-step-guide.html`
   *(double-click to open it in your web browser)*
+- 🐙 **GitHub basics primer (new to GitHub? start here)** → [`afternoon/04-github-basics-primer.md`](afternoon/04-github-basics-primer.md)
 - 🚀 **Deployment guide (GitHub + Streamlit Cloud, for beginners)** → [`afternoon/03-streamlit-cloud-deployment-guide.md`](afternoon/03-streamlit-cloud-deployment-guide.md)
 - 📝 **Completed project setup** → [`completed-project/README.md`](completed-project/README.md)
 
@@ -66,6 +67,18 @@ Follow the beginner-friendly guide:
 
 It walks you through GitHub and Streamlit Community Cloud from scratch — no
 command line required — and ends with a public link you can share with colleagues.
+
+**Brand new to GitHub?** Read the
+[GitHub basics primer](afternoon/04-github-basics-primer.md) first — it explains
+what a repo, commit, and push are, in plain language.
+
+---
+
+## 📄 License
+
+These materials are released under the [MIT License](LICENSE) — you're free to
+use, adapt, and share them, including in your own classroom. Attribution is
+appreciated but not required.
 
 ---
 
