@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI for STEM Teachers — Interactive Explorations</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+  color: #fff;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+}
+.site-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.site-header .subtitle {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.progress-steps {
+  display: flex;
+  gap: 0.35rem;
+  flex: 1;
+}
+.progress-step {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #e2e8f0;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.progress-step:hover { transform: scaleY(1.5); }
+.progress-step.active { background: #2563eb; }
+.progress-step.visited { background: #93c5fd; }
+.progress-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  white-space: nowrap;
+  font-weight: 600;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ===== SIMULATION CARDS ===== */
+.sim-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+}
+.sim-card h2 {
+  color: #1e40af;
+  font-size: 1.45rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #dbeafe;
+  margin-bottom: 1.25rem;
+}
+.sim-intro {
+  color: #475569;
+  font-size: 0.98rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  background: #f0f9ff;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+/* ===== SIMULATION AREA ===== */
+.sim-area {
+  background: #f1f5f9;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 1.5rem;
+  min-height: 200px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-secondary { background: #0891b2; color: #fff; }
+.btn-secondary:hover { background: #0e7490; }
+.btn-amber { background: #f59e0b; color: #fff; }
+.btn-amber:hover { background: #d97706; }
+.btn-outline {
+  background: transparent;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+.btn-outline:hover { background: #2563eb; color: #fff; }
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.82rem; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+
+/* ===== INPUTS ===== */
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+textarea:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+/* ===== CODE BLOCKS ===== */
+.code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.code-block .keyword { color: #c084fc; }
+.code-block .string { color: #86efac; }
+.code-block .comment { color: #64748b; }
+.code-block .func { color: #67e8f9; }
+
+/* ===== TWO-PANEL LAYOUT (Sim 1) ===== */
+.two-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .two-panel { grid-template-columns: 1fr; }
+}
+.panel {
+  background: #fff;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.panel-header.chatbot { background: #fef3c7; color: #92400e; }
+.panel-header.agent { background: #dbeafe; color: #1e40af; }
+.panel-body {
+  padding: 1rem;
+  min-height: 220px;
+  font-size: 0.9rem;
+}
+.panel-body .message {
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  animation: fadeSlideIn 0.4s ease;
+}
+.panel-body .msg-bot { background: #f1f5f9; }
+.panel-body .msg-step { background: #eff6ff; border-left: 3px solid #3b82f6; }
+.panel-body .msg-final { background: #ecfdf5; border-left: 3px solid #10b981; }
+.typing-indicator span {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: #94a3b8;
+  border-radius: 50%;
+  margin-right: 3px;
+  animation: bounce 1.2s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== TOKEN VISUALIZER (Sim 2) ===== */
+.token-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 1rem;
+  min-height: 60px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+}
+.token {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+  animation: tokenPop 0.3s ease;
+}
+.token:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.token-index {
+  font-size: 0.6rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+@keyframes tokenPop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.context-bar {
+  background: #e2e8f0;
+  border-radius: 6px;
+  height: 18px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+.context-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #0891b2);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.slider-container label {
+  font-weight: 600;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  background: #2563eb;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.prob-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 0.75rem;
+}
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeSlideIn 0.3s ease;
+}
+.prob-word {
+  width: 110px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: right;
+}
+.prob-bar-bg {
+  flex: 1;
+  height: 22px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.prob-bar-fg {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+.prob-bar-fg.top { background: #2563eb; }
+.prob-bar-fg.mid { background: #0891b2; }
+.prob-bar-fg.low { background: #94a3b8; }
+.prob-selected {
+  outline: 3px solid #f59e0b;
+  outline-offset: -1px;
+  border-radius: 4px;
+}
+
+/* ===== AGENT LOOP (Sim 3) ===== */
+.loop-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 420px;
+  margin: 0 auto;
+}
+.loop-svg { width: 100%; height: 100%; }
+.loop-node {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.loop-node:hover { filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+.loop-node.active rect, .loop-node.active circle { stroke: #f59e0b; stroke-width: 3; }
+.loop-info {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  min-height: 80px;
+  transition: all 0.3s;
+}
+.loop-info h3 { color: #1e40af; margin-bottom: 0.4rem; font-size: 1rem; }
+.loop-info p { font-size: 0.88rem; color: #475569; }
+
+/* ===== PROMPT LAB (Sim 4) ===== */
+.prompt-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .prompt-columns { grid-template-columns: 1fr; }
+}
+.prompt-col-header {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1e40af;
+  margin-bottom: 0.5rem;
+}
+.quality-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.quality-dots {
+  display: flex;
+  gap: 4px;
+}
+.quality-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: background 0.3s;
+}
+.quality-dot.filled { background: #10b981; }
+.quality-dot.half { background: #f59e0b; }
+.challenge-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s;
+}
+.challenge-card.completed { border-color: #10b981; }
+.challenge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.challenge-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.badge {
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-done { background: #dcfce7; color: #166534; }
+.hint-text {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+.solution-box {
+  display: none;
+  margin-top: 0.5rem;
+}
+.solution-box.visible { display: block; }
+
+/* ===== TOOL USE (Sim 5) ===== */
+.tools-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #f1f5f9;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s;
+}
+.tool-badge.active {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #1e40af;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.step-card {
+  background: #fff;
+  border-radius: 8px;
+  border-left: 4px solid #e2e8f0;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.4;
+  transform: translateX(-8px);
+  transition: all 0.4s ease;
+}
+.step-card.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+.step-card.thinking { border-left-color: #8b5cf6; }
+.step-card.tool-use { border-left-color: #2563eb; }
+.step-card.result { border-left-color: #10b981; }
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.step-label.thinking { color: #8b5cf6; }
+.step-label.tool-use { color: #2563eb; }
+.step-label.result { color: #10b981; }
+
+/* ===== FOOTER ===== */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  color: #94a3b8;
+  font-size: 0.82rem;
+}
+
+/* ===== UTILITIES ===== */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.text-sm { font-size: 0.85rem; }
+.text-muted { color: #64748b; }
+.font-mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <h1>Agentic AI for STEM Teachers &mdash; Interactive Explorations</h1>
+  <p class="subtitle">CSPD 2026 &bull; Morning Session</p>
+</header>
+
+<!-- ===== PROGRESS BAR ===== -->
+<nav class="progress-bar-container" id="progressBar">
+  <div class="progress-steps">
+    <div class="progress-step active" data-sim="1" onclick="scrollToSim(1)" title="Chatbot vs. Agent"></div>
+    <div class="progress-step" data-sim="2" onclick="scrollToSim(2)" title="Token Visualizer"></div>
+    <div class="progress-step" data-sim="3" onclick="scrollToSim(3)" title="Agent Loop"></div>
+    <div class="progress-step" data-sim="4" onclick="scrollToSim(4)" title="Prompt Lab"></div>
+    <div class="progress-step" data-sim="5" onclick="scrollToSim(5)" title="Tool Use"></div>
+  </div>
+  <span class="progress-label" id="progressLabel">1 / 5</span>
+</nav>
+
+<main class="main-container">
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SIMULATION 1: CHATBOT vs. AGENT                           ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<section class="sim-card" id="sim1">
+  <h2>Simulation 1: Chatbot vs. Agent &mdash; Side-by-Side</h2>
+  <p class="sim-intro">
+    What makes an AI <strong>agent</strong> different from a simple chatbot? A chatbot gives you one response. An agent <em>thinks</em>, <em>plans</em>, breaks a task into steps, and works through them one at a time &mdash; just like a good teacher would. Try a prompt below and watch the difference unfold in real time.
+  </p>
+
+  <div class="sim-area">
+    <div class="btn-group">
+      <button class="btn btn-outline btn-sm" onclick="sim1Run('quiz')">Create a quiz on photosynthesis</button>
+      <button class="btn btn-outline btn-sm" onclick="sim1Run('lab')">Review this lab report</button>
+      <button class="btn btn-outline btn-sm" onclick="sim1Run('debug')">Help a student debug code</button>
+      <button class="btn btn-outline btn-sm" onclick="sim1Run('lesson')">Generate a lesson plan on Newton's laws</button>
+    </div>
+
+    <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+      <input type="text" id="sim1Input" placeholder="Or type your own STEM teaching task..." style="flex:1;">
+      <button class="btn btn-primary" onclick="sim1Run('custom')">Send</button>
+    </div>
+
+    <div class="two-panel">
+      <!-- Left Panel: Chatbot -->
+      <div class="panel">
+        <div class="panel-header chatbot">&#x1F4AC; Simple Chatbot</div>
+        <div class="panel-body" id="sim1Chatbot">
+          <p class="text-muted text-sm" style="text-align:center; padding-top:2rem;">Send a prompt to see the response</p>
+        </div>
+      </div>
+      <!-- Right Panel: Agent -->
+      <div class="panel">
+        <div class="panel-header agent">&#x1F916; AI Agent</div>
+        <div class="panel-body" id="sim1Agent">
+          <p class="text-muted text-sm" style="text-align:center; padding-top:2rem;">Send a prompt to see the agent work</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SIMULATION 2: TOKEN VISUALIZER                            ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<section class="sim-card" id="sim2">
+  <h2>Simulation 2: How LLMs See Text &mdash; Token Visualizer</h2>
+  <p class="sim-intro">
+    Large Language Models don't read words the way we do. They break text into <strong>tokens</strong> &mdash; chunks that might be whole words, parts of words, or even single characters. Try typing or editing the text below to see how your sentence gets tokenized, and then experiment with predicting the next word at different "temperature" settings.
+  </p>
+
+  <div class="sim-area">
+    <textarea id="sim2Input" rows="3" style="margin-bottom:0.75rem;">The mitochondria is the</textarea>
+    <div class="btn-group">
+      <button class="btn btn-outline btn-sm" onclick="sim2SetText('The mitochondria is the')">Biology example</button>
+      <button class="btn btn-outline btn-sm" onclick="sim2SetText('Photosynthesis converts sunlight into')">Photosynthesis</button>
+      <button class="btn btn-outline btn-sm" onclick="sim2SetText('In a Python for loop, the variable i represents')">Coding example</button>
+      <button class="btn btn-outline btn-sm" onclick="sim2SetText('According to Newton, every action has an equal and opposite')">Physics example</button>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+      <strong class="text-sm">Tokens:</strong>
+      <span class="text-sm text-muted" id="sim2TokenCount">0 tokens</span>
+    </div>
+    <div class="token-display" id="sim2Tokens"></div>
+
+    <div style="margin-bottom:0.25rem;">
+      <strong class="text-sm">Context Window Usage:</strong>
+    </div>
+    <div class="context-bar">
+      <div class="context-bar-fill" id="sim2CtxBar" style="width:0%;"></div>
+    </div>
+    <p class="text-sm text-muted mb-2" id="sim2CtxLabel">0 / 200,000 tokens used</p>
+
+    <div class="slider-container">
+      <label>Temperature:</label>
+      <input type="range" id="sim2Temp" min="0" max="100" value="0">
+      <span class="font-mono text-sm" id="sim2TempVal" style="min-width:2.5rem;">0.00</span>
+    </div>
+    <p class="text-sm text-muted mb-2">Low temperature = predictable. High temperature = creative/random.</p>
+
+    <button class="btn btn-primary" onclick="sim2Predict()">Generate Next Word</button>
+
+    <div id="sim2Predictions" class="mt-2"></div>
+  </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SIMULATION 3: THE AGENT LOOP                              ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<section class="sim-card" id="sim3">
+  <h2>Simulation 3: The Agent Loop &mdash; Interactive Flowchart</h2>
+  <p class="sim-intro">
+    Every AI agent follows a core cycle: <strong>Perceive</strong> the situation, <strong>Plan</strong> a response, <strong>Act</strong> on it, <strong>Observe</strong> what happened, and <strong>Reflect</strong> on whether the goal was met. Click any node to learn more, or hit "Run Full Loop" to watch the cycle animate. Try different classroom scenarios to see how the loop adapts.
+  </p>
+
+  <div class="sim-area">
+    <div class="btn-group">
+      <button class="btn btn-secondary btn-sm" onclick="sim3RunLoop()">&#x25B6; Run Full Loop</button>
+      <button class="btn btn-outline btn-sm" onclick="sim3SetScenario('lab')">Lab report grading</button>
+      <button class="btn btn-outline btn-sm" onclick="sim3SetScenario('socratic')">Socratic tutoring</button>
+      <button class="btn btn-outline btn-sm" onclick="sim3SetScenario('quiz')">Quiz generation</button>
+    </div>
+
+    <div class="loop-container">
+      <svg class="loop-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" id="sim3Svg">
+        <!-- Arrows -->
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/>
+          </marker>
+          <marker id="arrowheadActive" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+          </marker>
+        </defs>
+
+        <!-- Connection paths -->
+        <path id="arrow01" d="M 230 72 Q 330 30 400 72" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <path id="arrow12" d="M 490 120 Q 540 200 490 280" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <path id="arrow23" d="M 400 330 Q 300 375 200 330" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <path id="arrow34" d="M 110 280 Q 60 200 110 120" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <path id="arrow40" d="M 170 72 Q 185 60 200 68" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+        <!-- Node 0: Perceive (top-left area) -->
+        <g class="loop-node" id="node0" onclick="sim3ClickNode(0)">
+          <rect x="130" y="55" width="110" height="50" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+          <text x="185" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">&#x1F441; Perceive</text>
+        </g>
+
+        <!-- Node 1: Plan (top-right area) -->
+        <g class="loop-node" id="node1" onclick="sim3ClickNode(1)">
+          <rect x="390" y="55" width="110" height="50" rx="10" fill="#fdf4ff" stroke="#a855f7" stroke-width="2"/>
+          <text x="445" y="85" text-anchor="middle" font-size="14" font-weight="700" fill="#7e22ce">&#x1F9E0; Plan</text>
+        </g>
+
+        <!-- Node 2: Act (right) -->
+        <g class="loop-node" id="node2" onclick="sim3ClickNode(2)">
+          <rect x="390" y="275" width="110" height="50" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+          <text x="445" y="305" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">&#x26A1; Act</text>
+        </g>
+
+        <!-- Node 3: Observe (bottom-left) -->
+        <g class="loop-node" id="node3" onclick="sim3ClickNode(3)">
+          <rect x="130" y="275" width="110" height="50" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+          <text x="185" y="305" text-anchor="middle" font-size="14" font-weight="700" fill="#9a3412">&#x1F50D; Observe</text>
+        </g>
+
+        <!-- Node 4: Reflect (left) -->
+        <g class="loop-node" id="node4" onclick="sim3ClickNode(4)">
+          <rect x="80" y="155" width="110" height="50" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="2"/>
+          <text x="135" y="185" text-anchor="middle" font-size="14" font-weight="700" fill="#854d0e">&#x1F4AD; Reflect</text>
+        </g>
+
+        <!-- Center label -->
+        <text x="300" y="195" text-anchor="middle" font-size="13" fill="#94a3b8" font-weight="600">Agent Loop</text>
+      </svg>
+    </div>
+
+    <div class="loop-info" id="sim3Info">
+      <h3>Click a node to learn more</h3>
+      <p>Each node in the loop represents a phase in the agent's reasoning cycle. Click any node or choose a scenario above, then run the full loop.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SIMULATION 4: PROMPT ENGINEERING LAB                      ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<section class="sim-card" id="sim4">
+  <h2>Simulation 4: Prompt Engineering Lab</h2>
+  <p class="sim-intro">
+    The <strong>system prompt</strong> is like giving the AI its job description before class starts. A vague prompt gets vague results; a specific one gets focused, useful output. Edit the system prompt and user message below, then see how the AI's response changes. Try the challenges to level up your prompt skills!
+  </p>
+
+  <div class="sim-area">
+    <div class="prompt-columns">
+      <div>
+        <div class="prompt-col-header">System Prompt</div>
+        <textarea id="sim4System" rows="6" style="font-size:0.85rem;">You are a helpful assistant.</textarea>
+        <div class="mt-1">
+          <div class="prompt-col-header">User Message</div>
+          <textarea id="sim4User" rows="3" style="font-size:0.85rem;">Explain how photosynthesis works.</textarea>
+        </div>
+        <div class="mt-1">
+          <button class="btn btn-primary" onclick="sim4Generate()">See Result</button>
+          <button class="btn btn-outline btn-sm" onclick="sim4Reset()" style="margin-left:0.5rem;">Reset</button>
+        </div>
+        <div class="quality-meter mt-1">
+          <span class="text-sm font-mono" style="font-weight:600;">Prompt Quality:</span>
+          <div class="quality-dots" id="sim4Dots">
+            <div class="quality-dot"></div>
+            <div class="quality-dot"></div>
+            <div class="quality-dot"></div>
+            <div class="quality-dot"></div>
+            <div class="quality-dot"></div>
+          </div>
+          <span class="text-sm text-muted" id="sim4QualityLabel">Basic</span>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-col-header">Output Preview</div>
+        <div id="sim4Output" style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:1rem; min-height:240px; font-size:0.88rem; line-height:1.7;">
+          <p class="text-muted text-sm" style="text-align:center; padding-top:3rem;">Click "See Result" to generate a response</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="color:#1e40af; font-size:1rem; margin-top:1.5rem; margin-bottom:1rem;">Challenges</h3>
+    <div id="sim4Challenges">
+      <!-- Challenge 1 -->
+      <div class="challenge-card" id="challenge1">
+        <div class="challenge-header">
+          <span class="challenge-title">1. Make the AI respond as a biology teacher</span>
+          <span class="badge badge-pending" id="badge1">Try it</span>
+        </div>
+        <p class="hint-text">Hint: Add a specific role and subject area to the system prompt.</p>
+        <button class="btn btn-amber btn-sm" onclick="sim4ToggleSolution(1)">Show Solution</button>
+        <div class="solution-box" id="solution1">
+          <div class="code-block" style="margin-top:0.5rem;">You are an experienced high school biology teacher with 15 years of classroom experience. You explain concepts using real-world analogies, always connect topics to the curriculum standards, and check for student understanding. Your tone is warm, encouraging, and age-appropriate.</div>
+        </div>
+      </div>
+      <!-- Challenge 2 -->
+      <div class="challenge-card" id="challenge2">
+        <div class="challenge-header">
+          <span class="challenge-title">2. Make the AI give feedback on lab reports</span>
+          <span class="badge badge-pending" id="badge2">Try it</span>
+        </div>
+        <p class="hint-text">Hint: Specify the task clearly and include a rubric or criteria.</p>
+        <button class="btn btn-amber btn-sm" onclick="sim4ToggleSolution(2)">Show Solution</button>
+        <div class="solution-box" id="solution2">
+          <div class="code-block" style="margin-top:0.5rem;">You are a science lab report reviewer. Evaluate student lab reports using this rubric:
+- Hypothesis clarity (1-5)
+- Methodology description (1-5)
+- Data presentation (1-5)
+- Analysis quality (1-5)
+- Conclusion validity (1-5)
+
+Provide specific, constructive feedback for each category. Start with what the student did well before suggesting improvements. Use a supportive, growth-mindset tone.</div>
+        </div>
+      </div>
+      <!-- Challenge 3 -->
+      <div class="challenge-card" id="challenge3">
+        <div class="challenge-header">
+          <span class="challenge-title">3. Make the AI use the Socratic method</span>
+          <span class="badge badge-pending" id="badge3">Try it</span>
+        </div>
+        <p class="hint-text">Hint: Add behavioral instructions — tell the AI HOW to interact.</p>
+        <button class="btn btn-amber btn-sm" onclick="sim4ToggleSolution(3)">Show Solution</button>
+        <div class="solution-box" id="solution3">
+          <div class="code-block" style="margin-top:0.5rem;">You are a Socratic tutor for middle school science. NEVER give direct answers. Instead:
+1. Ask probing questions to understand what the student already knows
+2. Guide them to discover the answer through a series of simpler questions
+3. Celebrate their reasoning, even when partially correct
+4. If they are stuck, provide a hint as a question, not a statement
+5. Use analogies from everyday life to make concepts relatable
+
+Always be patient and encouraging. End each response with a guiding question.</div>
+        </div>
+      </div>
+      <!-- Challenge 4 -->
+      <div class="challenge-card" id="challenge4">
+        <div class="challenge-header">
+          <span class="challenge-title">4. Make the AI generate quizzes with a specific format</span>
+          <span class="badge badge-pending" id="badge4">Try it</span>
+        </div>
+        <p class="hint-text">Hint: Specify the exact output format you want the AI to follow.</p>
+        <button class="btn btn-amber btn-sm" onclick="sim4ToggleSolution(4)">Show Solution</button>
+        <div class="solution-box" id="solution4">
+          <div class="code-block" style="margin-top:0.5rem;">You are a quiz generator for high school STEM classes. Generate quizzes in this exact format:
+
+## Quiz: [Topic Name]
+**Grade Level:** [grade]
+**Time:** [estimated minutes]
+
+### Question 1 (Easy)
+[Question text]
+A) [option]  B) [option]  C) [option]  D) [option]
+**Answer:** [letter] — [brief explanation]
+
+### Question 2 (Medium)
+[Continue pattern...]
+
+Include 5 questions per quiz: 2 Easy, 2 Medium, 1 Hard. Mix question types: multiple choice, true/false, and one short answer. Align questions to NGSS standards where applicable.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!-- ║  SIMULATION 5: TOOL USE — WATCH AN AGENT THINK             ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+<section class="sim-card" id="sim5">
+  <h2>Simulation 5: Tool Use &mdash; Watch an Agent Think</h2>
+  <p class="sim-intro">
+    Agents don't just generate text &mdash; they can <strong>use tools</strong>. In this scenario, a student asks about a rocket's trajectory (launched at 45 degrees with an initial velocity of 100 m/s). Watch as the agent decides which tools to call, executes calculations, and assembles feedback &mdash; step by step.
+  </p>
+
+  <div class="sim-area">
+    <div class="tools-toolbar" id="sim5Toolbar">
+      <div class="tool-badge" id="tool-calc">&#x1F9EE; Calculator</div>
+      <div class="tool-badge" id="tool-search">&#x1F50D; Web Search</div>
+      <div class="tool-badge" id="tool-code">&#x1F4BB; Code Runner</div>
+      <div class="tool-badge" id="tool-kb">&#x1F4DA; Knowledge Base</div>
+    </div>
+
+    <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:0.85rem 1rem; margin-bottom:1rem;">
+      <strong style="color:#0891b2;">Student asks:</strong> "I'm working on a projectile motion problem. A rocket is launched at 45 degrees with an initial velocity of 100 m/s. What's the maximum height and range? I got 510 meters for height — is that right?"
+    </div>
+
+    <div id="sim5Steps">
+      <!-- Step 1 -->
+      <div class="step-card thinking" id="s5step1">
+        <div class="step-label thinking">Agent Thinking</div>
+        <p>&#x1F914; "The student is asking about projectile motion. I need to verify their calculation. Let me break this down: I need the maximum height and range for v&#x2080; = 100 m/s at &#x3B8; = 45 degrees. I should use the calculator tool to check the physics."</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="step-card tool-use" id="s5step2">
+        <div class="step-label tool-use">Using Tool: Calculator &#x1F9EE;</div>
+        <div class="code-block" style="font-size:0.8rem; margin-top:0.5rem;">
+<span class="comment">// Projectile motion formulas</span>
+<span class="keyword">const</span> v0 = <span class="string">100</span>;          <span class="comment">// m/s</span>
+<span class="keyword">const</span> theta = <span class="string">45</span>;        <span class="comment">// degrees</span>
+<span class="keyword">const</span> g = <span class="string">9.8</span>;           <span class="comment">// m/s^2</span>
+<span class="keyword">const</span> rad = theta * Math.PI / <span class="string">180</span>;
+
+<span class="comment">// Maximum height: H = (v0 * sin(theta))^2 / (2g)</span>
+<span class="keyword">const</span> H = (v0 * <span class="func">Math.sin</span>(rad))**2 / (2 * g);
+
+<span class="comment">// Range: R = v0^2 * sin(2*theta) / g</span>
+<span class="keyword">const</span> R = v0**2 * <span class="func">Math.sin</span>(2 * rad) / g;
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="step-card result" id="s5step3">
+        <div class="step-label result">Calculator Result</div>
+        <p><strong>Maximum Height (H):</strong> 255.1 m &nbsp;&nbsp; <strong>Range (R):</strong> 1020.4 m</p>
+      </div>
+      <!-- Step 4 -->
+      <div class="step-card thinking" id="s5step4">
+        <div class="step-label thinking">Agent Thinking</div>
+        <p>&#x1F914; "The correct maximum height is approximately 255 m, but the student calculated 510 m. That's exactly double the correct value. They likely forgot to divide by 2 in the formula. Let me use the comparison tool to show the difference clearly."</p>
+      </div>
+      <!-- Step 5 -->
+      <div class="step-card tool-use" id="s5step5">
+        <div class="step-label tool-use">Using Tool: Knowledge Base &#x1F4DA;</div>
+        <div style="margin-top:0.5rem; display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div style="background:#fef2f2; padding:0.75rem; border-radius:6px; border:1px solid #fecaca;">
+            <strong style="color:#dc2626;">Student's Work</strong><br>
+            <span class="font-mono text-sm">H = v&#x2080;&sup2; sin&sup2;(&#x3B8;) / g</span><br>
+            <span class="font-mono text-sm">H = 100&sup2; &times; sin&sup2;(45) / 9.8</span><br>
+            <span class="font-mono text-sm">H = 10000 &times; 0.5 / 9.8</span><br>
+            <span class="font-mono text-sm">H = <strong>510.2 m</strong></span><br>
+            <span style="color:#dc2626; font-size:0.8rem;">Missing the &divide; 2 !</span>
+          </div>
+          <div style="background:#ecfdf5; padding:0.75rem; border-radius:6px; border:1px solid #bbf7d0;">
+            <strong style="color:#16a34a;">Correct Solution</strong><br>
+            <span class="font-mono text-sm">H = v&#x2080;&sup2; sin&sup2;(&#x3B8;) / <strong>(2g)</strong></span><br>
+            <span class="font-mono text-sm">H = 100&sup2; &times; sin&sup2;(45) / (2 &times; 9.8)</span><br>
+            <span class="font-mono text-sm">H = 10000 &times; 0.5 / 19.6</span><br>
+            <span class="font-mono text-sm">H = <strong>255.1 m</strong></span><br>
+            <span style="color:#16a34a; font-size:0.8rem;">Denominator is 2g, not g</span>
+          </div>
+        </div>
+      </div>
+      <!-- Step 6 -->
+      <div class="step-card result" id="s5step6">
+        <div class="step-label result">Agent Response to Student</div>
+        <p>&#x2705; <strong>Great effort on setting up the problem!</strong> You correctly identified the right formula and substituted the values well. However, there's a small but important detail: the maximum height formula has <strong>2g</strong> in the denominator, not just <strong>g</strong>.</p>
+        <p style="margin-top:0.5rem;">The correct formula is: <strong>H = v&#x2080;&sup2; sin&sup2;(&#x3B8;) / (2g)</strong></p>
+        <p style="margin-top:0.3rem;">This gives H = <strong>255.1 m</strong> (your answer of 510 m is exactly double &mdash; which is actually a helpful clue that you missed the factor of 2!)</p>
+        <p style="margin-top:0.3rem;">The range works out to <strong>1020.4 m</strong>. Fun fact: 45 degrees always gives you the maximum range for a given speed!</p>
+      </div>
+    </div>
+
+    <div class="mt-2" style="display:flex; gap:0.5rem; align-items:center;">
+      <button class="btn btn-primary" id="sim5NextBtn" onclick="sim5Next()">Next Step</button>
+      <button class="btn btn-secondary" id="sim5AutoBtn" onclick="sim5Auto()">&#x25B6; Auto-play</button>
+      <button class="btn btn-outline btn-sm" onclick="sim5Reset()">Reset</button>
+      <span class="text-sm text-muted" id="sim5StepLabel" style="margin-left:auto;">Step 0 / 6</span>
+    </div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="site-footer">
+  CSPD 2026 &mdash; Agentic AI for STEM Teachers &mdash; Interactive Explorations
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+/* ===========================================================
+   PROGRESS BAR
+   =========================================================== */
+function scrollToSim(n) {
+  var el = document.getElementById('sim' + n);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateProgress() {
+  var sims = [1,2,3,4,5];
+  var scrollY = window.scrollY || window.pageYOffset;
+  var winH = window.innerHeight;
+  var current = 1;
+  for (var i = 0; i < sims.length; i++) {
+    var el = document.getElementById('sim' + sims[i]);
+    if (el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < winH * 0.5) current = sims[i];
+    }
+  }
+  var steps = document.querySelectorAll('.progress-step');
+  steps.forEach(function(s) {
+    var n = parseInt(s.getAttribute('data-sim'));
+    s.classList.remove('active', 'visited');
+    if (n === current) s.classList.add('active');
+    else if (n < current) s.classList.add('visited');
+  });
+  document.getElementById('progressLabel').textContent = current + ' / 5';
+}
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('load', updateProgress);
+
+
+/* ===========================================================
+   SIMULATION 1: CHATBOT vs. AGENT
+   =========================================================== */
+var sim1Data = {
+  quiz: {
+    prompt: 'Create a quiz on photosynthesis',
+    chatbot: 'Here is a quiz on photosynthesis:\n\n1. What is photosynthesis?\n2. Where does photosynthesis occur?\n3. What are the products of photosynthesis?\n4. What is the chemical equation for photosynthesis?\n5. Name two factors that affect the rate of photosynthesis.',
+    agentSteps: [
+      { icon: '🤔', label: 'Planning', text: 'Breaking this into subtasks: determine grade level, identify key concepts, create varied question types, align to standards...' },
+      { icon: '📋', label: 'Step 1: Analyzing topic', text: 'Photosynthesis covers: light reactions, Calvin cycle, chloroplasts, pigments, inputs/outputs. Identifying core vs. advanced concepts...' },
+      { icon: '🎯', label: 'Step 2: Aligning to standards', text: 'Mapping to NGSS LS1.C (Organization for Matter and Energy Flow in Organisms). Adjusting question depth for middle school level...' },
+      { icon: '✍️', label: 'Step 3: Generating content', text: 'Creating 3 difficulty levels: recall, application, and analysis. Including multiple choice, fill-in-the-blank, and short answer formats...' },
+      { icon: '✅', label: 'Step 4: Final output', text: 'Assembling quiz with answer key, rubric, and differentiation notes...' }
+    ],
+    agentFinal: '<strong>Photosynthesis Quiz</strong> (Grade 7, NGSS LS1.C)\n\n<strong>Easy (Recall):</strong>\n1. [Multiple Choice] Which organelle is responsible for photosynthesis?\n   A) Mitochondria  B) Chloroplast  C) Nucleus  D) Ribosome\n2. [True/False] Photosynthesis produces oxygen as a byproduct.\n\n<strong>Medium (Application):</strong>\n3. A plant is placed in a dark room for 48 hours. Predict what happens to its rate of photosynthesis and explain why.\n4. [Fill in the blank] The equation: ___ + ___ → glucose + oxygen\n\n<strong>Hard (Analysis):</strong>\n5. Design an experiment to test whether light intensity affects the rate of photosynthesis. Include your hypothesis, variables, and how you would measure results.\n\n<em>Answer key, rubric, and accommodation notes included.</em>'
+  },
+  lab: {
+    prompt: 'Review this lab report',
+    chatbot: 'I\'d be happy to review a lab report! Please share the lab report and I\'ll provide feedback on it. I can check for proper formatting, methodology, data analysis, and conclusions.',
+    agentSteps: [
+      { icon: '🤔', label: 'Planning', text: 'Breaking this into subtasks: identify rubric criteria, analyze each section, prepare constructive feedback, suggest improvements...' },
+      { icon: '📋', label: 'Step 1: Loading rubric', text: 'Applying standard lab report rubric: Title, Hypothesis, Materials, Procedure, Data, Analysis, Conclusion. Checking for scientific reasoning...' },
+      { icon: '🎯', label: 'Step 2: Section-by-section analysis', text: 'Evaluating hypothesis specificity, methodology rigor, data presentation quality, conclusion support from evidence...' },
+      { icon: '✍️', label: 'Step 3: Crafting feedback', text: 'Balancing positive observations with growth areas. Using "glow and grow" framework for student-friendly feedback...' },
+      { icon: '✅', label: 'Step 4: Generating report', text: 'Compiling scored rubric, written feedback, and specific revision suggestions...' }
+    ],
+    agentFinal: '<strong>Lab Report Review</strong>\n\n<strong>Strengths (Glows):</strong>\n• Clear hypothesis with measurable prediction\n• Good use of data tables\n• Safety precautions documented\n\n<strong>Areas for Growth (Grows):</strong>\n• <strong>Methodology:</strong> Add a control group — how will you know the effect was from your variable and not something else?\n• <strong>Data:</strong> Include units on all measurements and add a graph to visualize trends\n• <strong>Conclusion:</strong> Connect back to your hypothesis explicitly — was it supported or refuted?\n\n<strong>Rubric Score:</strong> 18/25 (Proficient)\n<em>Specific revision checklist attached.</em>'
+  },
+  debug: {
+    prompt: 'Help a student debug code',
+    chatbot: 'Sure! Please share the code you\'re having trouble with and describe the error message you\'re seeing. I\'ll help you find and fix the bug.',
+    agentSteps: [
+      { icon: '🤔', label: 'Planning', text: 'Breaking this into subtasks: read the code, identify error type, trace the logic, prepare guided explanation (not just the answer)...' },
+      { icon: '📋', label: 'Step 1: Analyzing code', text: 'Scanning for common student errors: off-by-one, type mismatches, missing return statements, infinite loops, scope issues...' },
+      { icon: '🎯', label: 'Step 2: Pedagogical approach', text: 'Using Socratic method — guiding questions rather than direct answers. Preparing hints at increasing specificity...' },
+      { icon: '✍️', label: 'Step 3: Generating guided response', text: 'Creating a step-by-step debugging walkthrough the student can follow, building debugging skills for next time...' },
+      { icon: '✅', label: 'Step 4: Creating learning moment', text: 'Adding conceptual explanation of why the bug happens, connecting to programming fundamentals...' }
+    ],
+    agentFinal: '<strong>Debugging Guide</strong>\n\n<strong>First, let\'s trace through your code together:</strong>\n\n• On line 5, your loop starts at i=1. What value should it start at if your list begins at index 0?\n• Try adding a print(i) inside the loop — what values do you see?\n\n<strong>Hint 1:</strong> The error happens because you\'re skipping the first element.\n<strong>Hint 2:</strong> In Python, list indices start at 0, not 1.\n\n<strong>The Pattern to Remember:</strong>\nThis is called an "off-by-one error" — one of the most common bugs in programming! Always check: does my loop start at 0 or 1?\n\n<em>Try the fix, and let me know if you want to explore the related concept of list slicing.</em>'
+  },
+  lesson: {
+    prompt: "Generate a lesson plan on Newton's laws",
+    chatbot: "Here's a lesson plan on Newton's Laws of Motion:\n\nObjective: Students will learn about Newton's three laws of motion.\n\nActivities:\n1. Lecture on the three laws\n2. Worksheet practice\n3. Class discussion\n\nAssessment: Quiz at the end of the week.",
+    agentSteps: [
+      { icon: '🤔', label: 'Planning', text: 'Breaking this into subtasks: determine learning objectives, design engaging activities, plan differentiation, create assessment...' },
+      { icon: '📋', label: 'Step 1: Standards alignment', text: 'Mapping to NGSS PS2.A (Forces and Motion). Setting measurable objectives using Bloom\'s taxonomy levels...' },
+      { icon: '🎯', label: 'Step 2: Activity design', text: 'Designing hands-on activities: egg drop for inertia, skateboard push for action-reaction, friction stations for F=ma...' },
+      { icon: '✍️', label: 'Step 3: Building lesson structure', text: 'Using 5E model (Engage, Explore, Explain, Elaborate, Evaluate). Creating differentiated tiers and accommodations...' },
+      { icon: '✅', label: 'Step 4: Final assembly', text: 'Compiling lesson plan with timing, materials list, differentiation notes, and formative assessment strategies...' }
+    ],
+    agentFinal: '<strong>Lesson Plan: Newton\'s Laws in Action</strong> (Grade 8, 90 min)\nNGSS PS2.A | 5E Model\n\n<strong>Engage (10 min):</strong> "Tablecloth trick" demo — students predict and observe inertia\n\n<strong>Explore (25 min):</strong> Rotation stations:\n• Station A: Egg drop challenge (1st Law)\n• Station B: Cart + masses on ramp (F=ma, 2nd Law)\n• Station C: Balloon rockets on string (3rd Law)\n\n<strong>Explain (15 min):</strong> Mini-lecture connecting station observations to formal laws. Students complete guided notes.\n\n<strong>Elaborate (25 min):</strong> "Newton in Sports" — analyze video clips of athletic movements through the lens of all three laws.\n\n<strong>Evaluate (15 min):</strong> Exit ticket + peer discussion protocol.\n\n<em>Differentiation tiers, materials list, and extension activities included.</em>'
+  }
+};
+
+var sim1Running = false;
+
+function sim1Run(key) {
+  if (sim1Running) return;
+  sim1Running = true;
+
+  var data;
+  if (key === 'custom') {
+    var userText = document.getElementById('sim1Input').value.trim();
+    if (!userText) { sim1Running = false; return; }
+    data = {
+      prompt: userText,
+      chatbot: 'Sure, I can help with that! ' + userText + '. Here is a generic response. I would provide some relevant information about your topic, but without more specific instructions, I\'ll keep it general and cover the basics.',
+      agentSteps: [
+        { icon: '🤔', label: 'Planning', text: 'Breaking "' + userText.substring(0,50) + '..." into subtasks: analyzing request type, determining grade-level appropriateness, identifying required resources...' },
+        { icon: '📋', label: 'Step 1: Analyzing request', text: 'Categorizing as STEM task. Identifying key domain, required depth, and success criteria...' },
+        { icon: '🎯', label: 'Step 2: Aligning to standards', text: 'Cross-referencing with curriculum standards. Adjusting complexity for target audience...' },
+        { icon: '✍️', label: 'Step 3: Generating content', text: 'Creating structured, pedagogically sound output with differentiation options...' },
+        { icon: '✅', label: 'Step 4: Quality check', text: 'Reviewing for accuracy, age-appropriateness, inclusivity, and engagement...' }
+      ],
+      agentFinal: '<strong>Structured Response to: "' + userText.substring(0,60) + '"</strong>\n\n• <strong>Analysis:</strong> Identified key concepts and learning objectives\n• <strong>Standards:</strong> Aligned to relevant curriculum standards\n• <strong>Differentiation:</strong> Included multiple access points for diverse learners\n• <strong>Assessment:</strong> Built-in formative check for understanding\n\n<em>Notice how the agent broke this into steps, checked alignment with standards, and included pedagogical best practices — things a simple chatbot would skip!</em>'
+    };
+  } else {
+    data = sim1Data[key];
+    document.getElementById('sim1Input').value = data.prompt;
+  }
+
+  var chatbotEl = document.getElementById('sim1Chatbot');
+  var agentEl = document.getElementById('sim1Agent');
+
+  chatbotEl.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+  agentEl.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+
+  // Chatbot responds fast (but not instant)
+  setTimeout(function() {
+    chatbotEl.innerHTML = '<div class="message msg-bot">' + data.chatbot.replace(/\n/g, '<br>') + '</div>';
+  }, 800);
+
+  // Agent shows steps with delays
+  var steps = data.agentSteps;
+  var delay = 600;
+  agentEl.innerHTML = '';
+
+  steps.forEach(function(step, i) {
+    setTimeout(function() {
+      agentEl.innerHTML += '<div class="message msg-step">' + step.icon + ' <strong>' + step.label + ':</strong> ' + step.text + '</div>';
+      agentEl.scrollTop = agentEl.scrollHeight;
+    }, delay + i * 1200);
+  });
+
+  setTimeout(function() {
+    agentEl.innerHTML += '<div class="message msg-final">' + data.agentFinal.replace(/\n/g, '<br>') + '</div>';
+    agentEl.scrollTop = agentEl.scrollHeight;
+    sim1Running = false;
+  }, delay + steps.length * 1200 + 600);
+}
+
+
+/* ===========================================================
+   SIMULATION 2: TOKEN VISUALIZER
+   =========================================================== */
+var tokenColors = [
+  '#dbeafe', '#fce7f3', '#dcfce7', '#fef9c3', '#e0e7ff',
+  '#fde68a', '#d1fae5', '#fbcfe8', '#c7d2fe', '#fed7aa',
+  '#bae6fd', '#fecdd3', '#bbf7d0', '#fef08a', '#e9d5ff'
+];
+
+var subwordSplits = {
+  'photosynthesis': ['photo', 'synthesis'],
+  'understanding': ['under', 'standing'],
+  'mitochondria': ['mito', 'chondria'],
+  'electromagnetic': ['electro', 'magnetic'],
+  'thermodynamics': ['thermo', 'dynamics'],
+  'biodiversity': ['bio', 'diversity'],
+  'decomposition': ['de', 'composition'],
+  'multiplication': ['multi', 'plication'],
+  'acceleration': ['accel', 'eration'],
+  'differentiation': ['different', 'iation'],
+  'approximately': ['approx', 'imately'],
+  'representation': ['represent', 'ation'],
+  'transformation': ['trans', 'formation'],
+  'perpendicular': ['perpen', 'dicular'],
+  'circumference': ['circum', 'ference'],
+  'concentration': ['concent', 'ration'],
+  'precipitation': ['precip', 'itation']
+};
+
+var nextWordData = {
+  'the mitochondria is the': {
+    words: [
+      { word: 'powerhouse', base: 0.85 },
+      { word: 'organelle', base: 0.06 },
+      { word: 'energy', base: 0.04 },
+      { word: 'site', base: 0.03 },
+      { word: 'key', base: 0.02 }
+    ]
+  },
+  'photosynthesis converts sunlight into': {
+    words: [
+      { word: 'chemical', base: 0.60 },
+      { word: 'energy', base: 0.20 },
+      { word: 'glucose', base: 0.10 },
+      { word: 'food', base: 0.07 },
+      { word: 'sugars', base: 0.03 }
+    ]
+  },
+  'in a python for loop, the variable i represents': {
+    words: [
+      { word: 'the', base: 0.35 },
+      { word: 'each', base: 0.25 },
+      { word: 'an', base: 0.20 },
+      { word: 'a', base: 0.15 },
+      { word: 'one', base: 0.05 }
+    ]
+  },
+  'according to newton, every action has an equal and opposite': {
+    words: [
+      { word: 'reaction', base: 0.92 },
+      { word: 'force', base: 0.04 },
+      { word: 'effect', base: 0.02 },
+      { word: 'response', base: 0.01 },
+      { word: 'consequence', base: 0.01 }
+    ]
+  }
+};
+
+function sim2Tokenize(text) {
+  var tokens = [];
+  // Split on whitespace and punctuation, keeping delimiters
+  var parts = text.split(/(\s+|[.,;:!?()'"\/\-])/);
+  parts.forEach(function(part) {
+    if (!part || /^\s+$/.test(part)) return;
+    var lower = part.toLowerCase();
+    if (subwordSplits[lower]) {
+      subwordSplits[lower].forEach(function(sub) { tokens.push(sub); });
+    } else if (part.length > 0) {
+      tokens.push(part);
+    }
+  });
+  return tokens;
+}
+
+function sim2Render() {
+  var text = document.getElementById('sim2Input').value;
+  var tokens = sim2Tokenize(text);
+  var container = document.getElementById('sim2Tokens');
+  container.innerHTML = '';
+
+  tokens.forEach(function(t, i) {
+    var el = document.createElement('div');
+    el.className = 'token';
+    el.style.background = tokenColors[i % tokenColors.length];
+    el.innerHTML = '<span>' + t.replace(/</g, '&lt;') + '</span><span class="token-index">' + i + '</span>';
+    el.style.animationDelay = (i * 0.04) + 's';
+    container.appendChild(el);
+  });
+
+  document.getElementById('sim2TokenCount').textContent = tokens.length + ' tokens';
+  var pct = (tokens.length / 200000) * 100;
+  document.getElementById('sim2CtxBar').style.width = Math.max(pct, 0.1) + '%';
+  document.getElementById('sim2CtxLabel').textContent = tokens.length.toLocaleString() + ' / 200,000 tokens used';
+}
+
+function sim2SetText(t) {
+  document.getElementById('sim2Input').value = t;
+  sim2Render();
+  document.getElementById('sim2Predictions').innerHTML = '';
+}
+
+document.getElementById('sim2Input').addEventListener('input', function() {
+  sim2Render();
+  document.getElementById('sim2Predictions').innerHTML = '';
+});
+
+document.getElementById('sim2Temp').addEventListener('input', function() {
+  var v = (parseInt(this.value) / 100).toFixed(2);
+  document.getElementById('sim2TempVal').textContent = v;
+});
+
+function sim2Predict() {
+  var text = document.getElementById('sim2Input').value.trim().toLowerCase();
+  var temp = parseInt(document.getElementById('sim2Temp').value) / 100;
+  var container = document.getElementById('sim2Predictions');
+
+  // Find matching prediction set or use default
+  var pData = null;
+  Object.keys(nextWordData).forEach(function(key) {
+    if (text === key || text.endsWith(key.split(' ').slice(-3).join(' '))) {
+      pData = nextWordData[key];
+    }
+  });
+
+  if (!pData) {
+    // Generic fallback
+    pData = {
+      words: [
+        { word: 'the', base: 0.30 },
+        { word: 'a', base: 0.20 },
+        { word: 'is', base: 0.18 },
+        { word: 'and', base: 0.17 },
+        { word: 'of', base: 0.15 }
+      ]
+    };
+  }
+
+  // Apply temperature
+  var words = pData.words.map(function(w) {
+    return { word: w.word, prob: w.base };
+  });
+
+  if (temp > 0) {
+    // Flatten distribution with temperature
+    var logits = words.map(function(w) { return Math.log(w.prob + 0.001); });
+    var scaled = logits.map(function(l) { return l / (temp + 0.1); });
+    var maxL = Math.max.apply(null, scaled);
+    var exps = scaled.map(function(s) { return Math.exp(s - maxL); });
+    var sumExp = exps.reduce(function(a, b) { return a + b; }, 0);
+    words = words.map(function(w, i) {
+      return { word: w.word, prob: exps[i] / sumExp };
+    });
+  }
+
+  // Sort by probability
+  words.sort(function(a, b) { return b.prob - a.prob; });
+
+  // Determine selected word
+  var selectedIdx = 0;
+  if (temp > 0.3) {
+    // At higher temps, sometimes pick 2nd or 3rd
+    var r = Math.random();
+    if (r < words[0].prob) selectedIdx = 0;
+    else if (words.length > 1 && r < words[0].prob + words[1].prob) selectedIdx = 1;
+    else if (words.length > 2) selectedIdx = 2;
+  }
+
+  var html = '<div class="prob-bar-container">';
+  words.forEach(function(w, i) {
+    var pct = Math.round(w.prob * 100);
+    var cls = i === 0 ? 'top' : (i < 3 ? 'mid' : 'low');
+    var sel = i === selectedIdx ? ' prob-selected' : '';
+    html += '<div class="prob-row' + sel + '">';
+    html += '<span class="prob-word">' + w.word + (i === selectedIdx ? ' ←' : '') + '</span>';
+    html += '<div class="prob-bar-bg"><div class="prob-bar-fg ' + cls + '" style="width:' + pct + '%;">' + pct + '%</div></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  html += '<p class="text-sm text-muted mt-1">Predicted next word: <strong>"' + words[selectedIdx].word + '"</strong>' + (temp > 0.3 ? ' (sampled — higher temperature increases randomness)' : ' (top probability chosen at low temperature)') + '</p>';
+
+  container.innerHTML = html;
+}
+
+// Initial render
+sim2Render();
+
+
+/* ===========================================================
+   SIMULATION 3: AGENT LOOP
+   =========================================================== */
+var loopNodes = [
+  {
+    name: 'Perceive',
+    description: 'The agent takes in information about the current situation — reading a student\'s submission, receiving a question, or analyzing data.',
+    scenarios: {
+      lab: 'Reads the student\'s lab report, noting the title, hypothesis, data tables, and conclusion section.',
+      socratic: 'Receives the student\'s question: "Why does ice float on water?" and reads their chat history for context.',
+      quiz: 'Takes in the teacher\'s request: "Create a quiz on cell division for 9th grade biology."'
+    },
+    dataFlow: 'Input: Raw text, files, or data streams'
+  },
+  {
+    name: 'Plan',
+    description: 'The agent decides what to do. It breaks the task into steps, considers constraints, and selects an approach.',
+    scenarios: {
+      lab: 'Decides to: (1) check hypothesis format, (2) verify data completeness, (3) evaluate analysis logic, (4) score on rubric.',
+      socratic: 'Plans to: (1) identify what the student already knows, (2) choose a guiding question, (3) prepare a hint if needed.',
+      quiz: 'Plans to: (1) list key concepts in cell division, (2) categorize by difficulty, (3) generate questions, (4) create answer key.'
+    },
+    dataFlow: 'Input: Perceived context → Output: Action plan'
+  },
+  {
+    name: 'Act',
+    description: 'The agent executes its plan — generating text, calling tools, looking up information, or producing output.',
+    scenarios: {
+      lab: 'Generates section-by-section feedback, scores each rubric category, and writes a summary with specific improvement suggestions.',
+      socratic: 'Asks: "You know ice is solid water. What do you think is different about the molecules in ice vs. liquid water?"',
+      quiz: 'Generates 10 questions: 4 multiple choice (easy), 3 short answer (medium), 2 diagram-based (medium), 1 essay (hard).'
+    },
+    dataFlow: 'Input: Plan → Output: Actions + generated content'
+  },
+  {
+    name: 'Observe',
+    description: 'The agent checks what happened after acting. Did the tool return results? Did the student respond? Was there an error?',
+    scenarios: {
+      lab: 'Checks: Did the feedback cover all rubric areas? Is the tone constructive? Are the suggestions actionable?',
+      socratic: 'Reads the student\'s response: "I think the molecules in ice are more spread apart?" and evaluates correctness.',
+      quiz: 'Reviews generated quiz: Are questions clear? Do difficulty levels feel accurate? Is the answer key correct?'
+    },
+    dataFlow: 'Input: Results of actions → Output: Observed outcomes'
+  },
+  {
+    name: 'Reflect',
+    description: 'The agent evaluates: Did I achieve the goal? Should I try a different approach? What did I learn for next time?',
+    scenarios: {
+      lab: 'Reflection: "Feedback is thorough but might be overwhelming. I should add a priority ranking so the student knows where to start."',
+      socratic: 'Reflection: "The student is on the right track! I should reinforce their reasoning and guide them toward the concept of hydrogen bonding."',
+      quiz: 'Reflection: "Good coverage but I\'m missing a question on meiosis. Let me add one more question and verify alignment with the standards."'
+    },
+    dataFlow: 'Input: Observed outcomes → Output: Evaluation + decision to continue or stop'
+  }
+];
+
+var sim3Scenario = 'lab';
+var sim3ActiveNode = -1;
+var sim3LoopRunning = false;
+
+var arrowIds = ['arrow01', 'arrow12', 'arrow23', 'arrow34', 'arrow40'];
+
+function sim3SetScenario(s) {
+  sim3Scenario = s;
+  if (sim3ActiveNode >= 0) sim3ShowInfo(sim3ActiveNode);
+}
+
+function sim3ClickNode(i) {
+  sim3HighlightNode(i);
+  sim3ShowInfo(i);
+}
+
+function sim3HighlightNode(i) {
+  sim3ActiveNode = i;
+  for (var n = 0; n < 5; n++) {
+    var el = document.getElementById('node' + n);
+    if (n === i) el.classList.add('active');
+    else el.classList.remove('active');
+  }
+  // Highlight the arrow leading to this node
+  arrowIds.forEach(function(id, idx) {
+    var arrow = document.getElementById(id);
+    if (idx === (i > 0 ? i - 1 : 4)) {
+      arrow.setAttribute('stroke', '#2563eb');
+      arrow.setAttribute('stroke-width', '3');
+      arrow.setAttribute('marker-end', 'url(#arrowheadActive)');
+    } else {
+      arrow.setAttribute('stroke', '#cbd5e1');
+      arrow.setAttribute('stroke-width', '2');
+      arrow.setAttribute('marker-end', 'url(#arrowhead)');
+    }
+  });
+}
+
+function sim3ClearHighlights() {
+  sim3ActiveNode = -1;
+  for (var n = 0; n < 5; n++) {
+    document.getElementById('node' + n).classList.remove('active');
+  }
+  arrowIds.forEach(function(id) {
+    var arrow = document.getElementById(id);
+    arrow.setAttribute('stroke', '#cbd5e1');
+    arrow.setAttribute('stroke-width', '2');
+    arrow.setAttribute('marker-end', 'url(#arrowhead)');
+  });
+}
+
+function sim3ShowInfo(i) {
+  var node = loopNodes[i];
+  var info = document.getElementById('sim3Info');
+  info.innerHTML = '<h3>' + node.name + '</h3>' +
+    '<p>' + node.description + '</p>' +
+    '<p style="margin-top:0.5rem;"><strong>Scenario (' + sim3Scenario + '):</strong> ' + node.scenarios[sim3Scenario] + '</p>' +
+    '<p class="text-sm text-muted mt-1"><em>' + node.dataFlow + '</em></p>';
+}
+
+function sim3RunLoop() {
+  if (sim3LoopRunning) return;
+  sim3LoopRunning = true;
+  sim3ClearHighlights();
+
+  var steps = [0, 1, 2, 3, 4];
+  steps.forEach(function(i, idx) {
+    setTimeout(function() {
+      sim3HighlightNode(i);
+      sim3ShowInfo(i);
+      if (i === 4) {
+        setTimeout(function() { sim3LoopRunning = false; }, 1500);
+      }
+    }, idx * 2000);
+  });
+}
+
+
+/* ===========================================================
+   SIMULATION 4: PROMPT ENGINEERING LAB
+   =========================================================== */
+function sim4Generate() {
+  var sysPrompt = document.getElementById('sim4System').value.toLowerCase();
+  var userMsg = document.getElementById('sim4User').value;
+  var output = document.getElementById('sim4Output');
+
+  // Score quality based on keywords
+  var score = 0;
+  var qualities = [];
+
+  if (/teacher|tutor|instructor|professor|educator/.test(sysPrompt)) { score++; qualities.push('role'); }
+  if (/biology|physics|chemistry|math|science|stem|computer science/.test(sysPrompt)) { score++; qualities.push('subject'); }
+  if (/format|structure|template|heading|bullet|list|numbered|markdown/.test(sysPrompt)) { score++; qualities.push('format'); }
+  if (/tone|friendly|encouraging|supportive|warm|patient|professional/.test(sysPrompt)) { score++; qualities.push('tone'); }
+  if (/rubric|criteria|score|evaluate|assess|standard|ngss|benchmark/.test(sysPrompt)) { score++; qualities.push('rubric/standards'); }
+  if (/socratic|question|guide|never|don't|do not|avoid/.test(sysPrompt)) { score = Math.max(score, 3); qualities.push('behavior'); }
+  if (/step|first|then|next|finally|example/.test(sysPrompt)) { score = Math.max(score, 2); qualities.push('structure'); }
+
+  // Update quality dots
+  var dots = document.querySelectorAll('#sim4Dots .quality-dot');
+  var labels = ['Basic', 'Fair', 'Good', 'Strong', 'Excellent'];
+  dots.forEach(function(d, i) {
+    d.classList.remove('filled', 'half');
+    if (i < score) d.classList.add('filled');
+    else if (i === score) d.classList.add('half');
+  });
+  document.getElementById('sim4QualityLabel').textContent = labels[Math.min(score, 4)] + (qualities.length ? ' (' + qualities.join(', ') + ')' : '');
+
+  // Generate appropriate response
+  var response = '';
+  if (score === 0) {
+    response = '<p>Photosynthesis is the process by which plants convert sunlight into energy. Plants use carbon dioxide and water, along with sunlight, to produce glucose and oxygen.</p>' +
+      '<p style="margin-top:0.5rem;" class="text-muted text-sm"><em>Notice how this response is generic and flat. There\'s no clear role, no adaptation for a specific audience, no particular format. Try adding more detail to the system prompt!</em></p>';
+  } else if (score === 1) {
+    response = '<p><strong>Photosynthesis Overview:</strong></p>' +
+      '<p>Photosynthesis is how plants make their own food! They capture sunlight using chlorophyll in their leaves and use it to turn carbon dioxide and water into glucose (sugar) and oxygen.</p>' +
+      '<p style="margin-top:0.5rem;">The basic equation is: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂</p>' +
+      '<p style="margin-top:0.5rem;" class="text-muted text-sm"><em>Better! The response now has some personality. Adding subject expertise, format requirements, or tone will improve it further.</em></p>';
+  } else if (score === 2) {
+    response = '<p><strong>Photosynthesis: How Plants Make Food</strong></p>' +
+      '<p>Great question! Let me break this down in a way that\'s easy to understand.</p>' +
+      '<p style="margin-top:0.5rem;"><strong>The Big Picture:</strong> Plants are like tiny factories that turn sunlight into food.</p>' +
+      '<p><strong>Ingredients Needed:</strong></p>' +
+      '<ul style="margin-left:1.5rem;"><li>Sunlight (energy source)</li><li>Carbon dioxide (from the air)</li><li>Water (from the soil)</li></ul>' +
+      '<p style="margin-top:0.5rem;"><strong>What Plants Make:</strong></p>' +
+      '<ul style="margin-left:1.5rem;"><li>Glucose (sugar for energy)</li><li>Oxygen (released into the air — lucky us!)</li></ul>' +
+      '<p style="margin-top:0.5rem;" class="text-muted text-sm"><em>Good improvement! The response is more structured and engaging. Try adding rubric alignment or behavioral instructions.</em></p>';
+  } else if (score === 3) {
+    response = '<p><strong>Photosynthesis: Nature\'s Solar-Powered Kitchen</strong></p>' +
+      '<p>Hey there! I\'m excited you\'re learning about photosynthesis — it\'s one of the most important processes on Earth! Let me walk you through it step by step.</p>' +
+      '<p style="margin-top:0.5rem;"><strong>Think of it this way:</strong> Imagine a plant is a kitchen. Sunlight is the stove, CO₂ is one ingredient, water is another, and the "meal" the plant cooks is glucose.</p>' +
+      '<p style="margin-top:0.5rem;"><strong>The Two Main Stages:</strong></p>' +
+      '<ol style="margin-left:1.5rem;"><li><strong>Light Reactions</strong> (in the thylakoid membranes): Sunlight splits water molecules, releasing O₂ and creating energy carriers (ATP and NADPH).</li>' +
+      '<li><strong>Calvin Cycle</strong> (in the stroma): Uses that energy to convert CO₂ into glucose through a series of chemical reactions.</li></ol>' +
+      '<p style="margin-top:0.5rem;"><strong>Check Your Understanding:</strong> Can you explain why plants need both sunlight AND water for photosynthesis?</p>' +
+      '<p style="margin-top:0.5rem;" class="text-muted text-sm"><em>Strong response! Notice the clear role, subject expertise, engaging tone, and check for understanding. One more level to go!</em></p>';
+  } else {
+    response = '<p><strong>Photosynthesis: Nature\'s Solar-Powered Kitchen</strong></p>' +
+      '<p><em>NGSS Standard LS1.C: Organization for Matter and Energy Flow in Organisms</em></p>' +
+      '<p style="margin-top:0.5rem;">Great question! Before I explain, let me ask you: have you ever wondered why we need plants to survive? What do you think plants give us that we can\'t make ourselves?</p>' +
+      '<p style="margin-top:0.5rem;"><strong>Key Concept Map:</strong></p>' +
+      '<ul style="margin-left:1.5rem;"><li><strong>Inputs:</strong> Sunlight + CO₂ + H₂O</li><li><strong>Process:</strong> Light reactions → Calvin Cycle</li><li><strong>Outputs:</strong> Glucose (C₆H₁₂O₆) + Oxygen (O₂)</li></ul>' +
+      '<p style="margin-top:0.5rem;"><strong>Real-World Connection:</strong> Every breath you take contains oxygen that a plant produced through photosynthesis. The food on your plate? It all traces back to photosynthesis too!</p>' +
+      '<p style="margin-top:0.5rem;"><strong>Differentiation:</strong></p>' +
+      '<ul style="margin-left:1.5rem;"><li><em>Approaching:</em> Draw and label the inputs and outputs</li><li><em>Meeting:</em> Explain both stages in your own words</li><li><em>Exceeding:</em> Compare photosynthesis and cellular respiration</li></ul>' +
+      '<p style="margin-top:0.5rem;"><strong>Formative Check:</strong> In your own words, explain why the Calvin Cycle is sometimes called "light-independent reactions" even though it still depends on the light reactions.</p>' +
+      '<p style="margin-top:0.5rem;" class="text-muted text-sm"><em>Excellent! This response has everything: clear role, subject expertise, structured format, engaging tone, standards alignment, differentiation, and formative assessment. This is what great prompt engineering looks like!</em></p>';
+  }
+
+  output.innerHTML = response;
+
+  // Check challenge completion
+  sim4CheckChallenges(sysPrompt);
+}
+
+function sim4CheckChallenges(sys) {
+  // Challenge 1: biology teacher
+  if (/teacher|tutor|instructor/.test(sys) && /bio/.test(sys)) {
+    document.getElementById('badge1').textContent = 'Done!';
+    document.getElementById('badge1').className = 'badge badge-done';
+    document.getElementById('challenge1').classList.add('completed');
+  }
+  // Challenge 2: lab report feedback
+  if (/lab|report/.test(sys) && /rubric|criteria|feedback|evaluat/.test(sys)) {
+    document.getElementById('badge2').textContent = 'Done!';
+    document.getElementById('badge2').className = 'badge badge-done';
+    document.getElementById('challenge2').classList.add('completed');
+  }
+  // Challenge 3: Socratic method
+  if (/socratic|question|never.*answer|don't.*answer|guide|ask/.test(sys)) {
+    document.getElementById('badge3').textContent = 'Done!';
+    document.getElementById('badge3').className = 'badge badge-done';
+    document.getElementById('challenge3').classList.add('completed');
+  }
+  // Challenge 4: quiz format
+  if (/quiz|question/.test(sys) && /format|template|structure|multiple.*choice|easy.*medium.*hard|difficulty/.test(sys)) {
+    document.getElementById('badge4').textContent = 'Done!';
+    document.getElementById('badge4').className = 'badge badge-done';
+    document.getElementById('challenge4').classList.add('completed');
+  }
+}
+
+function sim4ToggleSolution(n) {
+  var el = document.getElementById('solution' + n);
+  el.classList.toggle('visible');
+  var btn = el.previousElementSibling;
+  btn.textContent = el.classList.contains('visible') ? 'Hide Solution' : 'Show Solution';
+}
+
+function sim4Reset() {
+  document.getElementById('sim4System').value = 'You are a helpful assistant.';
+  document.getElementById('sim4User').value = 'Explain how photosynthesis works.';
+  document.getElementById('sim4Output').innerHTML = '<p class="text-muted text-sm" style="text-align:center; padding-top:3rem;">Click "See Result" to generate a response</p>';
+  var dots = document.querySelectorAll('#sim4Dots .quality-dot');
+  dots.forEach(function(d) { d.classList.remove('filled', 'half'); });
+  document.getElementById('sim4QualityLabel').textContent = 'Basic';
+}
+
+
+/* ===========================================================
+   SIMULATION 5: TOOL USE
+   =========================================================== */
+var sim5CurrentStep = 0;
+var sim5TotalSteps = 6;
+var sim5AutoInterval = null;
+
+var sim5ToolMap = {
+  1: null,
+  2: 'tool-calc',
+  3: 'tool-calc',
+  4: null,
+  5: 'tool-kb',
+  6: null
+};
+
+function sim5UpdateUI() {
+  for (var i = 1; i <= sim5TotalSteps; i++) {
+    var el = document.getElementById('s5step' + i);
+    if (i <= sim5CurrentStep) el.classList.add('revealed');
+    else el.classList.remove('revealed');
+  }
+
+  // Highlight active tool
+  document.querySelectorAll('.tool-badge').forEach(function(b) { b.classList.remove('active'); });
+  if (sim5CurrentStep > 0 && sim5ToolMap[sim5CurrentStep]) {
+    var toolEl = document.getElementById(sim5ToolMap[sim5CurrentStep]);
+    if (toolEl) toolEl.classList.add('active');
+  }
+
+  document.getElementById('sim5StepLabel').textContent = 'Step ' + sim5CurrentStep + ' / ' + sim5TotalSteps;
+
+  if (sim5CurrentStep >= sim5TotalSteps) {
+    document.getElementById('sim5NextBtn').disabled = true;
+    document.getElementById('sim5AutoBtn').disabled = true;
+    if (sim5AutoInterval) { clearInterval(sim5AutoInterval); sim5AutoInterval = null; }
+  }
+}
+
+function sim5Next() {
+  if (sim5CurrentStep < sim5TotalSteps) {
+    sim5CurrentStep++;
+    sim5UpdateUI();
+  }
+}
+
+function sim5Auto() {
+  if (sim5AutoInterval) {
+    clearInterval(sim5AutoInterval);
+    sim5AutoInterval = null;
+    document.getElementById('sim5AutoBtn').innerHTML = '&#x25B6; Auto-play';
+    return;
+  }
+  document.getElementById('sim5AutoBtn').innerHTML = '&#x23F8; Pause';
+  sim5AutoInterval = setInterval(function() {
+    if (sim5CurrentStep >= sim5TotalSteps) {
+      clearInterval(sim5AutoInterval);
+      sim5AutoInterval = null;
+      document.getElementById('sim5AutoBtn').innerHTML = '&#x25B6; Auto-play';
+      return;
+    }
+    sim5Next();
+  }, 2000);
+}
+
+function sim5Reset() {
+  if (sim5AutoInterval) { clearInterval(sim5AutoInterval); sim5AutoInterval = null; }
+  sim5CurrentStep = 0;
+  document.getElementById('sim5NextBtn').disabled = false;
+  document.getElementById('sim5AutoBtn').disabled = false;
+  document.getElementById('sim5AutoBtn').innerHTML = '&#x25B6; Auto-play';
+  sim5UpdateUI();
+}
+
+// Initialize
+sim5UpdateUI();
+
+</script>
+</body>
+</html>

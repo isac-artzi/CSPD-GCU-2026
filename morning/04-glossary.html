@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop Glossary — Key Terms &amp; Concepts | CSPD 2026</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+    color: #fff;
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.02em;
+  }
+  .header p {
+    font-size: 1.05rem;
+    opacity: 0.9;
+    font-weight: 400;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  /* ===== CONTROLS BAR ===== */
+  .controls {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .search-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1 1 280px;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0.75rem center;
+  }
+  .search-input:focus { border-color: #2563eb; }
+  .search-input::placeholder { color: #94a3b8; }
+
+  .btn-toggle-all {
+    padding: 0.55rem 1rem;
+    border: 2px solid #2563eb;
+    background: #fff;
+    color: #2563eb;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-toggle-all:hover { background: #2563eb; color: #fff; }
+  .btn-toggle-all.active { background: #2563eb; color: #fff; }
+
+  /* Tag filter row */
+  .tag-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .tag-filters-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.25rem;
+  }
+  .tag-filter-btn {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .tag-filter-btn[data-tag="Core Concept"] { background: #dbeafe; color: #2563eb; border-color: #dbeafe; }
+  .tag-filter-btn[data-tag="Technical"]    { background: #ccfbf1; color: #0d9488; border-color: #ccfbf1; }
+  .tag-filter-btn[data-tag="Advanced"]     { background: #ede9fe; color: #7c3aed; border-color: #ede9fe; }
+
+  .tag-filter-btn.active[data-tag="Core Concept"] { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,0.25); }
+  .tag-filter-btn.active[data-tag="Technical"]    { border-color: #0d9488; box-shadow: 0 0 0 2px rgba(13,148,136,0.25); }
+  .tag-filter-btn.active[data-tag="Advanced"]     { border-color: #7c3aed; box-shadow: 0 0 0 2px rgba(124,58,237,0.25); }
+
+  .tag-filter-btn:hover { opacity: 0.85; }
+
+  .results-count {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== TERM CARDS ===== */
+  .term-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s, opacity 0.3s, transform 0.3s;
+  }
+  .term-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .term-card.hidden { display: none; }
+
+  .term-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .term-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin: 0;
+  }
+  .tag-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag-badge {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .tag-badge.core    { background: #dbeafe; color: #2563eb; }
+  .tag-badge.tech    { background: #ccfbf1; color: #0d9488; }
+  .tag-badge.adv     { background: #ede9fe; color: #7c3aed; }
+
+  .term-definition {
+    font-size: 0.95rem;
+    color: #334155;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  /* Classroom box */
+  .classroom-box {
+    border-left: 4px solid #0d9488;
+    background: #f0fdfa;
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .classroom-box .box-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0d9488;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+  }
+  .classroom-box p {
+    font-size: 0.9rem;
+    color: #134e4a;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Math/Technical detail */
+  .math-section {
+    border-left: 4px solid #2563eb;
+    background: #eff6ff;
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    display: none;
+  }
+  .math-section.visible { display: block; }
+  .math-section .box-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+  }
+  .math-section p {
+    font-size: 0.9rem;
+    color: #1e3a5f;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .math-section code {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  .btn-math-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border: 1.5px solid #cbd5e1;
+    background: #f8fafc;
+    color: #475569;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.25rem;
+  }
+  .btn-math-toggle:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+  .btn-math-toggle.active { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+  .btn-math-toggle .arrow { transition: transform 0.2s; display: inline-block; }
+  .btn-math-toggle.active .arrow { transform: rotate(90deg); }
+
+  /* ===== SECTION HEADINGS ===== */
+  .section-heading {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    padding: 2rem 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 2rem;
+  }
+
+  /* ===== NO RESULTS ===== */
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #94a3b8;
+    font-size: 1rem;
+    display: none;
+  }
+  .no-results.visible { display: block; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .header h1 { font-size: 1.5rem; }
+    .header p { font-size: 0.9rem; }
+    .container { padding: 1rem 0.75rem 2rem; }
+    .controls { padding: 1rem; border-radius: 10px; }
+    .term-card { padding: 1.15rem 1.25rem; }
+    .term-header { flex-direction: column; gap: 0.5rem; }
+    .search-row { flex-direction: column; }
+    .search-input { flex: 1 1 100%; }
+  }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .header {
+      background: none !important;
+      color: #000;
+      border-bottom: 3px solid #1e40af;
+      padding: 1rem 0;
+    }
+    .header h1 { color: #1e40af; font-size: 18pt; }
+    .header p { color: #475569; }
+    .controls { display: none !important; }
+    .container { max-width: 100%; padding: 0; }
+    .term-card {
+      box-shadow: none !important;
+      border: 1px solid #d1d5db;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 0.75rem;
+    }
+    .term-card.hidden { display: block !important; }
+    .math-section { display: block !important; }
+    .btn-math-toggle { display: none !important; }
+    .no-results { display: none !important; }
+    .footer { border-top: 1px solid #d1d5db; color: #6b7280; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <h1>Workshop Glossary &mdash; Key Terms &amp; Concepts</h1>
+  <p>CSPD 2026 &bull; Reference Guide</p>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="container">
+
+  <!-- Controls -->
+  <div class="controls" id="controls">
+    <div class="search-row">
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Search terms and definitions..."
+        autocomplete="off"
+      >
+      <button class="btn-toggle-all" id="btnToggleAll" title="Show or hide all math/technical sections">
+        Show All Math
+      </button>
+    </div>
+    <div class="tag-filters">
+      <span class="tag-filters-label">Filter by tag:</span>
+      <button class="tag-filter-btn" data-tag="Core Concept">Core Concept</button>
+      <button class="tag-filter-btn" data-tag="Technical">Technical</button>
+      <button class="tag-filter-btn" data-tag="Advanced">Advanced</button>
+    </div>
+    <div class="results-count" id="resultsCount"></div>
+  </div>
+
+  <!-- No Results Message -->
+  <div class="no-results" id="noResults">
+    No terms match your search. Try a different keyword or clear the filters.
+  </div>
+
+  <!-- ===== TERM CARDS ===== -->
+
+  <!-- 1. Agent / AI Agent -->
+  <div class="term-card" data-tags="Core Concept" data-term="Agent / AI Agent" data-search="agent ai agent a system that perceives its environment reasons about it and takes actions autonomously to achieve goals unlike a simple chatbot that only responds when asked an agent can plan multi-step tasks and use tools">
+    <div class="term-header">
+      <h3>Agent / AI Agent</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">A system that perceives its environment, reasons about it, and takes actions autonomously to achieve goals. Unlike a simple chatbot that only responds when asked, an agent can plan multi-step tasks and use tools.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>An agent that reviews student lab reports &mdash; it reads the report, checks it against a rubric, provides feedback, and logs scores, all without step-by-step human guidance.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Agent behavior can be modeled as a policy &pi;(a|s) &mdash; choosing action <em>a</em> given state <em>s</em>. The agent aims to maximize cumulative reward over time.</p>
+    </div>
+  </div>
+
+  <!-- 2. API -->
+  <div class="term-card" data-tags="Core Concept,Technical" data-term="API (Application Programming Interface)" data-search="api application programming interface a way for programs to talk to each other using structured requests and responses apis define what you can ask for and what format the answer comes in">
+    <div class="term-header">
+      <h3>API (Application Programming Interface)</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">A way for programs to talk to each other using structured requests and responses. APIs define what you can ask for and what format the answer comes in.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Your Streamlit app sends a student's question to Claude and gets a response back. The API handles all the communication behind the scenes.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Like a waiter taking your order (request) to the kitchen (server) and bringing back food (response). You don't need to know how to cook &mdash; just how to order.</p>
+    </div>
+  </div>
+
+  <!-- 3. Claude -->
+  <div class="term-card" data-tags="Core Concept" data-term="Claude" data-search="claude anthropic ai assistant built with a focus on safety and helpfulness claude is the large language model llm we use throughout this workshop">
+    <div class="term-header">
+      <h3>Claude</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">Anthropic's AI assistant, built with a focus on safety and helpfulness. Claude is the large language model (LLM) we use throughout this workshop.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>The "brain" behind the STEM tools we build today &mdash; it generates explanations, provides feedback, and answers student questions.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Think of Claude as a knowledgeable teaching assistant that never gets tired, can adapt to any subject, and is available 24/7.</p>
+    </div>
+  </div>
+
+  <!-- 4. Context Window -->
+  <div class="term-card" data-tags="Technical" data-term="Context Window" data-search="context window the maximum amount of text an llm can process at once including both the input your prompt and the output the response everything the model remembers during a conversation must fit in this window">
+    <div class="term-header">
+      <h3>Context Window</h3>
+      <div class="tag-badges">
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">The maximum amount of text an LLM can process at once, including both the input (your prompt) and the output (the response). Everything the model "remembers" during a conversation must fit in this window.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Determines how much of a student's essay the AI can read at once. A larger context window means you can include more background material.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Measured in tokens; Claude's context window is ~200K tokens &asymp; 150K words &asymp; a 500-page book.</p>
+    </div>
+  </div>
+
+  <!-- 5. Embedding -->
+  <div class="term-card" data-tags="Advanced" data-term="Embedding" data-search="embedding a numerical representation of text as a vector list of numbers in high-dimensional space similar meanings get mapped to nearby points">
+    <div class="term-header">
+      <h3>Embedding</h3>
+      <div class="tag-badges">
+        <span class="tag-badge adv">Advanced</span>
+      </div>
+    </div>
+    <p class="term-definition">A numerical representation of text as a vector (list of numbers) in high-dimensional space. Similar meanings get mapped to nearby points.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Finding similar student questions to group them, or matching student work to relevant curriculum standards.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>text &rarr; vector in &#x211D;<sup>n</sup> where n &asymp; 768&ndash;1536. Similar meanings &rarr; nearby vectors (measured by cosine similarity: cos &theta; = (A&middot;B) / (|A||B|)).</p>
+    </div>
+  </div>
+
+  <!-- 6. Fine-tuning -->
+  <div class="term-card" data-tags="Advanced" data-term="Fine-tuning" data-search="fine-tuning fine tuning additional training of a pre-trained model on a smaller specific dataset to customize its behavior for a particular task or domain">
+    <div class="term-header">
+      <h3>Fine-tuning</h3>
+      <div class="tag-badges">
+        <span class="tag-badge adv">Advanced</span>
+      </div>
+    </div>
+    <p class="term-definition">Additional training of a pre-trained model on a smaller, specific dataset to customize its behavior for a particular task or domain.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Customizing an AI to understand your school's specific rubric or grading standards (though for most classroom uses, prompt engineering is sufficient).</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Adjusting model weights <em>W</em> using gradient descent on new training data: <code>W_new = W_old - &eta;&nabla;L</code>, where &eta; is the learning rate and <em>L</em> is the loss function.</p>
+    </div>
+  </div>
+
+  <!-- 7. Hallucination -->
+  <div class="term-card" data-tags="Core Concept" data-term="Hallucination" data-search="hallucination when an ai generates plausible-sounding but incorrect or fabricated information the ai does not know it is wrong it is producing statistically likely text">
+    <div class="term-header">
+      <h3>Hallucination</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">When an AI generates plausible-sounding but incorrect or fabricated information. The AI doesn't "know" it's wrong &mdash; it's producing statistically likely text.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Always verify AI-generated quiz answers and facts! Cross-reference important content before sharing with students.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>The model predicts likely next tokens based on patterns, not truth. It's like a student who writes a confident-sounding essay based on vague memories &mdash; it might sound right but contain errors.</p>
+    </div>
+  </div>
+
+  <!-- 8. LLM -->
+  <div class="term-card" data-tags="Core Concept" data-term="LLM (Large Language Model)" data-search="llm large language model a neural network trained on massive text datasets to understand and generate human language large refers to billions of parameters adjustable numbers that encode patterns of language">
+    <div class="term-header">
+      <h3>LLM (Large Language Model)</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">A neural network trained on massive text datasets to understand and generate human language. "Large" refers to billions of parameters (adjustable numbers) that encode patterns of language.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>The core technology powering ChatGPT, Claude, and Gemini &mdash; all the AI tools transforming education.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>A function <em>f</em>(tokens) &rarr; probability distribution over the next token. Claude has billions of parameters (weights) learned during training.</p>
+    </div>
+  </div>
+
+  <!-- 9. Max Tokens -->
+  <div class="term-card" data-tags="Technical" data-term="Max Tokens" data-search="max tokens a parameter that sets the maximum number of tokens the ai will generate in its response it acts as a ceiling the response can be shorter but never longer">
+    <div class="term-header">
+      <h3>Max Tokens</h3>
+      <div class="tag-badges">
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">A parameter that sets the maximum number of tokens the AI will generate in its response. It acts as a ceiling &mdash; the response can be shorter but never longer.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Setting a word limit on AI responses (e.g., "Keep feedback under 200 words" combined with max_tokens=300).</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>The max_tokens parameter caps output length. In code: <code>messages.create(max_tokens=1024)</code>.</p>
+    </div>
+  </div>
+
+  <!-- 10. Model -->
+  <div class="term-card" data-tags="Core Concept" data-term="Model" data-search="model a specific version of an ai system with particular capabilities speed and cost characteristics e.g. claude-sonnet-4-6 claude-haiku-4-5">
+    <div class="term-header">
+      <h3>Model</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">A specific version of an AI system with particular capabilities, speed, and cost characteristics (e.g., claude-sonnet-4-6, claude-haiku-4-5).</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Choosing between faster/cheaper models for simple tasks (like formatting) or smarter models for complex tasks (like essay feedback).</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Like choosing between a calculator and a computer &mdash; both compute, but with different capabilities and costs.</p>
+    </div>
+  </div>
+
+  <!-- 11. Prompt -->
+  <div class="term-card" data-tags="Core Concept" data-term="Prompt" data-search="prompt the text input you give to an ai model it can be a question instruction or any text you want the ai to respond to">
+    <div class="term-header">
+      <h3>Prompt</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">The text input you give to an AI model. It can be a question, instruction, or any text you want the AI to respond to.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>"Explain the water cycle for 7th graders" or "Generate 5 multiple-choice questions about the Civil War."</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>The more specific your prompt, the better the output &mdash; like giving clear instructions to a substitute teacher. "Teach science" vs. "Teach the parts of a cell to 9th graders using a city analogy."</p>
+    </div>
+  </div>
+
+  <!-- 12. Prompt Engineering -->
+  <div class="term-card" data-tags="Core Concept" data-term="Prompt Engineering" data-search="prompt engineering the skill of writing effective prompts to get desired ai behavior this includes structuring instructions providing examples and specifying output format">
+    <div class="term-header">
+      <h3>Prompt Engineering</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">The skill of writing effective prompts to get desired AI behavior. This includes structuring instructions, providing examples, and specifying output format.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Crafting a system prompt that makes the AI grade essays the way you do &mdash; with your rubric, tone, and priorities.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Part art, part science &mdash; the practice of communicating effectively with AI to get the results you want.</p>
+    </div>
+  </div>
+
+  <!-- 13. Python -->
+  <div class="term-card" data-tags="Technical" data-term="Python" data-search="python a beginner-friendly programming language widely used in data science ai and web development known for its readable english-like syntax">
+    <div class="term-header">
+      <h3>Python</h3>
+      <div class="tag-badges">
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">A beginner-friendly programming language widely used in data science, AI, and web development. Known for its readable, English-like syntax.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>The language we use to build our Streamlit apps and call the Claude API. Also used in many STEM classrooms for data analysis.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Python reads almost like English: <code>for student in classroom: print(student.name)</code>. That's why it's the most popular first programming language.</p>
+    </div>
+  </div>
+
+  <!-- 14. RAG -->
+  <div class="term-card" data-tags="Advanced" data-term="RAG (Retrieval-Augmented Generation)" data-search="rag retrieval-augmented generation retrieval augmented generation a technique that gives an ai access to external knowledge documents databases before generating a response reducing hallucinations and enabling domain-specific answers">
+    <div class="term-header">
+      <h3>RAG (Retrieval-Augmented Generation)</h3>
+      <div class="tag-badges">
+        <span class="tag-badge adv">Advanced</span>
+      </div>
+    </div>
+    <p class="term-definition">A technique that gives an AI access to external knowledge (documents, databases) before generating a response, reducing hallucinations and enabling domain-specific answers.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>An agent that reads your course syllabus, textbook chapters, or past exams before generating a lesson plan &mdash; grounding its response in YOUR materials.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>retrieve(query) &rarr; relevant_docs &rarr; LLM(query + docs) &rarr; response. The retrieval step uses embeddings and vector search to find relevant documents.</p>
+    </div>
+  </div>
+
+  <!-- 15. Streamlit -->
+  <div class="term-card" data-tags="Technical" data-term="Streamlit" data-search="streamlit a python framework that turns simple python scripts into interactive web applications with minimal code no html css or javascript knowledge required">
+    <div class="term-header">
+      <h3>Streamlit</h3>
+      <div class="tag-badges">
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">A Python framework that turns simple Python scripts into interactive web applications with minimal code. No HTML, CSS, or JavaScript knowledge required.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Creating a web interface for your AI teaching tools &mdash; a page where you or students can type questions and get AI-powered responses.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Streamlit is like a translator between Python and the web browser. Write <code>st.button("Click me")</code> and a real button appears on a webpage.</p>
+    </div>
+  </div>
+
+  <!-- 16. System Prompt -->
+  <div class="term-card" data-tags="Core Concept" data-term="System Prompt" data-search="system prompt special instructions given to the ai before the conversation begins that define its role personality constraints and behavior throughout the entire interaction">
+    <div class="term-header">
+      <h3>System Prompt</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">Special instructions given to the AI before the conversation begins that define its role, personality, constraints, and behavior throughout the entire interaction.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>"You are a patient Socratic tutor for AP Chemistry students. Never give direct answers &mdash; instead, ask guiding questions." This shapes every response the AI gives.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Like a detailed job description for the AI &mdash; it sets expectations, defines the role, and establishes ground rules.</p>
+    </div>
+  </div>
+
+  <!-- 17. Temperature -->
+  <div class="term-card" data-tags="Technical" data-term="Temperature" data-search="temperature a parameter controlling the randomness creativity in ai responses ranges from 0 deterministic always picks the most likely word to 1 more creative and varied">
+    <div class="term-header">
+      <h3>Temperature</h3>
+      <div class="tag-badges">
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">A parameter controlling the randomness/creativity in AI responses. Ranges from 0 (deterministic, always picks the most likely word) to 1 (more creative and varied).</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Low temperature (0.1&ndash;0.3) for quiz answers and factual content. Higher temperature (0.7&ndash;0.9) for creative writing prompts and brainstorming.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Applied to the softmax function: softmax(logits / T). Lower T &rarr; sharper probability distribution &rarr; more predictable output. At T&rarr;0, always picks the highest-probability token.</p>
+    </div>
+  </div>
+
+  <!-- 18. Token -->
+  <div class="term-card" data-tags="Core Concept,Technical" data-term="Token" data-search="token the smallest unit of text an llm processes roughly three-quarters of a word in english the ai reads and generates text as a sequence of tokens not individual characters or whole words">
+    <div class="term-header">
+      <h3>Token</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+        <span class="tag-badge tech">Technical</span>
+      </div>
+    </div>
+    <p class="term-definition">The smallest unit of text an LLM processes &mdash; roughly &frac34; of a word in English. The AI reads and generates text as a sequence of tokens, not individual characters or whole words.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Understanding API costs (you pay per token) and context limits. A 1,000-word essay &asymp; 1,333 tokens.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Text is split into tokens via BPE (Byte Pair Encoding). Example: "photosynthesis" &rarr; <code>["photo", "synthesis"]</code>. Common words are single tokens; rare words are split into pieces.</p>
+    </div>
+  </div>
+
+  <!-- 19. Tool Use -->
+  <div class="term-card" data-tags="Core Concept" data-term="Tool Use" data-search="tool use an ai agent ability to call external functions or services like a calculator web search code interpreter or database query to accomplish tasks it cannot do with language alone">
+    <div class="term-header">
+      <h3>Tool Use</h3>
+      <div class="tag-badges">
+        <span class="tag-badge core">Core Concept</span>
+      </div>
+    </div>
+    <p class="term-definition">An AI agent's ability to call external functions or services &mdash; like a calculator, web search, code interpreter, or database query &mdash; to accomplish tasks it can't do with language alone.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>An AI that can actually solve math equations (using a calculator tool) rather than guessing, or one that can search your school's database for a student's previous grades.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Like giving a student a calculator during a math exam &mdash; the student still needs to know what to calculate, but the tool handles the computation.</p>
+    </div>
+  </div>
+
+  <!-- 20. Vector Database -->
+  <div class="term-card" data-tags="Advanced" data-term="Vector Database" data-search="vector database a specialized database designed to store and efficiently search through embeddings vectors optimized for find me things similar to x queries">
+    <div class="term-header">
+      <h3>Vector Database</h3>
+      <div class="tag-badges">
+        <span class="tag-badge adv">Advanced</span>
+      </div>
+    </div>
+    <p class="term-definition">A specialized database designed to store and efficiently search through embeddings (vectors). Optimized for "find me things similar to X" queries.</p>
+    <div class="classroom-box">
+      <div class="box-label">In Your Classroom</div>
+      <p>Storing your entire curriculum &mdash; lesson plans, worksheets, past exams &mdash; so the AI can quickly find and reference relevant materials when answering questions.</p>
+    </div>
+    <button class="btn-math-toggle" onclick="toggleMath(this)">
+      <span class="arrow">&#9654;</span> Show Math / Technical Detail
+    </button>
+    <div class="math-section">
+      <div class="box-label">Math / Technical Detail</div>
+      <p>Uses efficient nearest-neighbor search algorithms (like HNSW) to find similar vectors in high-dimensional space without comparing every single entry.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Agentic AI for STEM Teachers &bull; CSPD 2026 &bull; Workshop Reference Guide
+  </footer>
+
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  // DOM references
+  var searchInput   = document.getElementById('searchInput');
+  var btnToggleAll  = document.getElementById('btnToggleAll');
+  var resultsCount  = document.getElementById('resultsCount');
+  var noResults     = document.getElementById('noResults');
+  var cards         = Array.prototype.slice.call(document.querySelectorAll('.term-card'));
+  var tagFilterBtns = Array.prototype.slice.call(document.querySelectorAll('.tag-filter-btn'));
+
+  // State
+  var allMathShown   = false;
+  var activeTagFilters = [];
+
+  // ===== SEARCH & FILTER =====
+  function applyFilters() {
+    var query = searchInput.value.toLowerCase().trim();
+    var visibleCount = 0;
+
+    cards.forEach(function(card) {
+      var termName   = (card.getAttribute('data-term') || '').toLowerCase();
+      var searchText = (card.getAttribute('data-search') || '').toLowerCase();
+      var cardTags   = (card.getAttribute('data-tags') || '').split(',');
+
+      // Text match
+      var textMatch = !query || termName.indexOf(query) !== -1 || searchText.indexOf(query) !== -1;
+
+      // Tag match
+      var tagMatch = true;
+      if (activeTagFilters.length > 0) {
+        tagMatch = false;
+        for (var i = 0; i < activeTagFilters.length; i++) {
+          for (var j = 0; j < cardTags.length; j++) {
+            if (cardTags[j].trim() === activeTagFilters[i]) {
+              tagMatch = true;
+              break;
+            }
+          }
+          if (tagMatch) break;
+        }
+      }
+
+      if (textMatch && tagMatch) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Update results count
+    if (query || activeTagFilters.length > 0) {
+      resultsCount.textContent = 'Showing ' + visibleCount + ' of ' + cards.length + ' terms';
+    } else {
+      resultsCount.textContent = '';
+    }
+
+    // No results message
+    if (visibleCount === 0) {
+      noResults.classList.add('visible');
+    } else {
+      noResults.classList.remove('visible');
+    }
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  // ===== TAG FILTERS =====
+  tagFilterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var tag = btn.getAttribute('data-tag');
+      var idx = activeTagFilters.indexOf(tag);
+
+      if (idx === -1) {
+        activeTagFilters.push(tag);
+        btn.classList.add('active');
+      } else {
+        activeTagFilters.splice(idx, 1);
+        btn.classList.remove('active');
+      }
+
+      applyFilters();
+    });
+  });
+
+  // ===== INDIVIDUAL MATH TOGGLE =====
+  window.toggleMath = function(btn) {
+    var card = btn.closest('.term-card');
+    var mathSection = card.querySelector('.math-section');
+
+    if (mathSection.classList.contains('visible')) {
+      mathSection.classList.remove('visible');
+      btn.classList.remove('active');
+      btn.innerHTML = '<span class="arrow">&#9654;</span> Show Math / Technical Detail';
+    } else {
+      mathSection.classList.add('visible');
+      btn.classList.add('active');
+      btn.innerHTML = '<span class="arrow">&#9654;</span> Hide Math / Technical Detail';
+    }
+  };
+
+  // ===== SHOW ALL / HIDE ALL MATH =====
+  btnToggleAll.addEventListener('click', function() {
+    allMathShown = !allMathShown;
+
+    var allMathSections = document.querySelectorAll('.math-section');
+    var allMathBtns     = document.querySelectorAll('.btn-math-toggle');
+
+    if (allMathShown) {
+      allMathSections.forEach(function(sec) { sec.classList.add('visible'); });
+      allMathBtns.forEach(function(b) {
+        b.classList.add('active');
+        b.innerHTML = '<span class="arrow">&#9654;</span> Hide Math / Technical Detail';
+      });
+      btnToggleAll.textContent = 'Hide All Math';
+      btnToggleAll.classList.add('active');
+    } else {
+      allMathSections.forEach(function(sec) { sec.classList.remove('visible'); });
+      allMathBtns.forEach(function(b) {
+        b.classList.remove('active');
+        b.innerHTML = '<span class="arrow">&#9654;</span> Show Math / Technical Detail';
+      });
+      btnToggleAll.textContent = 'Show All Math';
+      btnToggleAll.classList.remove('active');
+    }
+  });
+
+  // ===== KEYBOARD SHORTCUT: Focus search =====
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

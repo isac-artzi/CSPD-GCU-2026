@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Exercises — Building Your AI Toolkit | CSPD 2026</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+  color: #fff;
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+}
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+.header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* Progress Bar */
+.progress-container {
+  background: #e2e8f0;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #cbd5e1;
+}
+.progress-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.progress-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+}
+.progress-bar-track {
+  flex: 1;
+  height: 12px;
+  background: #cbd5e1;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #1e40af, #0891b2);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+.progress-count {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e40af;
+  white-space: nowrap;
+}
+
+/* Main Content */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Prerequisites */
+.prereq-card {
+  border-left: 4px solid #2563eb;
+  background: #eff6ff;
+}
+.prereq-card h2 {
+  color: #1e40af;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.prereq-card ul {
+  list-style: none;
+  padding: 0;
+}
+.prereq-card li {
+  padding: 0.4rem 0;
+  padding-left: 1.8rem;
+  position: relative;
+}
+.prereq-card li::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* Exercise Cards */
+.exercise-card {
+  position: relative;
+}
+
+.exercise-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.exercise-checkbox {
+  margin-top: 0.35rem;
+  width: 22px;
+  height: 22px;
+  accent-color: #1e40af;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.exercise-title-block {
+  flex: 1;
+}
+.exercise-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.15rem;
+}
+.exercise-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+.time-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+}
+
+.exercise-card.completed {
+  border-left: 4px solid #10b981;
+}
+.exercise-card.completed .exercise-title {
+  color: #10b981;
+}
+
+h2 {
+  color: #1e40af;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-bottom: 2px solid #dbeafe;
+  padding-bottom: 0.5rem;
+  margin: 1.5rem 0 1rem;
+}
+
+h3 {
+  color: #334155;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+}
+
+p {
+  margin-bottom: 0.75rem;
+}
+
+/* Learn Box */
+.learn-box {
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.learn-box .learn-label {
+  font-weight: 700;
+  color: #1e40af;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.learn-box p {
+  margin: 0;
+  color: #1e3a5f;
+  font-size: 0.95rem;
+}
+
+/* Steps */
+.steps {
+  counter-reset: step-counter;
+  list-style: none;
+  padding: 0;
+}
+.steps > li {
+  counter-increment: step-counter;
+  padding: 0.5rem 0 0.5rem 2.5rem;
+  position: relative;
+}
+.steps > li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: #dbeafe;
+  color: #1e40af;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Code blocks */
+.code-wrapper {
+  position: relative;
+  margin: 1rem 0;
+}
+.code-wrapper pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  tab-size: 4;
+}
+.code-wrapper code {
+  font-family: inherit;
+}
+.copy-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: #334155;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.copy-btn:hover {
+  background: #475569;
+  color: #e2e8f0;
+}
+.copy-btn.copied {
+  background: #10b981;
+  color: #fff;
+  border-color: #10b981;
+}
+
+/* Language label */
+.code-lang {
+  position: absolute;
+  top: 0.6rem;
+  left: 1rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+/* Inline code */
+code.inline {
+  background: #e2e8f0;
+  color: #1e293b;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.88em;
+}
+
+/* Expected output */
+.expected-output {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-left: 4px solid #10b981;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.88rem;
+  color: #166534;
+}
+.expected-output .output-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #15803d;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* Tips */
+.tip {
+  background: #f0fdf4;
+  border-left: 4px solid #10b981;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+.tip .tip-label {
+  font-weight: 700;
+  color: #15803d;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Warnings */
+.warning {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+.warning .warning-label {
+  font-weight: 700;
+  color: #b45309;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Key Concepts */
+.concept {
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+.concept .concept-label {
+  font-weight: 700;
+  color: #1e40af;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Mini-challenge */
+.mini-challenge {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0 0.5rem;
+}
+.mini-challenge .challenge-label {
+  font-weight: 700;
+  color: #b45309;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Troubleshooting collapsible */
+details.troubleshooting {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+details.troubleshooting summary {
+  padding: 0.8rem 1.25rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+  background: #f1f5f9;
+  border-bottom: 1px solid transparent;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+}
+details.troubleshooting summary::-webkit-details-marker { display: none; }
+details.troubleshooting summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: #94a3b8;
+}
+details.troubleshooting[open] summary::before {
+  transform: rotate(90deg);
+}
+details.troubleshooting[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+}
+details.troubleshooting .troubleshooting-content {
+  padding: 1rem 1.25rem;
+}
+details.troubleshooting ul {
+  padding-left: 1.5rem;
+}
+details.troubleshooting li {
+  margin-bottom: 0.5rem;
+  color: #475569;
+}
+
+/* Need Help floating */
+.need-help {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+}
+.need-help-btn {
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30,64,175,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.need-help-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30,64,175,0.45);
+}
+.help-panel {
+  display: none;
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  padding: 1.5rem;
+  z-index: 201;
+}
+.help-panel.visible {
+  display: block;
+}
+.help-panel h3 {
+  color: #1e40af;
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+.help-panel ul {
+  list-style: none;
+  padding: 0;
+}
+.help-panel li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+  font-size: 0.9rem;
+}
+.help-panel li:last-child { border-bottom: none; }
+.help-panel li strong {
+  color: #1e293b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header { padding: 2rem 1rem 1.5rem; }
+  .header h1 { font-size: 1.6rem; }
+  .main { padding: 1rem 1rem 6rem; }
+  .card { padding: 1.25rem; }
+  .exercise-title { font-size: 1.2rem; }
+  .progress-container { padding: 0.75rem 1rem; }
+  .help-panel { width: calc(100vw - 2rem); right: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .exercise-header { flex-direction: column; gap: 0.5rem; }
+  .time-badge { align-self: flex-start; }
+}
+
+/* Separator between exercises */
+.exercise-card + .exercise-card {
+  margin-top: 2.5rem;
+}
+
+/* Section divider */
+.section-divider {
+  text-align: center;
+  margin: 2.5rem 0 1.5rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+li {
+  margin-bottom: 0.3rem;
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>Practice Exercises &mdash; Building Your AI Toolkit</h1>
+  <p>CSPD 2026 &bull; Morning Session</p>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-container">
+  <div class="progress-inner">
+    <span class="progress-label">Your Progress:</span>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 6 completed</span>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Prerequisites -->
+  <div class="card prereq-card">
+    <h2>Prerequisites Checklist</h2>
+    <p>Before starting the exercises, make sure you have the following ready:</p>
+    <ul>
+      <li><strong>VS Code</strong> installed and open on your computer</li>
+      <li><strong>Python 3.10+</strong> installed (type <code class="inline">python --version</code> in a terminal to check)</li>
+      <li><strong>Terminal / command prompt</strong> accessible in VS Code (press <code class="inline">Ctrl+`</code> or go to View &rarr; Terminal)</li>
+    </ul>
+    <div class="tip">
+      <div class="tip-label">Tip</div>
+      <p>If you get stuck on any prerequisite, raise your hand &mdash; a facilitator will help you get set up!</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 1 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-1">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="1" aria-label="Mark Exercise 1 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 1</div>
+        <div class="exercise-title">"Hello, Python!" &mdash; Your First Script</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to create a Python file, write your first line of code, and run it in the terminal.</p>
+    </div>
+
+    <ol class="steps">
+      <li><strong>Open VS Code</strong> on your computer.</li>
+      <li>Create a <strong>new file</strong> and save it as <code class="inline">hello.py</code></li>
+      <li>Type the following code into your file:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>print("Hello, CSPD 2026!")</code></pre>
+    </div>
+
+    <ol class="steps" start="4">
+      <li>Open the <strong>terminal</strong> in VS Code by pressing <code class="inline">Ctrl+`</code> (backtick) or going to <strong>View &rarr; Terminal</strong>.</li>
+      <li>Run your script by typing the following command:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Terminal</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>python hello.py</code></pre>
+    </div>
+
+    <div class="tip">
+      <div class="tip-label">Tip &mdash; Mac Users</div>
+      <p>On Mac, you may need to use <code class="inline">python3 hello.py</code> instead of <code class="inline">python hello.py</code>.</p>
+    </div>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      Hello, CSPD 2026!
+    </div>
+
+    <ol class="steps" start="7">
+      <li><strong>Celebrate!</strong> &#127881; You just wrote and ran your first Python program!</li>
+    </ol>
+
+    <div class="mini-challenge">
+      <div class="challenge-label">&#127942; Mini-Challenge</div>
+      <p>Change the message to include <strong>your name</strong> and the <strong>subject you teach</strong>. For example: <code class="inline">"Hello! I'm Ms. Chen and I teach Chemistry!"</code></p>
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>"python is not recognized"</strong> &mdash; Try <code class="inline">python3</code> instead, or check that Python is added to your system PATH.</li>
+          <li><strong>SyntaxError</strong> &mdash; Make sure you have matching quotation marks and parentheses.</li>
+          <li><strong>File not found</strong> &mdash; Make sure your terminal is in the same folder where you saved <code class="inline">hello.py</code>. Use <code class="inline">cd</code> to navigate there.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 2 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-2">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="2" aria-label="Mark Exercise 2 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 2</div>
+        <div class="exercise-title">"Variables &amp; Building Blocks"</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to store information in variables, format text with f-strings, and organize data in lists and dictionaries.</p>
+    </div>
+
+    <ol class="steps">
+      <li>Create a new file called <code class="inline">variables.py</code></li>
+      <li>Type the following code:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code># My first variables
+teacher_name = "Ms. Rodriguez"
+subject = "Biology"
+grade = 10
+
+# Using an f-string to build a message
+message = f"Hi! I'm {teacher_name}, and I teach {subject} to grade {grade} students."
+print(message)</code></pre>
+    </div>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      Hi! I'm Ms. Rodriguez, and I teach Biology to grade 10 students.
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concepts</div>
+      <ul>
+        <li><strong>Variables</strong> &mdash; named containers that store data (like labeled boxes).</li>
+        <li><strong>Strings</strong> &mdash; text wrapped in quotes: <code class="inline">"Hello"</code></li>
+        <li><strong>f-strings</strong> &mdash; strings that start with <code class="inline">f</code> and let you embed variables inside <code class="inline">{curly braces}</code>.</li>
+        <li><strong>Numbers</strong> &mdash; integers (whole numbers like <code class="inline">10</code>) don't need quotes.</li>
+      </ul>
+    </div>
+
+    <h3>Lists and Dictionaries</h3>
+    <p>Python also lets you organize collections of data. Add this to your file:</p>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code># A list is an ordered collection (like a bulleted list)
+topics = ["photosynthesis", "cell division", "genetics"]
+print("My topics:", topics)
+
+# A dictionary maps labels to values (like a rubric!)
+rubric = {
+    "methodology": 25,
+    "data_analysis": 25,
+    "conclusion": 25,
+    "presentation": 25
+}
+print("Rubric:", rubric)</code></pre>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concepts</div>
+      <ul>
+        <li><strong>Lists</strong> &mdash; ordered collections in <code class="inline">[square brackets]</code>, separated by commas.</li>
+        <li><strong>Dictionaries</strong> &mdash; key-value pairs in <code class="inline">{curly braces}</code>. Think of them like a lookup table.</li>
+      </ul>
+    </div>
+
+    <div class="mini-challenge">
+      <div class="challenge-label">&#127942; Mini-Challenge</div>
+      <p>Add more variables (school name, favorite topic, years teaching) and build a longer introduction using an f-string. Try creating a list of your own topics and a rubric dictionary for your class!</p>
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>NameError</strong> &mdash; Check that variable names are spelled exactly the same wherever you use them (Python is case-sensitive).</li>
+          <li><strong>SyntaxError with f-string</strong> &mdash; Make sure the string starts with <code class="inline">f"</code> (the <code class="inline">f</code> must be right before the opening quote).</li>
+          <li><strong>Missing comma in list</strong> &mdash; Each item in a list must be separated by a comma.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 3 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-3">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="3" aria-label="Mark Exercise 3 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 3</div>
+        <div class="exercise-title">"Installing Packages &mdash; Your AI Toolkit"</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to install Python packages using pip, and verify they're ready to use.</p>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept &mdash; What are Packages?</div>
+      <p><strong>Packages</strong> are pre-built code libraries that other developers have created so you don't have to write everything from scratch. Think of them like apps on your phone &mdash; someone else built them, and you install and use them. <strong>pip</strong> is the tool that installs packages (like an app store for Python).</p>
+    </div>
+
+    <ol class="steps">
+      <li>Open your <strong>terminal</strong> in VS Code.</li>
+      <li>Run the following command to install both packages:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Terminal</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>pip install anthropic streamlit</code></pre>
+    </div>
+
+    <div class="tip">
+      <div class="tip-label">Tip &mdash; Mac Users</div>
+      <p>On Mac, use <code class="inline">pip3 install anthropic streamlit</code> instead.</p>
+    </div>
+
+    <div class="warning">
+      <div class="warning-label">Be Patient!</div>
+      <p>These are large packages and may take a minute or two to install. You'll see progress messages scrolling in the terminal &mdash; that's normal!</p>
+    </div>
+
+    <ol class="steps" start="3">
+      <li>Verify the installation by creating a file called <code class="inline">check_install.py</code> with this code:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>import anthropic
+import streamlit
+print("All packages installed successfully! ✅")</code></pre>
+    </div>
+
+    <ol class="steps" start="4">
+      <li>Run it: <code class="inline">python check_install.py</code></li>
+    </ol>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      All packages installed successfully! &#10004;&#65039;
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>Permission errors</strong> &mdash; Add the <code class="inline">--user</code> flag: <code class="inline">pip install --user anthropic streamlit</code></li>
+          <li><strong>"pip: command not found"</strong> &mdash; Try <code class="inline">pip3</code> instead of <code class="inline">pip</code></li>
+          <li><strong>"No module named X"</strong> &mdash; Make sure you're using the same Python that pip installed to. Try <code class="inline">python3 check_install.py</code> if you used <code class="inline">pip3</code>.</li>
+          <li><strong>Slow installation</strong> &mdash; Be patient! Large packages take time, especially on slower connections. As long as the terminal is showing progress, it's working.</li>
+          <li><strong>Red error text during install</strong> &mdash; Some red/yellow warnings during installation are normal. Only worry if the final line says "ERROR."</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 4 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-4">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="4" aria-label="Mark Exercise 4 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 4</div>
+        <div class="exercise-title">"Your First AI Conversation"</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to connect to the Claude API and get your first AI-generated response.</p>
+    </div>
+
+    <ol class="steps">
+      <li>First, set up your <strong>API key</strong> as an environment variable. In your terminal, type:</li>
+    </ol>
+
+    <p><strong>Mac / Linux:</strong></p>
+    <div class="code-wrapper">
+      <span class="code-lang">Terminal</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>export ANTHROPIC_API_KEY="your-key-here"</code></pre>
+    </div>
+
+    <p><strong>Windows:</strong></p>
+    <div class="code-wrapper">
+      <span class="code-lang">Terminal</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>set ANTHROPIC_API_KEY=your-key-here</code></pre>
+    </div>
+
+    <div class="warning">
+      <div class="warning-label">Important</div>
+      <p>Replace <code class="inline">your-key-here</code> with the actual API key provided by your facilitator. Keep this key private &mdash; never share it or post it online!</p>
+    </div>
+
+    <ol class="steps" start="2">
+      <li>Create a new file called <code class="inline">first_ai_call.py</code></li>
+      <li>Type the following code:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>import anthropic
+
+# Create a client (it reads your API key from the environment)
+client = anthropic.Anthropic()
+
+# Send a message to Claude
+message = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Explain photosynthesis in one paragraph for a 9th grader."}
+    ]
+)
+
+# Print the response
+print(message.content[0].text)</code></pre>
+    </div>
+
+    <ol class="steps" start="4">
+      <li>Run it: <code class="inline">python first_ai_call.py</code></li>
+      <li>Watch as Claude responds with an explanation! &#129302;</li>
+    </ol>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      A paragraph explaining photosynthesis in student-friendly language. (Your exact output will vary &mdash; AI responses are generated fresh each time!)
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concepts</div>
+      <ul>
+        <li><strong>API</strong> &mdash; Application Programming Interface. A way for your code to "talk to" the AI service over the internet.</li>
+        <li><strong>API Key</strong> &mdash; Like a password that identifies you to the service.</li>
+        <li><strong>model</strong> &mdash; Which version of Claude to use.</li>
+        <li><strong>max_tokens</strong> &mdash; The maximum length of the response (1 token is roughly 1 word).</li>
+        <li><strong>messages</strong> &mdash; The conversation history you send to Claude.</li>
+      </ul>
+    </div>
+
+    <div class="mini-challenge">
+      <div class="challenge-label">&#127942; Mini-Challenge</div>
+      <p>Change the question to something from <strong>YOUR</strong> subject area! For example: "Explain the quadratic formula for a 10th grader" or "Describe Newton's third law using everyday examples."</p>
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>AuthenticationError</strong> &mdash; Your API key is missing or incorrect. Re-run the <code class="inline">export</code> or <code class="inline">set</code> command with the correct key.</li>
+          <li><strong>"No module named anthropic"</strong> &mdash; Go back to Exercise 3 and install the package.</li>
+          <li><strong>Connection error</strong> &mdash; Check your internet connection. The API requires internet access.</li>
+          <li><strong>Rate limit error</strong> &mdash; Wait a few seconds and try again.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 5 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-5">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="5" aria-label="Mark Exercise 5 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 5</div>
+        <div class="exercise-title">"Adding a System Prompt &mdash; Giving AI a Role"</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to use system prompts to shape AI behavior and create a specialized teaching assistant.</p>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept &mdash; System Prompts</div>
+      <p>A <strong>system prompt</strong> is a set of instructions that tells the AI <em>how to behave</em>. Think of it like giving a substitute teacher your lesson plans and classroom rules before they take over your class. The AI will follow these instructions for the entire conversation.</p>
+    </div>
+
+    <ol class="steps">
+      <li>Create a new file called <code class="inline">system_prompt.py</code></li>
+      <li>Type the following code:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>import anthropic
+
+client = anthropic.Anthropic()
+
+# Define the AI's personality and behavior
+system_prompt = """You are a friendly, patient high school biology teacher.
+You explain concepts using simple analogies.
+You always encourage students and check for understanding.
+When giving feedback, you start with something positive."""
+
+# Send a message with the system prompt
+message = client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=1024,
+    system=system_prompt,
+    messages=[
+        {"role": "user", "content": "Can you check my understanding? I think photosynthesis happens in the mitochondria."}
+    ]
+)
+
+print(message.content[0].text)</code></pre>
+    </div>
+
+    <ol class="steps" start="3">
+      <li>Run it: <code class="inline">python system_prompt.py</code></li>
+      <li>Notice how the AI responds! It should:
+        <ul>
+          <li>Start with something positive (acknowledging the student's effort)</li>
+          <li>Gently correct the misconception</li>
+          <li>Use a simple analogy</li>
+          <li>Check for understanding</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      A warm, encouraging response that gently corrects the misconception (photosynthesis happens in chloroplasts, not mitochondria), using an analogy and checking for understanding. The exact wording will vary.
+    </div>
+
+    <div class="tip">
+      <div class="tip-label">Tip</div>
+      <p>Try running the same question <em>without</em> the system prompt (comment it out by changing <code class="inline">system=system_prompt</code> to remove the <code class="inline">system</code> parameter). Notice how the response style changes!</p>
+    </div>
+
+    <div class="mini-challenge">
+      <div class="challenge-label">&#127942; Mini-Challenge</div>
+      <p>Write a system prompt for <strong>YOUR</strong> subject and teaching style! Think about:
+      </p>
+      <ul>
+        <li>What subject does the AI teach?</li>
+        <li>What tone should it use? (encouraging, humorous, formal?)</li>
+        <li>How should it handle mistakes?</li>
+        <li>What level should explanations be at?</li>
+      </ul>
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>The AI ignores the system prompt</strong> &mdash; Make sure the <code class="inline">system=system_prompt</code> parameter is included in the <code class="inline">messages.create()</code> call.</li>
+          <li><strong>Triple-quote strings</strong> &mdash; The <code class="inline">"""</code> syntax lets you write multi-line strings. Make sure you have three quotes at the start and three at the end.</li>
+          <li><strong>API key issues</strong> &mdash; If your terminal session restarted, you may need to set the API key again (Exercise 4, Step 1).</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EXERCISE 6 -->
+  <!-- ========================================== -->
+  <div class="card exercise-card" id="exercise-6">
+    <div class="exercise-header">
+      <input type="checkbox" class="exercise-checkbox" data-exercise="6" aria-label="Mark Exercise 6 as complete">
+      <div class="exercise-title-block">
+        <div class="exercise-number">Exercise 6</div>
+        <div class="exercise-title">"Hello, Streamlit! &mdash; Your First Web App"</div>
+      </div>
+      <span class="time-badge">~10 min</span>
+    </div>
+
+    <div class="learn-box">
+      <div class="learn-label">&#128218; What You'll Learn</div>
+      <p>How to create a web application using Streamlit, with interactive input elements.</p>
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Key Concept &mdash; What is Streamlit?</div>
+      <p><strong>Streamlit</strong> turns your Python scripts into interactive web apps with just a few lines of code. No HTML, CSS, or JavaScript knowledge needed! It's like magic for building quick demos and tools.</p>
+    </div>
+
+    <ol class="steps">
+      <li>Create a new file called <code class="inline">my_first_app.py</code></li>
+      <li>Type the following code:</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Python</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>import streamlit as st
+
+st.title("🔬 My STEM AI Assistant")
+st.write("Welcome! This is my first web app.")
+
+name = st.text_input("What's your name?")
+subject = st.selectbox("What subject do you teach?",
+    ["Biology", "Chemistry", "Physics", "Math", "Engineering", "Computer Science", "Other"])
+
+if name:
+    st.success(f"Hello, {name}! Let's build something amazing for your {subject} class!")
+
+    topic = st.text_area("Enter a topic you're teaching this week:")
+    if st.button("Get a fun fact!"):
+        st.info(f"🤖 Imagine an AI generating a fun fact about '{topic}' here... We'll connect the AI in the afternoon!")</code></pre>
+    </div>
+
+    <ol class="steps" start="3">
+      <li>Run it with Streamlit (note: this is different from how we ran scripts before!):</li>
+    </ol>
+
+    <div class="code-wrapper">
+      <span class="code-lang">Terminal</span>
+      <button class="copy-btn" aria-label="Copy code">Copy</button>
+      <pre><code>streamlit run my_first_app.py</code></pre>
+    </div>
+
+    <ol class="steps" start="4">
+      <li>Your browser should open automatically! If not, look for a URL in the terminal (usually <code class="inline">http://localhost:8501</code>) and open it manually.</li>
+      <li>Try interacting with your app &mdash; type your name, select a subject, and click the button!</li>
+    </ol>
+
+    <div class="expected-output">
+      <span class="output-label">Expected Output:</span>
+      A web page opens in your browser with a title, text input, dropdown, and button. When you type your name, a green success message appears. When you click the button, a blue info message appears.
+    </div>
+
+    <div class="concept">
+      <div class="concept-label">Streamlit Components You Just Used</div>
+      <ul>
+        <li><code class="inline">st.title()</code> &mdash; Large title text</li>
+        <li><code class="inline">st.write()</code> &mdash; General-purpose text display</li>
+        <li><code class="inline">st.text_input()</code> &mdash; Single-line text input</li>
+        <li><code class="inline">st.text_area()</code> &mdash; Multi-line text input</li>
+        <li><code class="inline">st.selectbox()</code> &mdash; Dropdown menu</li>
+        <li><code class="inline">st.button()</code> &mdash; Clickable button</li>
+        <li><code class="inline">st.success()</code> &mdash; Green success message</li>
+        <li><code class="inline">st.info()</code> &mdash; Blue info message</li>
+        <li><code class="inline">st.warning()</code> &mdash; Yellow warning message</li>
+      </ul>
+    </div>
+
+    <div class="tip">
+      <div class="tip-label">Tip</div>
+      <p>To stop the Streamlit server, go back to your terminal and press <code class="inline">Ctrl+C</code>. Every time you save your file, Streamlit will ask if you want to re-run &mdash; click "Always rerun" for the best experience!</p>
+    </div>
+
+    <div class="mini-challenge">
+      <div class="challenge-label">&#127942; Mini-Challenge</div>
+      <p>Enhance your app! Try adding:</p>
+      <ul>
+        <li>A slider for grade level: <code class="inline">grade = st.slider("Grade level", 6, 12, 9)</code></li>
+        <li>More input fields for different types of information</li>
+        <li>A <code class="inline">st.warning()</code> message somewhere in your app</li>
+        <li>An <code class="inline">st.balloons()</code> call to celebrate (just call it on its own line!)</li>
+      </ul>
+    </div>
+
+    <details class="troubleshooting">
+      <summary>Troubleshooting</summary>
+      <div class="troubleshooting-content">
+        <ul>
+          <li><strong>"streamlit: command not found"</strong> &mdash; Try <code class="inline">python -m streamlit run my_first_app.py</code> instead.</li>
+          <li><strong>Browser doesn't open</strong> &mdash; Copy the URL from the terminal (usually <code class="inline">http://localhost:8501</code>) and paste it in your browser.</li>
+          <li><strong>Page shows an error</strong> &mdash; Check the terminal for the full error message. Most often it's a typo in the code.</li>
+          <li><strong>"Address already in use"</strong> &mdash; Another Streamlit app might be running. Press <code class="inline">Ctrl+C</code> in all terminal windows and try again.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- You did it! -->
+  <div class="card" style="text-align:center; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 2px solid #dbeafe;">
+    <h2 style="border-bottom: none; text-align: center; font-size: 1.6rem; margin-bottom: 0.5rem;">&#127881; Congratulations! &#127881;</h2>
+    <p style="font-size: 1.1rem; color: #475569; margin-bottom: 0.5rem;">You've completed all six exercises and built a foundation in Python, the Claude API, and Streamlit.</p>
+    <p style="font-size: 1rem; color: #64748b;">In the <strong>afternoon session</strong>, you'll combine everything to build a fully functional AI-powered teaching tool!</p>
+  </div>
+
+</div><!-- end .main -->
+
+<!-- Need Help Button -->
+<div class="need-help">
+  <div class="help-panel" id="helpPanel">
+    <h3>Need Help?</h3>
+    <ul>
+      <li><strong>Raise your hand</strong> &mdash; A facilitator will come to your table</li>
+      <li><strong>Ask a neighbor</strong> &mdash; Pair programming is encouraged!</li>
+      <li><strong>Check the troubleshooting section</strong> in each exercise</li>
+      <li><strong>Re-read the steps</strong> &mdash; A small typo is the #1 cause of errors</li>
+      <li><strong>Take a breath</strong> &mdash; Debugging is a skill. Errors are normal and expected!</li>
+    </ul>
+  </div>
+  <button class="need-help-btn" id="helpBtn" aria-label="Need help?">
+    <span>&#9997;&#65039;</span> Need Help?
+  </button>
+</div>
+
+<script>
+(function() {
+  // ========================
+  // PROGRESS TRACKING
+  // ========================
+  var completed = {};
+  var total = 6;
+
+  function updateProgress() {
+    var count = Object.keys(completed).length;
+    var pct = Math.round((count / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressCount').textContent = count + ' / ' + total + ' completed';
+  }
+
+  var checkboxes = document.querySelectorAll('.exercise-checkbox');
+  checkboxes.forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var ex = this.getAttribute('data-exercise');
+      var card = document.getElementById('exercise-' + ex);
+      if (this.checked) {
+        completed[ex] = true;
+        card.classList.add('completed');
+      } else {
+        delete completed[ex];
+        card.classList.remove('completed');
+      }
+      updateProgress();
+    });
+  });
+
+  // ========================
+  // COPY BUTTONS
+  // ========================
+  var copyBtns = document.querySelectorAll('.copy-btn');
+  copyBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var codeEl = this.parentElement.querySelector('code');
+      var text = codeEl.textContent;
+      var button = this;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          button.textContent = 'Copied!';
+          button.classList.add('copied');
+          setTimeout(function() {
+            button.textContent = 'Copy';
+            button.classList.remove('copied');
+          }, 2000);
+        }).catch(function() {
+          fallbackCopy(text, button);
+        });
+      } else {
+        fallbackCopy(text, button);
+      }
+    });
+  });
+
+  function fallbackCopy(text, button) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      button.textContent = 'Copied!';
+      button.classList.add('copied');
+      setTimeout(function() {
+        button.textContent = 'Copy';
+        button.classList.remove('copied');
+      }, 2000);
+    } catch (e) {
+      button.textContent = 'Error';
+      setTimeout(function() { button.textContent = 'Copy'; }, 2000);
+    }
+    document.body.removeChild(ta);
+  }
+
+  // ========================
+  // HELP PANEL TOGGLE
+  // ========================
+  var helpBtn = document.getElementById('helpBtn');
+  var helpPanel = document.getElementById('helpPanel');
+
+  helpBtn.addEventListener('click', function() {
+    helpPanel.classList.toggle('visible');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!helpBtn.contains(e.target) && !helpPanel.contains(e.target)) {
+      helpPanel.classList.remove('visible');
+    }
+  });
+
+  // ========================
+  // SYNTAX HIGHLIGHTING
+  // ========================
+  function highlightPython(codeEl) {
+    var text = codeEl.textContent;
+    // We need to process the text and wrap tokens in spans.
+    // Strategy: split into tokens using a regex and wrap matches.
+
+    var keywords = ['def', 'class', 'import', 'from', 'return', 'if', 'elif', 'else',
+      'for', 'while', 'in', 'not', 'and', 'or', 'is', 'with', 'as', 'try', 'except',
+      'finally', 'raise', 'pass', 'break', 'continue', 'lambda', 'yield', 'global',
+      'nonlocal', 'assert', 'del', 'True', 'False', 'None'];
+
+    var builtins = ['print', 'input', 'len', 'range', 'type', 'int', 'str', 'float',
+      'list', 'dict', 'set', 'tuple', 'bool', 'open', 'sorted', 'enumerate', 'zip',
+      'map', 'filter', 'format', 'round', 'abs', 'min', 'max', 'sum', 'any', 'all',
+      'isinstance', 'super', 'property', 'staticmethod', 'classmethod'];
+
+    // Escape HTML entities
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Tokenize: comments, triple-quoted strings, strings, numbers, identifiers, other
+    var pattern = /("""[\s\S]*?"""|'''[\s\S]*?'''|#[^\n]*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b\d+\.?\d*\b|[A-Za-z_]\w*|[^\s]|\s+)/g;
+    var tokens = text.match(pattern);
+    if (!tokens) return;
+
+    var html = '';
+    for (var i = 0; i < tokens.length; i++) {
+      var t = tokens[i];
+      if (t.charAt(0) === '#') {
+        // Comment
+        html += '<span style="color:#94a3b8">' + esc(t) + '</span>';
+      } else if ((t.charAt(0) === '"' || t.charAt(0) === "'") && t.length >= 2) {
+        // String (including triple-quoted)
+        // Check for f-string prefix on previous token
+        html += '<span style="color:#86efac">' + esc(t) + '</span>';
+      } else if (/^\d+\.?\d*$/.test(t)) {
+        // Number
+        html += '<span style="color:#fbbf24">' + esc(t) + '</span>';
+      } else if (/^[A-Za-z_]\w*$/.test(t)) {
+        // Check if previous non-whitespace token is 'f' and current starts with quote
+        // Handle identifiers
+        if (keywords.indexOf(t) !== -1) {
+          html += '<span style="color:#c084fc">' + esc(t) + '</span>';
+        } else if (builtins.indexOf(t) !== -1) {
+          // Check if followed by ( to confirm function usage
+          var next = i + 1 < tokens.length ? tokens[i + 1] : '';
+          if (next === '(') {
+            html += '<span style="color:#38bdf8">' + esc(t) + '</span>';
+          } else {
+            html += esc(t);
+          }
+        } else if (t === 'f' && i + 1 < tokens.length && (tokens[i + 1].charAt(0) === '"' || tokens[i + 1].charAt(0) === "'")) {
+          // f-string prefix
+          html += '<span style="color:#86efac">' + esc(t) + '</span>';
+        } else {
+          html += esc(t);
+        }
+      } else {
+        html += esc(t);
+      }
+    }
+
+    codeEl.innerHTML = html;
+  }
+
+  // Apply syntax highlighting to all Python code blocks
+  var codeWrappers = document.querySelectorAll('.code-wrapper');
+  codeWrappers.forEach(function(wrapper) {
+    var langLabel = wrapper.querySelector('.code-lang');
+    if (langLabel && langLabel.textContent.trim().toLowerCase() === 'python') {
+      var codeEl = wrapper.querySelector('code');
+      if (codeEl) {
+        highlightPython(codeEl);
+      }
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step-by-Step Building Guide — CSPD 2026</title>
+    <style>
+        /* ── Reset & Base ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+            color: #fff;
+            padding: 48px 24px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(255,255,255,0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.92;
+            font-weight: 400;
+            position: relative;
+        }
+        .header .badge {
+            display: inline-block;
+            margin-top: 16px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        /* ── Progress Bar ── */
+        .progress-bar-container {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            max-width: 900px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 16px;
+            transition: all 0.2s;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .progress-step:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        .progress-step.active {
+            background: #2563eb;
+            color: #fff;
+            font-weight: 600;
+        }
+        .progress-step.completed {
+            color: #059669;
+            font-weight: 500;
+        }
+        .progress-step .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            font-size: 0.72rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .progress-step.completed .step-num {
+            background: #059669;
+            color: #fff;
+            border-color: #059669;
+        }
+        .progress-connector {
+            width: 20px;
+            height: 2px;
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        /* ── Main Content ── */
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+        }
+
+        /* ── Intro Box ── */
+        .intro-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border-left: 5px solid #2563eb;
+        }
+        .intro-box h2 {
+            color: #1e40af;
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+        .intro-box p {
+            margin-bottom: 10px;
+        }
+        .tool-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0 16px;
+        }
+        .tool-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .tool-card .icon { font-size: 2rem; margin-bottom: 8px; }
+        .tool-card h4 { color: #1e40af; margin-bottom: 4px; font-size: 0.95rem; }
+        .tool-card p { font-size: 0.85rem; color: #64748b; }
+        .time-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 0.92rem;
+        }
+        .time-table th {
+            background: #eff6ff;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid #bfdbfe;
+            color: #1e40af;
+        }
+        .time-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .time-table tr:last-child td { border-bottom: none; }
+
+        /* ── Step Sections ── */
+        .step-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 36px 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            scroll-margin-top: 80px;
+        }
+        .step-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .step-meta h2 {
+            font-size: 1.45rem;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        .step-meta .timing {
+            font-size: 0.88rem;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .step-meta .todos {
+            font-size: 0.82rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* ── Sub-steps ── */
+        .substep {
+            margin-bottom: 28px;
+        }
+        .substep h3 {
+            font-size: 1.1rem;
+            color: #1e40af;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #eff6ff;
+        }
+        .substep h4 {
+            font-size: 1rem;
+            color: #334155;
+            margin: 16px 0 8px;
+        }
+        .substep p, .substep li {
+            margin-bottom: 8px;
+        }
+        .substep ul, .substep ol {
+            padding-left: 24px;
+            margin-bottom: 12px;
+        }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            position: relative;
+            margin: 14px 0 18px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .code-label {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-label .filename {
+            color: #67e8f9;
+        }
+        .copy-btn {
+            background: rgba(255,255,255,0.1);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .copy-btn.copied {
+            background: #059669;
+            color: #fff;
+            border-color: #059669;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 18px 20px;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            margin: 0;
+        }
+        pre code {
+            font-family: inherit;
+        }
+        /* Inline code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 0.88em;
+        }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Syntax highlighting */
+        .kw { color: #c084fc; }      /* keyword */
+        .fn { color: #67e8f9; }      /* function */
+        .st { color: #86efac; }      /* string */
+        .cm { color: #64748b; }      /* comment */
+        .nu { color: #fbbf24; }      /* number */
+        .op { color: #f472b6; }      /* operator */
+        .va { color: #e2e8f0; }      /* variable */
+        .bi { color: #67e8f9; }      /* built-in */
+
+        /* ── Info Boxes ── */
+        .info-box {
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.92rem;
+        }
+        .info-box.tip {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            color: #166534;
+        }
+        .info-box.warning {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            color: #854d0e;
+        }
+        .info-box.celebrate {
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+            border: 2px solid #22c55e;
+            color: #166534;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 20px;
+        }
+        .info-box.info {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            color: #1e40af;
+        }
+        .info-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .info-box p { margin: 0; }
+
+        /* ── Collapsible Troubleshooting ── */
+        details {
+            margin: 16px 0;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        summary {
+            background: #fef2f2;
+            padding: 12px 18px;
+            font-weight: 600;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.92rem;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        summary::before {
+            content: '▶';
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        summary::-webkit-details-marker { display: none; }
+        details .troubleshoot-content {
+            padding: 16px 18px;
+            background: #fff;
+            font-size: 0.9rem;
+        }
+        details .troubleshoot-content p {
+            margin-bottom: 8px;
+        }
+        details .troubleshoot-content code {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        /* ── Sample Data Box ── */
+        .sample-data {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+        .sample-data h4 {
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        .sample-data pre {
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        /* ── What It Should Look Like ── */
+        .expected-output {
+            border: 2px dashed #a5b4fc;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin: 16px 0;
+            background: #fafafe;
+        }
+        .expected-output h4 {
+            color: #4338ca;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .expected-output .mock {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.9rem;
+        }
+        .expected-output .mock .mock-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        .expected-output .mock .mock-widget {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .expected-output .mock .mock-btn {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* ── Bonus Section ── */
+        .bonus-section {
+            background: linear-gradient(135deg, #fdf4ff 0%, #eff6ff 100%);
+            border: 2px solid #c084fc;
+            border-radius: 16px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+        .bonus-section h2 {
+            color: #7c3aed;
+            margin-bottom: 16px;
+        }
+        .bonus-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            border-left: 4px solid #a78bfa;
+        }
+        .bonus-item h4 { color: #6d28d9; margin-bottom: 4px; }
+        .bonus-item p { font-size: 0.9rem; color: #64748b; margin: 0; }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.8rem; }
+            .step-section { padding: 24px 20px; }
+            .tool-cards { grid-template-columns: 1fr; }
+            .progress-steps { gap: 2px; }
+            .progress-connector { display: none; }
+        }
+
+        /* ── Print ── */
+        @media print {
+            .progress-bar-container { position: static; box-shadow: none; }
+            .copy-btn { display: none; }
+            .step-section { break-inside: avoid; box-shadow: none; border: 1px solid #e2e8f0; }
+            details { border: 1px solid #ccc; }
+            details[open] .troubleshoot-content { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<div class="header">
+    <h1>Step-by-Step Building Guide</h1>
+    <div class="subtitle">Agentic AI for STEM Teachers &mdash; Afternoon Session</div>
+    <div class="badge">CSPD 2026 &bull; 1:00 &ndash; 4:00 PM</div>
+</div>
+
+<!-- ═══════════════════════ PROGRESS BAR ═══════════════════════ -->
+<div class="progress-bar-container">
+    <div class="progress-steps">
+        <a href="#step-0" class="progress-step active" data-step="0">
+            <span class="step-num">0</span> Setup
+        </a>
+        <div class="progress-connector"></div>
+        <a href="#step-1" class="progress-step" data-step="1">
+            <span class="step-num">1</span> AI Helper
+        </a>
+        <div class="progress-connector"></div>
+        <a href="#step-2" class="progress-step" data-step="2">
+            <span class="step-num">2</span> Lab Report
+        </a>
+        <div class="progress-connector"></div>
+        <a href="#step-3" class="progress-step" data-step="3">
+            <span class="step-num">3</span> Quiz Gen
+        </a>
+        <div class="progress-connector"></div>
+        <a href="#step-4" class="progress-step" data-step="4">
+            <span class="step-num">4</span> Socratic Tutor
+        </a>
+        <div class="progress-connector"></div>
+        <a href="#step-5" class="progress-step" data-step="5">
+            <span class="step-num">5</span> Deploy
+        </a>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════ INTRODUCTION ═══════════════════════ -->
+<div class="intro-box" id="intro">
+    <h2>What We're Building This Afternoon</h2>
+    <p>In this hands-on session, you'll build a <strong>STEM AI Toolkit</strong> &mdash; a multi-page web application with three AI-powered tools that you can actually use in your classroom. No prior coding experience required; we'll walk through every line together.</p>
+
+    <div class="tool-cards">
+        <div class="tool-card">
+            <div class="icon">&#x1F4DD;</div>
+            <h4>Lab Report Feedback</h4>
+            <p>Paste a student's lab report, get rubric-based feedback</p>
+        </div>
+        <div class="tool-card">
+            <div class="icon">&#x1F4CA;</div>
+            <h4>Quiz Generator</h4>
+            <p>Custom quizzes with answer keys for any STEM topic</p>
+        </div>
+        <div class="tool-card">
+            <div class="icon">&#x1F914;</div>
+            <h4>Socratic Tutor</h4>
+            <p>An AI tutor that guides with questions, not answers</p>
+        </div>
+    </div>
+
+    <h3 style="margin: 20px 0 8px; font-size: 1.05rem;">The Tech Stack (Don't Worry, It's Friendly!)</h3>
+    <ul>
+        <li><strong>Python</strong> &mdash; The most popular beginner-friendly programming language.</li>
+        <li><strong>Streamlit</strong> &mdash; A library that turns Python scripts into beautiful web apps. No HTML/CSS needed!</li>
+        <li><strong>Claude API</strong> &mdash; Anthropic's AI model. We send it instructions and questions, and it sends back intelligent responses.</li>
+    </ul>
+
+    <h3 style="margin: 20px 0 8px; font-size: 1.05rem;">Time Estimates</h3>
+    <table class="time-table">
+        <tr><th>Step</th><th>What</th><th>Time</th></tr>
+        <tr><td>Step 0</td><td>Project Setup</td><td>~15 min</td></tr>
+        <tr><td>Step 1</td><td>Complete the AI Helper (TODOs 1&ndash;2)</td><td>~15 min</td></tr>
+        <tr><td>Step 2</td><td>Build Lab Report Feedback (TODOs 3&ndash;4)</td><td>~30 min</td></tr>
+        <tr><td>Step 3</td><td>Build Quiz Generator (TODOs 5&ndash;6)</td><td>~30 min</td></tr>
+        <tr><td>Step 4</td><td>Build Socratic Tutor (TODOs 7&ndash;8)</td><td>~30 min</td></tr>
+        <tr><td>Step 5</td><td>Deploy to Streamlit Cloud</td><td>~15 min</td></tr>
+        <tr><td>Bonus</td><td>Stretch challenges (if time permits)</td><td>Remaining</td></tr>
+    </table>
+
+    <div class="info-box tip" style="margin-top: 20px;">
+        <strong>Working at your own pace?</strong>
+        <p>The steps build on each other, so complete them in order. If you get stuck, check the troubleshooting sections, look at the example code, or raise your hand for a facilitator. Every code block has a copy button &mdash; feel free to use it!</p>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 0: SETUP ═══════════════════════ -->
+<div class="step-section" id="step-0">
+    <div class="step-header">
+        <div class="step-number">0</div>
+        <div class="step-meta">
+            <h2>Project Setup</h2>
+            <div class="timing">~15 minutes</div>
+            <div class="todos">Get your development environment up and running</div>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>0.1 &mdash; Open VS Code and a Terminal</h3>
+        <p>Open <strong>Visual Studio Code</strong> (VS Code). If it's not installed, open any text editor and a separate Terminal/Command Prompt window.</p>
+        <p>In VS Code, open a terminal by going to the menu: <strong>Terminal &rarr; New Terminal</strong> (or press <code>Ctrl+`</code> on Windows / <code>Cmd+`</code> on Mac).</p>
+    </div>
+
+    <div class="substep">
+        <h3>0.2 &mdash; Get the Starter Project</h3>
+        <p><strong>Option A: Clone from GitHub</strong> (if you have Git installed):</p>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>git clone https://github.com/YOUR-WORKSHOP-REPO/stem-ai-toolkit.git
+cd stem-ai-toolkit</code></pre>
+        </div>
+
+        <p><strong>Option B: Download the provided folder</strong> (if Git is not available):</p>
+        <p>Copy the <code>starter-project</code> folder from the workshop USB drive or shared link to your Desktop, then navigate to it in the terminal:</p>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Mac/Linux)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd ~/Desktop/starter-project</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Windows)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd %USERPROFILE%\Desktop\starter-project</code></pre>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>0.3 &mdash; Create a Virtual Environment</h3>
+        <p>A virtual environment keeps your project's packages isolated. Think of it like giving each project its own toolbox.</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Mac/Linux)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>python3 -m venv venv
+source venv/bin/activate</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Windows)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>python -m venv venv
+venv\Scripts\activate</code></pre>
+        </div>
+
+        <div class="info-box tip">
+            <strong>How do you know it worked?</strong>
+            <p>You should see <code>(venv)</code> appear at the beginning of your terminal prompt. That means the virtual environment is active!</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>0.4 &mdash; Install Dependencies</h3>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </div>
+        <p>This installs two packages: <strong>Streamlit</strong> (the web app framework) and <strong>Anthropic</strong> (the library to talk to Claude AI).</p>
+    </div>
+
+    <div class="substep">
+        <h3>0.5 &mdash; Set Your API Key</h3>
+        <p>Your API key lets the app communicate with Claude. You received this key at the beginning of the workshop.</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Mac/Linux)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>export ANTHROPIC_API_KEY="sk-ant-your-key-here"</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Windows &mdash; Command Prompt)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>set ANTHROPIC_API_KEY=sk-ant-your-key-here</code></pre>
+        </div>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal (Windows &mdash; PowerShell)</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>$env:ANTHROPIC_API_KEY="sk-ant-your-key-here"</code></pre>
+        </div>
+
+        <div class="info-box warning">
+            <strong>Replace the placeholder!</strong>
+            <p>Replace <code>sk-ant-your-key-here</code> with the actual API key provided to you. The key starts with <code>sk-ant-</code>.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>0.6 &mdash; Run the App to Verify Setup</h3>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>streamlit run app.py</code></pre>
+        </div>
+
+        <p>Your browser should open automatically to <code>http://localhost:8501</code>. You'll see the home page!</p>
+
+        <div class="expected-output">
+            <h4>What you should see:</h4>
+            <div class="mock">
+                <div class="mock-title">&#x1F52C; STEM AI Toolkit</div>
+                <p style="font-size: 0.95rem; color: #475569; font-weight: 500;">Your AI-Powered Teaching Assistant</p>
+                <hr style="border: 1px solid #e2e8f0; margin: 10px 0;">
+                <p style="font-size: 0.88rem; color: #64748b;">Welcome to your personal STEM AI Toolkit! This app contains three AI-powered tools designed to help you in your classroom...</p>
+                <p style="font-size: 0.88rem; color: #64748b; margin-top: 8px;">&#x1F448; <strong>Select a tool from the sidebar to get started!</strong></p>
+            </div>
+        </div>
+
+        <div class="info-box tip">
+            <strong>Sidebar pages are empty for now.</strong>
+            <p>If you click the page links in the sidebar (Lab Report Feedback, etc.), the pages will load but won't do anything useful yet. That's exactly what we expect &mdash; we're about to build them!</p>
+        </div>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: Common Setup Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>"python: command not found"</strong></p>
+            <p>Try <code>python3</code> instead of <code>python</code>. On Mac, Python 3 is often called <code>python3</code>.</p>
+
+            <p><strong>"No module named venv"</strong></p>
+            <p>On Ubuntu/Debian Linux, install it: <code>sudo apt install python3-venv</code></p>
+
+            <p><strong>"pip: command not found"</strong></p>
+            <p>Try <code>pip3</code> instead of <code>pip</code>, or <code>python -m pip install -r requirements.txt</code></p>
+
+            <p><strong>Streamlit doesn't open the browser</strong></p>
+            <p>Manually go to <code>http://localhost:8501</code> in your browser.</p>
+
+            <p><strong>Port 8501 already in use</strong></p>
+            <p>Run <code>streamlit run app.py --server.port 8502</code> to use a different port.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x2705; Setup complete! You have a running web app. Let's make it smart!
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 1: AI HELPER ═══════════════════════ -->
+<div class="step-section" id="step-1">
+    <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-meta">
+            <h2>Complete the AI Helper</h2>
+            <div class="timing">~15 minutes &bull; TODOs 1&ndash;2</div>
+            <div class="todos">File: <code>utils/ai_helper.py</code></div>
+        </div>
+    </div>
+
+    <div class="info-box info">
+        <strong>What you're building:</strong>
+        <p>The AI helper is the "engine" of your toolkit. It contains two functions that all three tools share: one for sending a single question to Claude, and one for having a back-and-forth conversation. Once this file works, every tool will be able to talk to AI.</p>
+    </div>
+
+    <div class="substep">
+        <h3>1.1 &mdash; Open the File</h3>
+        <p>In VS Code, open the file <code>utils/ai_helper.py</code>. You can find it in the sidebar file explorer, or press <code>Ctrl+P</code> (Windows) / <code>Cmd+P</code> (Mac) and type <code>ai_helper.py</code>.</p>
+        <p>Read through the file. Notice it already has two functions set up, but each one ends with <code>pass</code> &mdash; that's Python's way of saying "do nothing." Your job is to replace those <code>pass</code> lines with real code.</p>
+    </div>
+
+    <div class="substep">
+        <h3>1.2 &mdash; Complete TODO 1: Single Message API Call</h3>
+        <p>Find the comment that says <code># TODO 1: Call the Claude API</code>. You need to replace the <code>pass</code> line with code that:</p>
+        <ol>
+            <li>Calls <code>client.messages.create()</code> with the right parameters</li>
+            <li>Returns the text from Claude's response</li>
+        </ol>
+
+        <h4>Understanding the Parameters</h4>
+        <ul>
+            <li><code>model</code> &mdash; Which AI model to use. We're using <code>"claude-sonnet-4-6"</code>, a fast and capable model.</li>
+            <li><code>max_tokens</code> &mdash; The maximum length of Claude's response (2048 tokens is roughly 1,500 words).</li>
+            <li><code>system</code> &mdash; The "system prompt" that tells Claude how to behave (like giving it a job description).</li>
+            <li><code>messages</code> &mdash; The actual question or content you're sending.</li>
+        </ul>
+
+        <h4>The Code to Write</h4>
+        <p>Replace the <code>pass</code> at the end of the <code>get_ai_response</code> function with this:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">utils/ai_helper.py</span> &mdash; TODO 1
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>    <span class="cm"># Call the Claude API</span>
+    <span class="va">response</span> <span class="op">=</span> <span class="va">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+        <span class="va">model</span><span class="op">=</span><span class="st">"claude-sonnet-4-6"</span>,
+        <span class="va">max_tokens</span><span class="op">=</span><span class="nu">2048</span>,
+        <span class="va">system</span><span class="op">=</span><span class="va">system_prompt</span>,
+        <span class="va">messages</span><span class="op">=</span>[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="va">user_message</span>}]
+    )
+
+    <span class="cm"># Return just the text from Claude's response</span>
+    <span class="kw">return</span> <span class="va">response</span>.<span class="va">content</span>[<span class="nu">0</span>].<span class="va">text</span></code></pre>
+        </div>
+
+        <div class="info-box tip">
+            <strong>Make sure the indentation is correct!</strong>
+            <p>The code should be indented with 4 spaces, aligned with the existing comments inside the function. Python is very picky about indentation.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>1.3 &mdash; Complete TODO 2: Conversation API Call</h3>
+        <p>Find the comment that says <code># TODO 2: Call the Claude API with a conversation</code>. This is almost identical to TODO 1, except instead of sending a single message, you send the entire conversation history.</p>
+
+        <p>Replace the <code>pass</code> at the end of the <code>get_chat_response</code> function with this:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">utils/ai_helper.py</span> &mdash; TODO 2
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>    <span class="cm"># Call the Claude API with the full conversation</span>
+    <span class="va">response</span> <span class="op">=</span> <span class="va">client</span>.<span class="fn">messages</span>.<span class="fn">create</span>(
+        <span class="va">model</span><span class="op">=</span><span class="st">"claude-sonnet-4-6"</span>,
+        <span class="va">max_tokens</span><span class="op">=</span><span class="nu">2048</span>,
+        <span class="va">system</span><span class="op">=</span><span class="va">system_prompt</span>,
+        <span class="va">messages</span><span class="op">=</span><span class="va">messages</span>
+    )
+
+    <span class="cm"># Return just the text from Claude's response</span>
+    <span class="kw">return</span> <span class="va">response</span>.<span class="va">content</span>[<span class="nu">0</span>].<span class="va">text</span></code></pre>
+        </div>
+
+        <div class="info-box info">
+            <strong>What's the difference?</strong>
+            <p>In TODO 1, <code>messages</code> is a list with just one item (the user's question). In TODO 2, <code>messages</code> is a list of the entire conversation &mdash; alternating between user messages and assistant responses. This is what lets the Socratic Tutor remember what was said earlier in the conversation.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>1.4 &mdash; Verify It Works</h3>
+        <p>Let's run a quick test to make sure your AI helper is working. Create a temporary test file (you can delete it afterward):</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>python -c "
+from utils.ai_helper import get_ai_response
+result = get_ai_response('You are a helpful assistant.', 'Say hello in exactly 5 words.')
+print('Response:', result)
+"</code></pre>
+        </div>
+
+        <p>If everything is working, you should see Claude's 5-word greeting printed in the terminal. If you get an error, check the troubleshooting section below.</p>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: AI Helper Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>"AuthenticationError" or "Invalid API key"</strong></p>
+            <p>Your API key is not set correctly. Re-run the <code>export</code> or <code>set</code> command from Step 0.5. Make sure you're in the same terminal window where you set the key.</p>
+
+            <p><strong>"ModuleNotFoundError: No module named 'anthropic'"</strong></p>
+            <p>Make sure your virtual environment is activated (you should see <code>(venv)</code> in your prompt). Then run <code>pip install anthropic</code>.</p>
+
+            <p><strong>"IndentationError"</strong></p>
+            <p>Python requires consistent indentation. Make sure your code uses 4 spaces (not tabs). In VS Code, look at the bottom-right corner &mdash; it should say "Spaces: 4".</p>
+
+            <p><strong>"SyntaxError"</strong></p>
+            <p>Double-check that you've copied the code exactly, including all parentheses, brackets, and quotes. Make sure you deleted the <code>pass</code> line.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x2705; Your AI engine is running! Every tool in the toolkit can now talk to Claude.
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 2: LAB REPORT ═══════════════════════ -->
+<div class="step-section" id="step-2">
+    <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-meta">
+            <h2>Build the Lab Report Feedback Agent</h2>
+            <div class="timing">~30 minutes &bull; TODOs 3&ndash;4</div>
+            <div class="todos">File: <code>pages/1_&#x1F4DD;_Lab_Report_Feedback.py</code></div>
+        </div>
+    </div>
+
+    <div class="info-box info">
+        <strong>What you're building:</strong>
+        <p>A tool where you paste a student's lab report and get detailed, rubric-based feedback from AI. This is your first hands-on experience with <em>prompt engineering</em> &mdash; the art of writing instructions that get the AI to behave exactly how you want.</p>
+    </div>
+
+    <div class="substep">
+        <h3>2.1 &mdash; Open the File</h3>
+        <p>Open <code>pages/1_&#x1F4DD;_Lab_Report_Feedback.py</code> in VS Code.</p>
+        <p>Scroll down and find the two TODO sections. TODO 3 is about writing the system prompt, and TODO 4 is about building the user interface.</p>
+    </div>
+
+    <div class="substep">
+        <h3>2.2 &mdash; Complete TODO 3: Write the System Prompt</h3>
+        <p>The <strong>system prompt</strong> is the single most important part. It's like writing a detailed job description for an AI teaching assistant. A good system prompt produces excellent feedback; a vague one produces generic, unhelpful responses.</p>
+
+        <h4>Good Prompts vs. Bad Prompts</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0;">
+            <div style="background: #fef2f2; border-radius: 8px; padding: 12px; border-left: 4px solid #ef4444;">
+                <strong style="color: #dc2626;">Weak prompt:</strong>
+                <p style="font-size: 0.85rem; margin: 4px 0 0; color: #7f1d1d;">"Give feedback on a lab report."</p>
+            </div>
+            <div style="background: #f0fdf4; border-radius: 8px; padding: 12px; border-left: 4px solid #22c55e;">
+                <strong style="color: #16a34a;">Strong prompt:</strong>
+                <p style="font-size: 0.85rem; margin: 4px 0 0; color: #166534;">"You are a supportive high school science teacher. Evaluate on 4 criteria, score each out of 25, start with strengths, use growth-mindset language..."</p>
+            </div>
+        </div>
+
+        <p>Find the line that says <code>system_prompt = ""</code> and replace it with:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/1_&#x1F4DD;_Lab_Report_Feedback.py</span> &mdash; TODO 3
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="va">system_prompt</span> <span class="op">=</span> <span class="st">"""You are a supportive and experienced high school science teacher
+reviewing a student's lab report. Your feedback should help the student
+grow as a scientist.
+
+EVALUATION RUBRIC (score each category out of 25 points):
+
+1. HYPOTHESIS (0-25 points)
+   - Is it clearly stated?
+   - Is it testable and specific?
+   - Does it identify the independent and dependent variables?
+
+2. METHODOLOGY (0-25 points)
+   - Is the procedure detailed enough to be reproducible?
+   - Are variables properly controlled?
+   - Is the sample size appropriate?
+   - Are safety considerations mentioned?
+
+3. DATA ANALYSIS (0-25 points)
+   - Is the data presented clearly (tables, graphs)?
+   - Are calculations accurate with correct units?
+   - Are trends or patterns identified?
+
+4. CONCLUSION (0-25 points)
+   - Does it directly address the hypothesis?
+   - Is it supported by the data?
+   - Are sources of error discussed?
+   - Are future improvements suggested?
+
+FORMAT YOUR FEEDBACK LIKE THIS:
+- Start with 2-3 things the student did WELL (be specific!)
+- Give the score and detailed feedback for each rubric category
+- End with 2-3 specific, actionable "Next Steps" for improvement
+- Add a total score out of 100
+
+TONE: Encouraging but honest. Use growth-mindset language like
+"You're on the right track..." or "To strengthen this section, try..."
+Never be harsh or discouraging. Remember these are high school students
+who are still learning the scientific method."""</span></code></pre>
+        </div>
+
+        <div class="info-box tip">
+            <strong>Feel free to customize!</strong>
+            <p>This is <em>your</em> rubric. You might want to weight categories differently, add criteria for your specific subject, or adjust the tone. Experiment and see how changes to the system prompt affect the AI's feedback.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>2.3 &mdash; Complete TODO 4: Build the User Interface</h3>
+        <p>Now you'll add the widgets that teachers interact with. Find the comment <code># Your UI code goes here!</code> and replace it with the following code. Make sure it goes <em>above</em> the final <code>st.markdown("---")</code> line.</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/1_&#x1F4DD;_Lab_Report_Feedback.py</span> &mdash; TODO 4
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="cm"># ── Settings ──</span>
+<span class="va">col1</span>, <span class="va">col2</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">columns</span>(<span class="nu">2</span>)
+<span class="kw">with</span> <span class="va">col1</span>:
+    <span class="va">subject</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Subject"</span>, [<span class="st">"Biology"</span>, <span class="st">"Chemistry"</span>, <span class="st">"Physics"</span>, <span class="st">"Environmental Science"</span>, <span class="st">"Other"</span>])
+<span class="kw">with</span> <span class="va">col2</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Grade Level"</span>, [<span class="st">"9th"</span>, <span class="st">"10th"</span>, <span class="st">"11th"</span>, <span class="st">"12th"</span>])
+
+<span class="cm"># ── Lab report input ──</span>
+<span class="va">lab_report</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">text_area</span>(
+    <span class="st">"Paste the lab report here:"</span>,
+    <span class="va">height</span><span class="op">=</span><span class="nu">300</span>,
+    <span class="va">placeholder</span><span class="op">=</span><span class="st">"Paste the student's lab report text here..."</span>
+)
+
+<span class="cm"># ── Submit button ──</span>
+<span class="kw">if</span> <span class="va">st</span>.<span class="fn">button</span>(<span class="st">"&#x1F4DD; Get Feedback"</span>, <span class="va">type</span><span class="op">=</span><span class="st">"primary"</span>):
+    <span class="kw">if</span> <span class="va">lab_report</span>.<span class="fn">strip</span>():
+        <span class="va">user_message</span> <span class="op">=</span> <span class="st">f"Subject: </span><span class="va">{subject}</span><span class="st">\nGrade Level: </span><span class="va">{grade}</span><span class="st">\n\nLab Report:\n</span><span class="va">{lab_report}</span><span class="st">"</span>
+        <span class="kw">with</span> <span class="va">st</span>.<span class="fn">spinner</span>(<span class="st">"Analyzing lab report..."</span>):
+            <span class="va">feedback</span> <span class="op">=</span> <span class="fn">get_ai_response</span>(<span class="va">system_prompt</span>, <span class="va">user_message</span>)
+        <span class="kw">if</span> <span class="va">feedback</span>:
+            <span class="va">st</span>.<span class="fn">markdown</span>(<span class="st">"### Feedback"</span>)
+            <span class="va">st</span>.<span class="fn">markdown</span>(<span class="va">feedback</span>)
+        <span class="kw">else</span>:
+            <span class="va">st</span>.<span class="fn">error</span>(<span class="st">"Could not get feedback. Check your API key and try again."</span>)
+    <span class="kw">else</span>:
+        <span class="va">st</span>.<span class="fn">warning</span>(<span class="st">"Please paste a lab report before clicking the button."</span>)</code></pre>
+        </div>
+
+        <h4>What Each Widget Does</h4>
+        <ul>
+            <li><code>st.columns(2)</code> &mdash; Creates two side-by-side columns for a clean layout.</li>
+            <li><code>st.selectbox()</code> &mdash; A dropdown menu. The first argument is the label, the second is a list of options.</li>
+            <li><code>st.text_area()</code> &mdash; A large text input box where teachers paste the lab report.</li>
+            <li><code>st.button()</code> &mdash; A clickable button. The <code>type="primary"</code> makes it blue and prominent.</li>
+            <li><code>st.spinner()</code> &mdash; Shows a "loading" animation while the AI is thinking.</li>
+            <li><code>st.markdown()</code> &mdash; Displays formatted text (Claude's response comes back with formatting).</li>
+        </ul>
+    </div>
+
+    <div class="substep">
+        <h3>2.4 &mdash; Test Your Lab Report Agent</h3>
+        <p>Go to your browser (refresh if needed), then click <strong>"Lab Report Feedback"</strong> in the sidebar. Use this sample lab report to test:</p>
+
+        <div class="sample-data">
+            <h4>&#x1F9EA; Sample Lab Report (copy and paste this):</h4>
+            <pre><code>Title: The Effect of Light Intensity on Photosynthesis Rate
+
+Hypothesis: If light intensity increases, then the rate of photosynthesis
+will increase because more light energy is available for the
+light-dependent reactions.
+
+Materials: Elodea plant, beaker, water, lamp, ruler, timer,
+sodium bicarbonate
+
+Procedure: We put the plant in water and moved the lamp closer
+and counted bubbles.
+
+Data: Close lamp = 15 bubbles, Medium = 10 bubbles, Far = 5 bubbles
+
+Conclusion: Our hypothesis was right. More light means more
+photosynthesis.</code></pre>
+        </div>
+
+        <div class="expected-output">
+            <h4>What you should see after clicking "Get Feedback":</h4>
+            <div class="mock">
+                <div class="mock-title">Feedback</div>
+                <p style="font-size: 0.85rem; color: #475569;">The AI should provide detailed feedback with scores for each rubric category. It should praise the clear hypothesis while noting that the procedure needs more detail (distances, timing, number of trials). The data section should be flagged for lacking units, tables, or graphs. The conclusion should be noted as too brief, missing error analysis.</p>
+                <p style="font-size: 0.85rem; color: #475569; margin-top: 6px;">Expect a total score around 45-60 out of 100 for this intentionally imperfect sample.</p>
+            </div>
+        </div>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: Lab Report Page Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>"cannot import name 'get_ai_response' from 'utils.ai_helper'"</strong></p>
+            <p>Make sure you completed TODOs 1 and 2 in <code>utils/ai_helper.py</code> and saved the file. Also check that the <code>utils/__init__.py</code> file exists.</p>
+
+            <p><strong>The page loads but nothing happens when you click the button</strong></p>
+            <p>Did you paste a lab report in the text area? The button only works if there's text in the box. Also check the browser console (press F12) and the terminal for error messages.</p>
+
+            <p><strong>"RateLimitError"</strong></p>
+            <p>Wait a few seconds and try again. The workshop API key has rate limits. If it persists, ask a facilitator.</p>
+
+            <p><strong>The response looks weird or unformatted</strong></p>
+            <p>Make sure you're using <code>st.markdown(feedback)</code>, not <code>st.write(feedback)</code> or <code>st.text(feedback)</code>. The markdown function renders Claude's formatting properly.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x1F389; Your Lab Report Feedback Agent is live! Try experimenting with different system prompts to see how the feedback changes.
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 3: QUIZ GENERATOR ═══════════════════════ -->
+<div class="step-section" id="step-3">
+    <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-meta">
+            <h2>Build the Quiz Generator</h2>
+            <div class="timing">~30 minutes &bull; TODOs 5&ndash;6</div>
+            <div class="todos">File: <code>pages/2_&#x1F4CA;_Quiz_Generator.py</code></div>
+        </div>
+    </div>
+
+    <div class="info-box info">
+        <strong>What you're building:</strong>
+        <p>A tool that generates custom quizzes for any STEM topic, complete with answer keys. This builds on the same skills you just practiced &mdash; writing a system prompt and building a UI &mdash; but with a few new Streamlit widgets like sliders and download buttons.</p>
+    </div>
+
+    <div class="substep">
+        <h3>3.1 &mdash; Open the File</h3>
+        <p>Open <code>pages/2_&#x1F4CA;_Quiz_Generator.py</code> in VS Code.</p>
+    </div>
+
+    <div class="substep">
+        <h3>3.2 &mdash; Complete TODO 5: Write the System Prompt</h3>
+        <p>Find the line <code>system_prompt = ""</code> and replace it with:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/2_&#x1F4CA;_Quiz_Generator.py</span> &mdash; TODO 5
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="va">system_prompt</span> <span class="op">=</span> <span class="st">"""You are an expert STEM curriculum designer creating quizzes
+and assessments for high school students.
+
+QUIZ CREATION RULES:
+1. Generate exactly the number of questions requested.
+2. Mix question types:
+   - Multiple choice (4 options labeled A-D, with exactly one correct answer)
+   - True/False (with brief justification in the answer key)
+   - Short answer (1-3 sentences expected)
+3. Order questions from easiest to most challenging.
+4. Make every question clear and unambiguous.
+5. Align difficulty and vocabulary to the specified grade level.
+6. Include real-world applications and critical thinking questions,
+   not just rote memorization.
+
+OUTPUT FORMAT:
+- Title the quiz with the topic and grade level
+- Number each question clearly
+- After ALL questions, include a clearly labeled ANSWER KEY section
+- In the answer key, provide the correct answer AND a brief explanation
+  for each question (1-2 sentences explaining WHY it's correct)
+- At the end, list which standards or key concepts each question addresses
+
+IMPORTANT: Never include inappropriate, biased, or culturally insensitive
+content. Questions should be inclusive and accessible to all students."""</span></code></pre>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>3.3 &mdash; Complete TODO 6: Build the User Interface</h3>
+        <p>Find the comment <code># Your UI code goes here!</code> and replace it with:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/2_&#x1F4CA;_Quiz_Generator.py</span> &mdash; TODO 6
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="cm"># ── Settings in two columns ──</span>
+<span class="va">col1</span>, <span class="va">col2</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">columns</span>(<span class="nu">2</span>)
+<span class="kw">with</span> <span class="va">col1</span>:
+    <span class="va">subject</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Subject"</span>, [<span class="st">"Biology"</span>, <span class="st">"Chemistry"</span>, <span class="st">"Physics"</span>, <span class="st">"Math"</span>, <span class="st">"Engineering"</span>, <span class="st">"Other"</span>])
+    <span class="va">num_questions</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">slider</span>(<span class="st">"Number of questions"</span>, <span class="va">min_value</span><span class="op">=</span><span class="nu">3</span>, <span class="va">max_value</span><span class="op">=</span><span class="nu">20</span>, <span class="va">value</span><span class="op">=</span><span class="nu">10</span>)
+<span class="kw">with</span> <span class="va">col2</span>:
+    <span class="va">grade</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Grade Level"</span>, [<span class="st">"9th"</span>, <span class="st">"10th"</span>, <span class="st">"11th"</span>, <span class="st">"12th"</span>, <span class="st">"AP"</span>])
+    <span class="va">difficulty</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Difficulty Mix"</span>, [<span class="st">"Mostly Easy"</span>, <span class="st">"Balanced"</span>, <span class="st">"Mostly Challenging"</span>])
+
+<span class="cm"># ── Topic input ──</span>
+<span class="va">topic</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">text_input</span>(<span class="st">"Quiz Topic"</span>, <span class="va">placeholder</span><span class="op">=</span><span class="st">"e.g., Photosynthesis, Newton's Laws, Quadratic Equations"</span>)
+
+<span class="cm"># ── Optional extra instructions ──</span>
+<span class="va">extra</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">text_area</span>(
+    <span class="st">"Additional instructions (optional)"</span>,
+    <span class="va">height</span><span class="op">=</span><span class="nu">100</span>,
+    <span class="va">placeholder</span><span class="op">=</span><span class="st">"e.g., Focus on real-world applications, include diagram descriptions..."</span>
+)
+
+<span class="cm"># ── Generate button ──</span>
+<span class="kw">if</span> <span class="va">st</span>.<span class="fn">button</span>(<span class="st">"&#x1F4CA; Generate Quiz"</span>, <span class="va">type</span><span class="op">=</span><span class="st">"primary"</span>):
+    <span class="kw">if</span> <span class="va">topic</span>.<span class="fn">strip</span>():
+        <span class="va">user_message</span> <span class="op">=</span> <span class="st">f"""Create a quiz with the following specifications:
+- Subject: </span><span class="va">{subject}</span><span class="st">
+- Topic: </span><span class="va">{topic}</span><span class="st">
+- Grade Level: </span><span class="va">{grade}</span><span class="st">
+- Number of Questions: </span><span class="va">{num_questions}</span><span class="st">
+- Difficulty Mix: </span><span class="va">{difficulty}</span><span class="st">"""</span>
+        <span class="kw">if</span> <span class="va">extra</span>.<span class="fn">strip</span>():
+            <span class="va">user_message</span> <span class="op">+=</span> <span class="st">f"\n- Additional Instructions: </span><span class="va">{extra}</span><span class="st">"</span>
+
+        <span class="kw">with</span> <span class="va">st</span>.<span class="fn">spinner</span>(<span class="st">"Generating your quiz..."</span>):
+            <span class="va">quiz_text</span> <span class="op">=</span> <span class="fn">get_ai_response</span>(<span class="va">system_prompt</span>, <span class="va">user_message</span>)
+
+        <span class="kw">if</span> <span class="va">quiz_text</span>:
+            <span class="va">st</span>.<span class="fn">markdown</span>(<span class="st">"### Your Quiz"</span>)
+            <span class="va">st</span>.<span class="fn">markdown</span>(<span class="va">quiz_text</span>)
+            <span class="va">st</span>.<span class="fn">download_button</span>(
+                <span class="st">"&#x1F4E5; Download Quiz"</span>,
+                <span class="va">quiz_text</span>,
+                <span class="va">file_name</span><span class="op">=</span><span class="st">f"</span><span class="va">{topic}</span><span class="st">_quiz.txt"</span>,
+                <span class="va">mime</span><span class="op">=</span><span class="st">"text/plain"</span>
+            )
+        <span class="kw">else</span>:
+            <span class="va">st</span>.<span class="fn">error</span>(<span class="st">"Could not generate quiz. Check your API key and try again."</span>)
+    <span class="kw">else</span>:
+        <span class="va">st</span>.<span class="fn">warning</span>(<span class="st">"Please enter a quiz topic."</span>)</code></pre>
+        </div>
+
+        <h4>New Widgets in This Page</h4>
+        <ul>
+            <li><code>st.slider()</code> &mdash; A draggable slider for picking a number. Great for "how many questions?"</li>
+            <li><code>st.text_input()</code> &mdash; A single-line text input (unlike <code>text_area</code>, which is multi-line).</li>
+            <li><code>st.download_button()</code> &mdash; Creates a button that downloads a file. Teachers can save the quiz as a text file!</li>
+        </ul>
+    </div>
+
+    <div class="substep">
+        <h3>3.4 &mdash; Test Your Quiz Generator</h3>
+        <p>Refresh your browser and click <strong>"Quiz Generator"</strong> in the sidebar. Try these settings:</p>
+        <ul>
+            <li>Subject: <strong>Biology</strong></li>
+            <li>Topic: <strong>Photosynthesis</strong></li>
+            <li>Grade: <strong>10th</strong></li>
+            <li>Questions: <strong>5</strong> (start small for faster results)</li>
+            <li>Difficulty: <strong>Balanced</strong></li>
+        </ul>
+
+        <div class="expected-output">
+            <h4>What you should see:</h4>
+            <div class="mock">
+                <div class="mock-title">Your Quiz</div>
+                <p style="font-size: 0.85rem; color: #475569;">A formatted quiz with 5 questions in a mix of multiple choice, true/false, and short answer. Below the questions, an answer key with explanations.</p>
+                <div class="mock-btn" style="background: #64748b;">&#x1F4E5; Download Quiz</div>
+            </div>
+        </div>
+
+        <div class="info-box tip">
+            <strong>Try different topics!</strong>
+            <p>Test with your own subject. Try "Newton's Third Law" for Physics, "Balancing Chemical Equations" for Chemistry, or "DNA Replication" for Biology. Notice how the AI adjusts for different grade levels.</p>
+        </div>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: Quiz Generator Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>The download button doesn't appear</strong></p>
+            <p>Make sure <code>quiz_text</code> is not <code>None</code>. The download button only shows if the AI response was successful. Check your terminal for error messages.</p>
+
+            <p><strong>The quiz formatting looks off</strong></p>
+            <p>Claude formats responses using Markdown. If you see asterisks and hashtags instead of bold text and headings, make sure you're using <code>st.markdown()</code> to display the result.</p>
+
+            <p><strong>The quiz takes a long time</strong></p>
+            <p>Generating 20 questions takes longer than generating 5. Start with a small number for testing. If it's consistently slow, the API might be under heavy load &mdash; try again in a minute.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x1F389; Two tools down, one to go! Your Quiz Generator can create assessments for any STEM topic.
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 4: SOCRATIC TUTOR ═══════════════════════ -->
+<div class="step-section" id="step-4">
+    <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-meta">
+            <h2>Build the Socratic Tutor</h2>
+            <div class="timing">~30 minutes &bull; TODOs 7&ndash;8</div>
+            <div class="todos">File: <code>pages/3_&#x1F914;_Socratic_Tutor.py</code></div>
+        </div>
+    </div>
+
+    <div class="info-box info">
+        <strong>What you're building:</strong>
+        <p>A chat-based AI tutor that uses the Socratic method &mdash; it guides students through problem-solving by asking questions, never giving direct answers. This is the most sophisticated tool: it maintains a conversation history so the AI remembers what was said earlier, and the prompt engineering is the most challenging because you have to instruct an AI to <em>not</em> do what it naturally wants to do (give answers).</p>
+    </div>
+
+    <div class="substep">
+        <h3>4.1 &mdash; A Quick Word About the Socratic Method</h3>
+        <p>The Socratic method is a teaching approach where the teacher asks a series of guiding questions to help students arrive at understanding on their own. Instead of saying "The answer is 42," a Socratic tutor would ask "What happens when you multiply 6 by 7?"</p>
+        <p>This is a perfect use case for AI because:</p>
+        <ul>
+            <li>The AI can be infinitely patient</li>
+            <li>It can adapt its questions to the student's level</li>
+            <li>It can work with each student one-on-one, even when you're helping other students</li>
+        </ul>
+    </div>
+
+    <div class="substep">
+        <h3>4.2 &mdash; Open the File</h3>
+        <p>Open <code>pages/3_&#x1F914;_Socratic_Tutor.py</code> in VS Code.</p>
+    </div>
+
+    <div class="substep">
+        <h3>4.3 &mdash; Complete TODO 7: Write the System Prompt</h3>
+        <p>This is the most important prompt in the entire toolkit. The challenge: Claude naturally wants to be helpful by giving direct answers. You need to override that instinct and tell it to <em>only</em> ask guiding questions.</p>
+
+        <p>Find the line <code>system_prompt = ""</code> and replace it with:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/3_&#x1F914;_Socratic_Tutor.py</span> &mdash; TODO 7
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="va">system_prompt</span> <span class="op">=</span> <span class="st">"""You are a Socratic tutor for high school STEM students.
+Your goal is to help students discover answers through guided questioning,
+never by telling them the answer directly.
+
+GOLDEN RULES (follow these strictly):
+1. NEVER give the student the direct answer to their question.
+2. Instead, ask ONE guiding question that helps them take the next step.
+3. If they're stuck, break the problem into a smaller, more manageable piece.
+4. If they make an error, don't say "that's wrong." Instead, ask a question
+   that helps them discover the mistake themselves.
+   Example: "Interesting thought! What would happen if we tested that
+   with the number 0? Does your rule still work?"
+5. Celebrate correct reasoning enthusiastically:
+   "Excellent thinking! You've got it. Now, can we take it one step further?"
+6. Use analogies from everyday life to make abstract concepts concrete.
+   Example: "Think of electrons like students in a school — they fill up
+   the front-row seats (lower energy levels) before moving to the back."
+7. Keep responses concise: 2-4 sentences plus one guiding question.
+8. ALWAYS end your response with a question to keep the dialogue moving.
+
+CONVERSATION FLOW:
+- First message: Greet the student warmly, ask them to describe the
+  problem or concept they need help with.
+- During the conversation: Guide step-by-step with questions.
+- If the student gets the right answer: Celebrate and ask if they
+  want to try a harder variation or a different problem.
+
+TONE: Warm, patient, encouraging, never condescending. You're a mentor,
+not a lecturer. Use casual but respectful language appropriate for
+high school students."""</span></code></pre>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>4.4 &mdash; Complete TODO 8: Build the Chat Interface</h3>
+        <p>This is different from the other two pages because instead of a simple form, you're building a <strong>chat interface</strong>. Streamlit has built-in chat components that make this surprisingly easy.</p>
+
+        <h4>Understanding Session State</h4>
+        <p>When a user interacts with a Streamlit app, the entire script reruns from top to bottom. That means variables would normally be lost between interactions! <code>st.session_state</code> solves this &mdash; it's a persistent dictionary that survives across reruns. We use it to store the conversation history.</p>
+
+        <p>Find the comment <code># Your chat code goes here!</code> and replace it with:</p>
+
+        <div class="code-block">
+            <div class="code-label">
+                <span class="filename">pages/3_&#x1F914;_Socratic_Tutor.py</span> &mdash; TODO 8
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="cm"># ── Sidebar settings ──</span>
+<span class="kw">with</span> <span class="va">st</span>.<span class="va">sidebar</span>:
+    <span class="va">subject</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Subject"</span>, [<span class="st">"Biology"</span>, <span class="st">"Chemistry"</span>, <span class="st">"Physics"</span>, <span class="st">"Math"</span>, <span class="st">"Engineering"</span>])
+    <span class="va">grade</span> <span class="op">=</span> <span class="va">st</span>.<span class="fn">selectbox</span>(<span class="st">"Grade Level"</span>, [<span class="st">"9th"</span>, <span class="st">"10th"</span>, <span class="st">"11th"</span>, <span class="st">"12th"</span>, <span class="st">"AP"</span>])
+    <span class="kw">if</span> <span class="va">st</span>.<span class="fn">button</span>(<span class="st">"&#x1F5D1;&#xFE0F; Clear Chat"</span>):
+        <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span> <span class="op">=</span> []
+        <span class="va">st</span>.<span class="fn">rerun</span>()
+
+<span class="cm"># ── Initialize chat history ──</span>
+<span class="kw">if</span> <span class="st">"messages"</span> <span class="kw">not in</span> <span class="va">st</span>.<span class="va">session_state</span>:
+    <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span> <span class="op">=</span> []
+
+<span class="cm"># ── Display existing chat messages ──</span>
+<span class="kw">for</span> <span class="va">msg</span> <span class="kw">in</span> <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span>:
+    <span class="kw">with</span> <span class="va">st</span>.<span class="fn">chat_message</span>(<span class="va">msg</span>[<span class="st">"role"</span>]):
+        <span class="va">st</span>.<span class="fn">markdown</span>(<span class="va">msg</span>[<span class="st">"content"</span>])
+
+<span class="cm"># ── Handle new user input ──</span>
+<span class="kw">if</span> <span class="va">prompt</span> <span class="op">:=</span> <span class="va">st</span>.<span class="fn">chat_input</span>(<span class="st">"Ask a question or describe a problem..."</span>):
+    <span class="cm"># Add user message to history and display it</span>
+    <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span>.<span class="fn">append</span>({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="va">prompt</span>})
+    <span class="kw">with</span> <span class="va">st</span>.<span class="fn">chat_message</span>(<span class="st">"user"</span>):
+        <span class="va">st</span>.<span class="fn">markdown</span>(<span class="va">prompt</span>)
+
+    <span class="cm"># Get AI response</span>
+    <span class="kw">with</span> <span class="va">st</span>.<span class="fn">chat_message</span>(<span class="st">"assistant"</span>):
+        <span class="kw">with</span> <span class="va">st</span>.<span class="fn">spinner</span>(<span class="st">"Thinking..."</span>):
+            <span class="va">full_system</span> <span class="op">=</span> <span class="st">f"</span><span class="va">{system_prompt}</span><span class="st">\n\nYou are tutoring a </span><span class="va">{grade}</span><span class="st"> grade </span><span class="va">{subject}</span><span class="st"> student."</span>
+            <span class="va">response</span> <span class="op">=</span> <span class="fn">get_chat_response</span>(<span class="va">full_system</span>, <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span>)
+        <span class="kw">if</span> <span class="va">response</span>:
+            <span class="va">st</span>.<span class="fn">markdown</span>(<span class="va">response</span>)
+            <span class="va">st</span>.<span class="va">session_state</span>.<span class="va">messages</span>.<span class="fn">append</span>({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: <span class="va">response</span>})
+        <span class="kw">else</span>:
+            <span class="va">st</span>.<span class="fn">error</span>(<span class="st">"Could not get a response. Check your API key."</span>)</code></pre>
+        </div>
+
+        <h4>How the Chat Loop Works</h4>
+        <ol>
+            <li><strong>Initialize:</strong> <code>st.session_state.messages</code> starts as an empty list.</li>
+            <li><strong>Display:</strong> The <code>for</code> loop shows all previous messages (so they don't disappear when the page reruns).</li>
+            <li><strong>Input:</strong> <code>st.chat_input()</code> shows a text box at the bottom of the page, just like a messaging app.</li>
+            <li><strong>Process:</strong> When the user sends a message, it gets added to the history, sent to Claude along with the full history, and Claude's response gets added to the history too.</li>
+            <li><strong>Repeat:</strong> The page reruns, displaying all messages including the new ones.</li>
+        </ol>
+
+        <div class="info-box info">
+            <strong>Why <code>:=</code> (walrus operator)?</strong>
+            <p>The line <code>if prompt := st.chat_input(...)</code> uses the "walrus operator." It's a shortcut that assigns the value <em>and</em> checks if it's not empty, all in one line. It's equivalent to writing <code>prompt = st.chat_input(...)</code> followed by <code>if prompt:</code>.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>4.5 &mdash; Test Your Socratic Tutor</h3>
+        <p>Refresh your browser and click <strong>"Socratic Tutor"</strong> in the sidebar. Try having a conversation:</p>
+
+        <div class="sample-data">
+            <h4>&#x1F4AC; Sample Conversation Starters (try one of these):</h4>
+            <pre><code>I don't understand why plants are green. Can you tell me?
+
+I need help balancing this equation: H2 + O2 -> H2O
+
+Can you explain why the sky is blue?
+
+I'm confused about Newton's Third Law. If I push a wall and
+it pushes me back with equal force, why doesn't the wall move?</code></pre>
+        </div>
+
+        <p>Notice how the tutor responds with questions instead of answers. It should ask you things like "What do you already know about..." or "What do you think would happen if..." rather than simply explaining the concept.</p>
+
+        <div class="expected-output">
+            <h4>What the conversation should look like:</h4>
+            <div class="mock">
+                <p style="font-size: 0.85rem; color: #475569; margin-bottom: 8px;"><strong>You:</strong> I don't understand why plants are green.</p>
+                <p style="font-size: 0.85rem; color: #475569; margin-bottom: 8px;"><strong>Tutor:</strong> Great question! Let's explore this together. What do you know about how plants get their energy? Do you remember the name of the process?</p>
+                <p style="font-size: 0.85rem; color: #475569; margin-bottom: 8px;"><strong>You:</strong> Photosynthesis?</p>
+                <p style="font-size: 0.85rem; color: #475569;"><strong>Tutor:</strong> Exactly right! Now, photosynthesis requires a special molecule that captures light energy. Do you remember what that molecule is called?</p>
+            </div>
+        </div>
+
+        <div class="info-box tip">
+            <strong>Test the "Clear Chat" button!</strong>
+            <p>Click the "Clear Chat" button in the sidebar to start fresh. This resets <code>st.session_state.messages</code> to an empty list.</p>
+        </div>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: Socratic Tutor Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>The tutor gives direct answers instead of asking questions</strong></p>
+            <p>Your system prompt might not be strong enough. Make sure it includes phrases like "NEVER give the direct answer" and "ALWAYS end with a question." The stronger and more explicit your instructions, the better the AI follows them.</p>
+
+            <p><strong>Chat history disappears when I change the subject</strong></p>
+            <p>This is expected! Changing a sidebar widget causes Streamlit to rerun. The messages are still in session state, but the new subject will be applied to future responses. Use "Clear Chat" to start a conversation in the new subject.</p>
+
+            <p><strong>"get_chat_response is not defined"</strong></p>
+            <p>Make sure the import at the top of the file says <code>from utils.ai_helper import get_chat_response</code> (not <code>get_ai_response</code>). This page uses the chat version!</p>
+
+            <p><strong>The chat input box doesn't appear</strong></p>
+            <p><code>st.chat_input()</code> always appears at the bottom of the page. If your code has an error above it, the input might not render. Check the terminal for error messages.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x1F389; All three tools are working! You've built a complete AI-powered STEM toolkit. Take a moment to celebrate &mdash; you just coded a multi-page web application that uses artificial intelligence!
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ STEP 5: DEPLOY ═══════════════════════ -->
+<div class="step-section" id="step-5">
+    <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-meta">
+            <h2>Deploy to Streamlit Cloud</h2>
+            <div class="timing">~15 minutes</div>
+            <div class="todos">Get your app on the internet!</div>
+        </div>
+    </div>
+
+    <div class="info-box info">
+        <strong>What you're doing:</strong>
+        <p>Right now, your app only runs on your computer. In this step, you'll deploy it to <strong>Streamlit Community Cloud</strong> &mdash; a free hosting service &mdash; so anyone with the link can use your toolkit. You'll be able to share it with colleagues!</p>
+    </div>
+
+    <div class="substep">
+        <h3>5.1 &mdash; Push Your Code to GitHub</h3>
+        <p>If you cloned from GitHub, push your changes:</p>
+        <div class="code-block">
+            <div class="code-label">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>git add -A
+git commit -m "Complete STEM AI Toolkit"
+git push</code></pre>
+        </div>
+
+        <p>If you started from a local folder, you'll need to create a new GitHub repository first:</p>
+        <ol>
+            <li>Go to <a href="https://github.com/new" target="_blank">github.com/new</a> and create a new repository called <code>stem-ai-toolkit</code>.</li>
+            <li>Follow the instructions on the page to push your existing code.</li>
+        </ol>
+
+        <div class="info-box warning">
+            <strong>Don't push your API key!</strong>
+            <p>Make sure your API key is NOT in any of the files. It should only be in your environment variable or Streamlit secrets. Never commit API keys to GitHub.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>5.2 &mdash; Deploy on Streamlit Cloud</h3>
+        <ol>
+            <li>Go to <a href="https://share.streamlit.io" target="_blank"><strong>share.streamlit.io</strong></a></li>
+            <li>Click <strong>"New app"</strong></li>
+            <li>Sign in with your GitHub account</li>
+            <li>Select your repository (<code>stem-ai-toolkit</code>)</li>
+            <li>Set the main file path to <code>app.py</code></li>
+            <li>Click <strong>"Advanced settings"</strong> and add your secret:
+                <div class="code-block">
+                    <div class="code-label">
+                        <span>Secrets (TOML format)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>ANTHROPIC_API_KEY = "sk-ant-your-key-here"</code></pre>
+                </div>
+            </li>
+            <li>Click <strong>"Deploy!"</strong></li>
+        </ol>
+
+        <p>After a minute or two, your app will be live at a URL like: <code>https://your-username-stem-ai-toolkit.streamlit.app</code></p>
+    </div>
+
+    <div class="substep">
+        <h3>5.3 &mdash; Share Your URL!</h3>
+        <p>Copy the URL and share it with your colleagues. They can use your STEM AI Toolkit directly in their browser &mdash; no installation needed!</p>
+
+        <div class="info-box tip">
+            <strong>For ongoing classroom use:</strong>
+            <p>The free Streamlit Cloud tier is great for personal use and sharing with colleagues. For classroom-wide deployment, consider the resource limits and usage guidelines at <a href="https://streamlit.io/cloud" target="_blank">streamlit.io/cloud</a>.</p>
+        </div>
+    </div>
+
+    <details>
+        <summary>Troubleshooting: Deployment Issues</summary>
+        <div class="troubleshoot-content">
+            <p><strong>"ModuleNotFoundError" in deployment logs</strong></p>
+            <p>Make sure your <code>requirements.txt</code> file is in the root of the repository and includes both <code>streamlit</code> and <code>anthropic</code>.</p>
+
+            <p><strong>App crashes with "API key" error</strong></p>
+            <p>Check that you added the <code>ANTHROPIC_API_KEY</code> in the Advanced settings &rarr; Secrets section. Make sure the key is valid and has not expired.</p>
+
+            <p><strong>The app deploys but pages are missing</strong></p>
+            <p>Make sure the <code>pages/</code> folder and all its files are committed and pushed to GitHub. Run <code>git status</code> to check.</p>
+        </div>
+    </details>
+
+    <div class="info-box celebrate">
+        &#x1F680; Your STEM AI Toolkit is live on the internet! You built and deployed a real AI-powered web application.
+    </div>
+</div>
+
+
+<!-- ═══════════════════════ BONUS ═══════════════════════ -->
+<div class="bonus-section" id="bonus">
+    <h2>&#x1F31F; Bonus Challenges</h2>
+    <p>Finished early? Here are some ideas to extend your toolkit:</p>
+
+    <div class="bonus-item">
+        <h4>1. Add a 4th Tool: Lesson Plan Generator</h4>
+        <p>Create a new file <code>pages/4_&#x1F4DA;_Lesson_Planner.py</code> that generates lesson plans. Include inputs for topic, duration, learning objectives, and activities. Write a system prompt that produces structured lesson plans with warm-up, instruction, practice, and assessment sections.</p>
+    </div>
+
+    <div class="bonus-item">
+        <h4>2. Add File Upload for Lab Reports</h4>
+        <p>Use <code>st.file_uploader("Upload a lab report", type=["txt", "pdf"])</code> to let teachers upload files instead of pasting text. You'll need to read the file content and pass it to the AI.</p>
+    </div>
+
+    <div class="bonus-item">
+        <h4>3. Add Custom CSS Styling</h4>
+        <p>Use <code>st.markdown()</code> with the <code>unsafe_allow_html=True</code> parameter to inject custom CSS. You can style headings, add colored boxes for different score ranges, or create a custom header.</p>
+    </div>
+
+    <div class="bonus-item">
+        <h4>4. Save Quiz History</h4>
+        <p>Use <code>st.session_state</code> to keep track of generated quizzes so teachers can review and compare previous quizzes without regenerating them. Add a sidebar section that lists past quizzes.</p>
+    </div>
+</div>
+
+
+</div><!-- /.container -->
+
+<div class="footer">
+    <p><strong>CSPD 2026</strong> &bull; Agentic AI for STEM Teachers &bull; Afternoon Session</p>
+    <p>Built with Streamlit &bull; Powered by Claude AI</p>
+</div>
+
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+<script>
+// ── Copy-to-clipboard for code blocks ──
+function copyCode(btn) {
+    const codeBlock = btn.closest('.code-block');
+    const pre = codeBlock.querySelector('pre');
+    // Get raw text, stripping HTML tags
+    const text = pre.innerText || pre.textContent;
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+// ── Progress bar highlighting on scroll ──
+(function() {
+    const sections = document.querySelectorAll('.step-section');
+    const progressSteps = document.querySelectorAll('.progress-step');
+
+    function updateProgress() {
+        let currentStep = 0;
+        const scrollPos = window.scrollY + 120; // offset for sticky bar
+
+        sections.forEach((section, i) => {
+            if (scrollPos >= section.offsetTop) {
+                currentStep = i;
+            }
+        });
+
+        progressSteps.forEach((step, i) => {
+            step.classList.remove('active', 'completed');
+            if (i < currentStep) {
+                step.classList.add('completed');
+            } else if (i === currentStep) {
+                step.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+})();
+
+// ── Smooth scroll for progress bar links ──
+document.querySelectorAll('.progress-step').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

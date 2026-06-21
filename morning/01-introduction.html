@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI for STEM Teachers - CSPD 2026 Morning Session</title>
+<style>
+/* ── Reset & Base ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  line-height: 1.7;
+}
+
+/* ── Header ── */
+.hero {
+  background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+  color: #fff;
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -20%;
+  width: 140%;
+  height: 220%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+  position: relative;
+}
+.hero .subtitle {
+  font-size: 1.15rem;
+  opacity: .9;
+  margin-bottom: .25rem;
+  position: relative;
+}
+.hero .meta {
+  font-size: .95rem;
+  opacity: .75;
+  position: relative;
+}
+
+/* ── Table of Contents (nav) ── */
+.toc-bar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: .75rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.toc-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .75rem;
+  align-items: center;
+}
+.toc-label {
+  font-weight: 600;
+  color: #1e40af;
+  font-size: .85rem;
+  margin-right: .25rem;
+  white-space: nowrap;
+}
+.toc-inner a {
+  font-size: .8rem;
+  color: #475569;
+  text-decoration: none;
+  padding: .2rem .55rem;
+  border-radius: 6px;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.toc-inner a:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* ── Main content ── */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Section cards ── */
+.section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  padding: 2rem;
+}
+.section h2 {
+  color: #1e40af;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding-bottom: .6rem;
+  border-bottom: 3px solid #dbeafe;
+  margin-bottom: 1.25rem;
+}
+.section h3 {
+  color: #334155;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.25rem 0 .5rem;
+}
+.section p {
+  margin-bottom: .85rem;
+}
+.section ul, .section ol {
+  margin: .5rem 0 1rem 1.5rem;
+}
+.section li {
+  margin-bottom: .35rem;
+}
+
+/* ── Callout boxes ── */
+.callout {
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+.callout-concept {
+  border-left: 4px solid #2563eb;
+  background: #eff6ff;
+}
+.callout-tip {
+  border-left: 4px solid #10b981;
+  background: #f0fdf4;
+}
+.callout-warning {
+  border-left: 4px solid #f59e0b;
+  background: #fffbeb;
+}
+.callout-title {
+  font-weight: 700;
+  margin-bottom: .3rem;
+  font-size: .95rem;
+}
+.callout-concept .callout-title { color: #1e40af; }
+.callout-tip .callout-title { color: #047857; }
+.callout-warning .callout-title { color: #b45309; }
+
+/* ── Comparison Table ── */
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.25rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.comparison-table th {
+  background: #1e40af;
+  color: #fff;
+  padding: .75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: .95rem;
+}
+.comparison-table td {
+  padding: .65rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: .95rem;
+}
+.comparison-table tr:last-child td { border-bottom: none; }
+.comparison-table tr:nth-child(even) td { background: #f8fafc; }
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding: 1rem 0 1rem 2.5rem;
+  margin: 1.25rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #1e40af, #0891b2);
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -2.5rem;
+  top: .35rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid #1e40af;
+  background: #fff;
+  z-index: 1;
+}
+.timeline-item .era {
+  font-weight: 700;
+  color: #1e40af;
+  font-size: .9rem;
+  display: block;
+  margin-bottom: .1rem;
+}
+.timeline-item .era-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #1e293b;
+}
+.timeline-item .era-desc {
+  color: #475569;
+  font-size: .92rem;
+  margin-top: .15rem;
+}
+
+/* ── Agent Loop (Circular CSS Diagram) ── */
+.agent-loop-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.agent-loop {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+.loop-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: .85rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(30,64,175,.3);
+  z-index: 2;
+}
+.loop-node {
+  position: absolute;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: .72rem;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  z-index: 2;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.loop-node .node-emoji { font-size: 1.2rem; margin-bottom: 2px; }
+.node-perceive { background: #2563eb; top: 4px; left: 50%; transform: translateX(-50%); }
+.node-plan    { background: #7c3aed; top: 25%; right: 4px; }
+.node-act     { background: #059669; bottom: 25%; right: 4px; }
+.node-observe { background: #d97706; bottom: 4px; left: 50%; transform: translateX(-50%); }
+.node-reflect { background: #dc2626; top: 25%; left: 4px; }
+
+/* Curved arrows between nodes */
+.loop-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2.5px dashed #94a3b8;
+  z-index: 1;
+}
+.arrow-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── Use-case Cards ── */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+.usecase-card {
+  border-radius: 10px;
+  padding: 1.25rem;
+  border: 1px solid transparent;
+  transition: transform .15s, box-shadow .15s;
+}
+.usecase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+.usecase-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: .4rem;
+}
+.usecase-card .card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: .4rem;
+}
+.usecase-card p {
+  font-size: .9rem;
+  margin: 0;
+}
+.card-science   { background: #eff6ff; border-color: #bfdbfe; }
+.card-science .card-title { color: #1e40af; }
+.card-math      { background: #fef3c7; border-color: #fde68a; }
+.card-math .card-title { color: #92400e; }
+.card-eng       { background: #f0fdf4; border-color: #bbf7d0; }
+.card-eng .card-title { color: #166534; }
+.card-general   { background: #fdf2f8; border-color: #fbcfe8; }
+.card-general .card-title { color: #9d174d; }
+.card-general2  { background: #f5f3ff; border-color: #ddd6fe; }
+.card-general2 .card-title { color: #5b21b6; }
+.card-general3  { background: #fff7ed; border-color: #fed7aa; }
+.card-general3 .card-title { color: #9a3412; }
+
+/* ── Tech Stack Diagram ── */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+.tech-box {
+  background: #fff;
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  min-width: 160px;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(37,99,235,.12);
+}
+.tech-box .tech-icon { font-size: 1.8rem; margin-bottom: .25rem; }
+.tech-box .tech-name { font-weight: 700; color: #1e40af; font-size: 1rem; }
+.tech-box .tech-role { font-size: .8rem; color: #64748b; margin-top: .15rem; }
+.tech-arrow {
+  font-size: 1.6rem;
+  color: #2563eb;
+  padding: 0 .35rem;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+@media (max-width: 700px) {
+  .tech-stack { flex-direction: column; }
+  .tech-arrow { transform: rotate(90deg); padding: .35rem 0; }
+}
+
+/* ── Pillar Cards ── */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+.pillar-card {
+  border-radius: 10px;
+  padding: 1.15rem;
+  text-align: center;
+}
+.pillar-card .pillar-icon { font-size: 2rem; margin-bottom: .25rem; }
+.pillar-card .pillar-name { font-weight: 700; font-size: 1.05rem; margin-bottom: .35rem; }
+.pillar-card .pillar-desc { font-size: .88rem; color: #334155; text-align: left; }
+.pillar-card .pillar-example {
+  font-size: .82rem;
+  color: #475569;
+  font-style: italic;
+  margin-top: .5rem;
+  text-align: left;
+  padding-top: .5rem;
+  border-top: 1px dashed #cbd5e1;
+}
+.pillar-a { background: #eff6ff; border: 1px solid #bfdbfe; }
+.pillar-a .pillar-name { color: #1e40af; }
+.pillar-b { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.pillar-b .pillar-name { color: #166534; }
+.pillar-c { background: #fef3c7; border: 1px solid #fde68a; }
+.pillar-c .pillar-name { color: #92400e; }
+.pillar-d { background: #fdf2f8; border: 1px solid #fbcfe8; }
+.pillar-d .pillar-name { color: #9d174d; }
+.pillar-e { background: #f5f3ff; border: 1px solid #ddd6fe; }
+.pillar-e .pillar-name { color: #5b21b6; }
+
+/* ── Responsible AI Checklist ── */
+.checklist {
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+.checklist li {
+  padding: .6rem .75rem .6rem 2.75rem;
+  position: relative;
+  border-radius: 8px;
+  margin-bottom: .5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: .95rem;
+}
+.checklist li::before {
+  content: attr(data-icon);
+  position: absolute;
+  left: .75rem;
+  top: .55rem;
+  font-size: 1.15rem;
+}
+
+/* ── Agenda Grid ── */
+.agenda-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+@media (max-width: 600px) {
+  .agenda-grid { grid-template-columns: 1fr; }
+}
+.agenda-block {
+  border-radius: 10px;
+  padding: 1.15rem;
+  border: 1px solid #e2e8f0;
+}
+.agenda-morning {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+.agenda-afternoon {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.agenda-block .agenda-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: .5rem;
+}
+.agenda-morning .agenda-label { color: #1e40af; }
+.agenda-afternoon .agenda-label { color: #166534; }
+.agenda-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.agenda-block li {
+  padding: .3rem 0 .3rem 1.5rem;
+  position: relative;
+  font-size: .92rem;
+}
+.agenda-block li::before {
+  content: '';
+  position: absolute;
+  left: .25rem;
+  top: .65rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.agenda-morning li::before { background: #2563eb; }
+.agenda-afternoon li::before { background: #10b981; }
+
+/* ── Takeaway Box ── */
+.takeaway {
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  margin: 1.25rem 0;
+}
+.takeaway h3 {
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: .75rem;
+}
+.takeaway p {
+  opacity: .95;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+}
+
+/* ── Back to Top ── */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #1e40af;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(30,64,175,.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .3s, transform .15s;
+  z-index: 200;
+}
+.back-to-top.visible { opacity: 1; }
+.back-to-top:hover { transform: scale(1.1); }
+
+/* ── Misc ── */
+strong { font-weight: 600; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.muted { color: #64748b; font-size: .9rem; }
+
+/* ── Print ── */
+@media print {
+  .toc-bar, .back-to-top { display: none !important; }
+  .section { break-inside: avoid; box-shadow: none; border: 1px solid #e2e8f0; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════ HEADER ════════════════════════════════════════ -->
+<header class="hero" id="top">
+  <h1>Agentic AI for STEM Teachers</h1>
+  <p class="subtitle">From Zero to Deployed &mdash; Build Your Own AI Teaching Assistant in One Day</p>
+  <p class="meta">CSPD 2026 &bull; Arizona CS Professional Development Week &bull; Morning Session (9:00 &ndash; 10:00 AM)</p>
+</header>
+
+<!-- ════════════════════════════════════════ TABLE OF CONTENTS ════════════════════════════════════════ -->
+<nav class="toc-bar" aria-label="Table of contents">
+  <div class="toc-inner">
+    <span class="toc-label">Contents:</span>
+    <a href="#welcome">Welcome</a>
+    <a href="#what-is-ai">What is AI?</a>
+    <a href="#llm">Meet the LLM</a>
+    <a href="#chatbot-to-agent">Chatbot &rarr; Agent</a>
+    <a href="#five-pillars">Five Pillars</a>
+    <a href="#classroom">In Your Classroom</a>
+    <a href="#tech-stack">Tech Stack</a>
+    <a href="#responsible-ai">Responsible AI</a>
+    <a href="#journey">Your Journey</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<!-- ════════════════════════════════════════ 1. WELCOME ════════════════════════════════════════ -->
+<section class="section" id="welcome">
+  <h2>1. Welcome &amp; Today's Journey</h2>
+
+  <p>Welcome to <strong>Agentic AI for STEM Teachers</strong>! Today is a hands-on, no-prerequisites workshop designed for educators who want to understand what AI agents really are and &mdash; most importantly &mdash; <em>build one themselves</em> before the day is over.</p>
+
+  <p>You do <strong>not</strong> need to know how to code. You do <strong>not</strong> need a computer science background. If you can type, follow instructions, and care about your students' learning, you have everything you need.</p>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">What you'll leave with today</div>
+    <p>A <strong>working AI teaching assistant</strong> that you designed, customized for your subject area, deployed on the web, and can share with colleagues. It'll be live at a real URL you can open on your phone right now &mdash; no app store, no IT department, no cost.</p>
+  </div>
+
+  <h3>Today's Agenda</h3>
+  <div class="agenda-grid">
+    <div class="agenda-block agenda-morning">
+      <div class="agenda-label">Morning: Learn &amp; Practice</div>
+      <ul>
+        <li><strong>9:00 &ndash; 10:00</strong> &mdash; Concepts &amp; foundations (you are here)</li>
+        <li><strong>10:00 &ndash; 10:15</strong> &mdash; Break</li>
+        <li><strong>10:15 &ndash; 11:15</strong> &mdash; Interactive lesson: prompting &amp; prompt engineering</li>
+        <li><strong>11:15 &ndash; 11:30</strong> &mdash; Break</li>
+        <li><strong>11:30 &ndash; 12:30</strong> &mdash; Guided coding: your first AI app</li>
+      </ul>
+    </div>
+    <div class="agenda-block agenda-afternoon">
+      <div class="agenda-label">Afternoon: Build &amp; Deploy</div>
+      <ul>
+        <li><strong>1:30 &ndash; 2:45</strong> &mdash; Design your custom agent</li>
+        <li><strong>2:45 &ndash; 3:00</strong> &mdash; Break</li>
+        <li><strong>3:00 &ndash; 4:00</strong> &mdash; Deploy to the web &amp; test</li>
+        <li><strong>4:00 &ndash; 4:30</strong> &mdash; Showcase, reflection &amp; next steps</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Tip: Go at your own pace</div>
+    <p>This document is yours to keep. Bookmark it, revisit it tonight, share it with a colleague. Every section is self-contained. If the presenter moves on before you finish reading, that's okay &mdash; you can come back.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 2. WHAT IS AI ════════════════════════════════════════ -->
+<section class="section" id="what-is-ai">
+  <h2>2. What is AI, Really?</h2>
+
+  <p>Let's get one thing out of the way: <strong>AI is not magic, and it is not alive.</strong> At its core, artificial intelligence is software that finds patterns in data and uses those patterns to make predictions. That's it. Everything else &mdash; the hype, the fear, the sci-fi fantasies &mdash; is built on top of that simple foundation.</p>
+
+  <p>Think about how you learned to predict what comes next in a sentence. If I say "The cat sat on the ___," you immediately think "mat" or "chair" or "couch." You can do that because you've read thousands of sentences and absorbed patterns of how English works. Modern AI does something remarkably similar, except it has read <em>billions</em> of pages and can draw on all of them at once.</p>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">The one-sentence definition</div>
+    <p><strong>Artificial intelligence is software that learns patterns from data and uses those patterns to make predictions or decisions.</strong> No consciousness. No feelings. No hidden agenda. Just very sophisticated pattern matching.</p>
+  </div>
+
+  <h3>A Brief History: How We Got Here</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <span class="era">1950s &ndash; 1980s</span>
+      <span class="era-title">Rule-Based Systems (Expert Systems)</span>
+      <p class="era-desc">Humans wrote explicit if/then rules by hand. "If the patient has a fever AND a cough, suggest flu." Useful but brittle &mdash; they could only handle situations the programmers anticipated.</p>
+    </div>
+    <div class="timeline-item">
+      <span class="era">1990s &ndash; 2000s</span>
+      <span class="era-title">Machine Learning</span>
+      <p class="era-desc">Instead of writing rules, we gave the computer data and let it find the rules itself. Spam filters are a classic example: show the system 10,000 spam emails and 10,000 real emails, and it figures out what makes spam "spammy."</p>
+    </div>
+    <div class="timeline-item">
+      <span class="era">2010s</span>
+      <span class="era-title">Deep Learning</span>
+      <p class="era-desc">Neural networks with many layers could learn incredibly complex patterns &mdash; recognizing faces in photos, translating languages, even beating humans at Go. Required enormous amounts of data and computing power.</p>
+    </div>
+    <div class="timeline-item">
+      <span class="era">2020 &ndash; 2023</span>
+      <span class="era-title">Large Language Models (LLMs)</span>
+      <p class="era-desc">GPT, Claude, Gemini &mdash; models trained on most of the text on the internet. They can write essays, explain calculus, draft emails, and hold conversations. This is where ChatGPT comes from.</p>
+    </div>
+    <div class="timeline-item">
+      <span class="era">2024 &ndash; Present</span>
+      <span class="era-title">Agentic AI</span>
+      <p class="era-desc">The frontier today. AI systems that don't just answer questions &mdash; they take <em>actions</em>. They can search the web, write and run code, manage files, and complete multi-step tasks autonomously. This is what we're here to learn about.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Why this matters for teachers</div>
+    <p>Understanding this timeline helps you see that AI isn't one thing &mdash; it's a spectrum. The AI in your email spam filter is very different from the AI in ChatGPT, and both are different from the agentic AI we'll build today. Knowing the differences helps you make informed decisions about which tools to use in your classroom and how to teach students about them.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 3. MEET THE LLM ════════════════════════════════════════ -->
+<section class="section" id="llm">
+  <h2>3. Meet the Large Language Model (LLM)</h2>
+
+  <p>You've almost certainly used one already. ChatGPT, Claude, Gemini, Copilot &mdash; these are all built on <strong>large language models</strong>. Let's pull back the curtain on what they actually are.</p>
+
+  <h3>How LLMs Work (The Non-Technical Version)</h3>
+
+  <p>An LLM is trained by reading a massive amount of text &mdash; books, websites, academic papers, forums, code, and more. During training, it plays a game millions of times: given a sequence of words, predict the next word. Over time, it gets extraordinarily good at this game.</p>
+
+  <p>When you type a prompt into ChatGPT, the model isn't "thinking" about your question. It's generating one word (technically, one <em>token</em>) at a time, each time asking itself: "Given everything that's come before, what word is most likely to come next?" The result often <em>looks</em> like understanding, but it's really very sophisticated pattern completion.</p>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">The analogy: Your world's most well-read writing partner</div>
+    <p>Imagine a writing partner who has read every textbook, every novel, every scientific paper, every coding tutorial, and every Reddit thread ever posted &mdash; but has <em>never lived in the real world</em>. They can write beautifully about how rain feels on your skin because they've read a million descriptions of it, not because they've ever been wet. That's an LLM. Incredibly knowledgeable, but knowledge without experience.</p>
+  </div>
+
+  <h3>Three Key Properties You Need to Know</h3>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>What It Means</th>
+        <th>Why It Matters</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Context Window</strong></td>
+        <td>The amount of text the model can "see" at once &mdash; both your input and its output. Measured in tokens (roughly &frac34; of a word).</td>
+        <td>If your conversation is too long, the model "forgets" the beginning. Modern models have windows of 100K+ tokens, but there are still limits.</td>
+      </tr>
+      <tr>
+        <td><strong>Temperature</strong></td>
+        <td>A setting that controls how "creative" vs. "predictable" the output is. Low temperature = safe, expected answers. High temperature = surprising, varied answers.</td>
+        <td>For a math tutor, you want low temperature (consistent, accurate). For a creative writing helper, you might want higher temperature.</td>
+      </tr>
+      <tr>
+        <td><strong>Tokens</strong></td>
+        <td>The basic unit the model reads and writes. A token is roughly &frac34; of an English word. "Photosynthesis" = 4 tokens. "Cat" = 1 token.</td>
+        <td>API pricing is based on tokens. Understanding this helps you estimate costs and design efficient prompts.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">LLMs can be confidently wrong</div>
+    <p>Because LLMs are pattern-completion machines (not fact-lookup engines), they can generate text that <em>sounds</em> authoritative but is factually incorrect. This is called a <strong>hallucination</strong>. An LLM might confidently tell you that a made-up research paper exists, complete with fake authors and a fake journal. Always verify important claims independently. This is one of the key things to teach your students as well.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 4. CHATBOT TO AGENT ════════════════════════════════════════ -->
+<section class="section" id="chatbot-to-agent">
+  <h2>4. From Chatbot to Agent: The Big Leap</h2>
+
+  <p>Here's the most important concept we'll cover today. There's a <strong>fundamental difference</strong> between a chatbot and an AI agent, and understanding that difference is what this entire workshop is about.</p>
+
+  <p>A <strong>chatbot</strong> is like a reference librarian. You ask a question, you get an answer. The librarian doesn't follow you home, organize your bookshelf, or check whether you actually read the book. They answer your question and wait for the next one.</p>
+
+  <p>An <strong>agent</strong> is like a teaching assistant. You say, "Help my students review for the chemistry exam," and the TA figures out the steps: review the syllabus, identify key topics, create practice problems, grade the results, and report back on which concepts the class is struggling with. The TA <em>plans, acts, evaluates, and adapts</em> &mdash; without you specifying every step.</p>
+
+  <h3>Side-by-Side Comparison</h3>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Chatbot</th>
+        <th>AI Agent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Interaction Style</strong></td>
+        <td>Reactive &mdash; waits for your question</td>
+        <td>Proactive &mdash; can initiate actions on its own</td>
+      </tr>
+      <tr>
+        <td><strong>Conversation</strong></td>
+        <td>Single-turn (one question, one answer)</td>
+        <td>Multi-step (works through complex workflows)</td>
+      </tr>
+      <tr>
+        <td><strong>Memory</strong></td>
+        <td>Limited or none between sessions</td>
+        <td>Remembers context and learns from past interactions</td>
+      </tr>
+      <tr>
+        <td><strong>Tools</strong></td>
+        <td>No tools &mdash; can only generate text</td>
+        <td>Uses tools: searches the web, runs code, reads files, calls APIs</td>
+      </tr>
+      <tr>
+        <td><strong>Planning</strong></td>
+        <td>No planning &mdash; responds to the immediate prompt</td>
+        <td>Breaks big tasks into steps and executes them in order</td>
+      </tr>
+      <tr>
+        <td><strong>Self-Correction</strong></td>
+        <td>None &mdash; if it's wrong, you must notice and re-prompt</td>
+        <td>Evaluates its own output and tries again if the result isn't right</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>The Agent Loop</h3>
+
+  <p>Every AI agent, regardless of how sophisticated it is, follows the same fundamental cycle. We call it the <strong>Agent Loop</strong>. The agent perceives its environment, makes a plan, takes action, observes the result, reflects on whether it worked, and then loops back to perceive the updated situation. This cycle repeats until the task is complete.</p>
+
+  <!-- Agent Loop Diagram -->
+  <div class="agent-loop-wrapper">
+    <div class="agent-loop">
+      <!-- Center -->
+      <div class="loop-center">Agent<br>Loop</div>
+
+      <!-- Ring (dashed circle) -->
+      <div class="loop-ring"></div>
+
+      <!-- SVG arrows between nodes -->
+      <svg class="arrow-svg" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Perceive → Plan -->
+        <path d="M 185 35 Q 235 55 240 110" stroke="#6366f1" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+        <!-- Plan → Act -->
+        <path d="M 250 170 Q 245 225 195 250" stroke="#6366f1" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+        <!-- Act → Observe -->
+        <path d="M 145 268 Q 95 268 65 235" stroke="#6366f1" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+        <!-- Observe → Reflect -->
+        <path d="M 35 175 Q 25 120 55 75" stroke="#6366f1" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+        <!-- Reflect → Perceive -->
+        <path d="M 85 38 Q 110 18 140 22" stroke="#6366f1" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)"/>
+        <defs>
+          <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#6366f1"/>
+          </marker>
+        </defs>
+      </svg>
+
+      <!-- Nodes -->
+      <div class="loop-node node-perceive">
+        <span class="node-emoji">👁</span>
+        Perceive
+      </div>
+      <div class="loop-node node-plan">
+        <span class="node-emoji">🧠</span>
+        Plan
+      </div>
+      <div class="loop-node node-act">
+        <span class="node-emoji">⚡</span>
+        Act
+      </div>
+      <div class="loop-node node-observe">
+        <span class="node-emoji">🔍</span>
+        Observe
+      </div>
+      <div class="loop-node node-reflect">
+        <span class="node-emoji">💭</span>
+        Reflect
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">The Agent Loop in Plain English</div>
+    <ol>
+      <li><strong>Perceive</strong> &mdash; The agent reads the task description, user input, or current state of the world.</li>
+      <li><strong>Plan</strong> &mdash; It decides what to do next: which tool to use, what question to ask, what step comes first.</li>
+      <li><strong>Act</strong> &mdash; It takes that action: runs a web search, writes some text, calls an API, generates a quiz question.</li>
+      <li><strong>Observe</strong> &mdash; It looks at the result. Did the action work? Is the output correct? Was there an error?</li>
+      <li><strong>Reflect</strong> &mdash; It evaluates: "Is this good enough? Do I need to try again? Should I take a different approach?"</li>
+    </ol>
+    <p>Then it loops back to <strong>Perceive</strong> with the updated information and continues until the task is done.</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Why should teachers care about the agent loop?</div>
+    <p>Notice something familiar? The agent loop is essentially the <strong>scientific method</strong> (observe, hypothesize, experiment, analyze) and the <strong>engineering design process</strong> (define, ideate, prototype, test, refine). When you teach your students about AI agents, you can connect this directly to processes they already know.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 5. FIVE PILLARS ════════════════════════════════════════ -->
+<section class="section" id="five-pillars">
+  <h2>5. What Makes AI "Agentic"?</h2>
+
+  <p>Not every AI system is an agent. An AI becomes "agentic" when it possesses some combination of five key capabilities. The more of these pillars it has, the more autonomous and useful it becomes. Let's explore each one &mdash; with examples from your classroom.</p>
+
+  <div class="pillar-grid">
+    <div class="pillar-card pillar-a">
+      <div class="pillar-icon">🤖</div>
+      <div class="pillar-name">(a) Autonomy</div>
+      <div class="pillar-desc">The agent acts without needing step-by-step human instruction. You give it a goal ("generate a review worksheet for Chapter 5"), and it figures out the steps on its own &mdash; reading the chapter topics, selecting question types, balancing difficulty levels, and formatting the output.</div>
+      <div class="pillar-example">STEM Example: You tell the agent "Prepare a lab safety briefing for tomorrow's chemistry class." It identifies the experiment, looks up the relevant safety protocols, creates a pre-lab checklist, and drafts discussion questions &mdash; all from a single request.</div>
+    </div>
+
+    <div class="pillar-card pillar-b">
+      <div class="pillar-icon">🔧</div>
+      <div class="pillar-name">(b) Tool Use</div>
+      <div class="pillar-desc">The agent can reach beyond text generation to use external tools: search the web for current information, run Python code to solve math problems, read files and documents, call external APIs, and even control other software.</div>
+      <div class="pillar-example">STEM Example: A physics tutor agent that doesn't just explain projectile motion but actually runs the kinematic equations in Python, generates a plot of the trajectory, and shows the student a visual graph alongside the explanation.</div>
+    </div>
+
+    <div class="pillar-card pillar-c">
+      <div class="pillar-icon">📋</div>
+      <div class="pillar-name">(c) Planning</div>
+      <div class="pillar-desc">The agent breaks complex tasks into manageable steps and executes them in a logical order. It can handle dependencies ("I need to do X before Y"), deal with contingencies ("If the student gets this wrong, try a different approach"), and manage multi-step workflows.</div>
+      <div class="pillar-example">STEM Example: An engineering design review agent that first reads the student's design brief, then checks if constraints were met, then evaluates the solution's feasibility, then provides structured feedback &mdash; each step building on the previous one.</div>
+    </div>
+
+    <div class="pillar-card pillar-d">
+      <div class="pillar-icon">🧠</div>
+      <div class="pillar-name">(d) Memory</div>
+      <div class="pillar-desc">The agent remembers context across interactions. It knows what a student struggled with last week, what topics have been covered in the course, and what approach worked best for a particular learner. This is different from a chatbot that starts fresh every conversation.</div>
+      <div class="pillar-example">STEM Example: A math tutor that remembers a student consistently confuses area and perimeter. The next time it generates practice problems, it includes extra scaffolding on those specific concepts without the teacher having to re-explain the student's history.</div>
+    </div>
+
+    <div class="pillar-card pillar-e">
+      <div class="pillar-icon">🪞</div>
+      <div class="pillar-name">(e) Reflection</div>
+      <div class="pillar-desc">The agent evaluates its own output and improves it. If it generates a quiz and notices one question is ambiguous, it rewrites it. If a student says "I don't understand," it tries a completely different explanation strategy rather than repeating itself.</div>
+      <div class="pillar-example">STEM Example: A lab report feedback agent that drafts its feedback, then re-reads it checking for tone ("Is this constructive, not discouraging?"), accuracy ("Did I correctly identify the student's error?"), and actionability ("Can the student actually use this to improve?").</div>
+    </div>
+  </div>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">Not all-or-nothing</div>
+    <p>An AI system doesn't need all five pillars to be useful. The agent we build today will focus primarily on <strong>Autonomy</strong>, <strong>Tool Use</strong>, and <strong>Planning</strong>. Memory and Reflection are more advanced features that you can add as you grow more comfortable. Think of these pillars as a menu, not a checklist.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 6. CLASSROOM USE CASES ════════════════════════════════════════ -->
+<section class="section" id="classroom">
+  <h2>6. Agentic AI in Your STEM Classroom</h2>
+
+  <p>Let's get concrete. Here are real use cases where an AI agent (not just a chatbot) can meaningfully support your teaching &mdash; without replacing your judgment, expertise, or the human connection that makes great teaching great.</p>
+
+  <div class="usecase-grid">
+    <div class="usecase-card card-science">
+      <div class="card-icon">🔬</div>
+      <div class="card-title">Lab Report Feedback Agent</div>
+      <p>Reads student lab reports and provides structured feedback on scientific methodology: Was the hypothesis testable? Were variables properly controlled? Is the conclusion supported by the data? Gives constructive criticism that teaches scientific thinking, not just grammar corrections. The teacher reviews the feedback before sharing it with students.</p>
+    </div>
+
+    <div class="usecase-card card-math">
+      <div class="card-icon">🧮</div>
+      <div class="card-title">Socratic Math Tutor</div>
+      <p>Guides students through problem-solving using the Socratic method &mdash; asking guiding questions instead of giving answers. If a student is stuck on a quadratic equation, the agent might ask, "What do you notice about the coefficients?" or "Can you identify a common factor?" It builds mathematical reasoning, not answer dependency.</p>
+    </div>
+
+    <div class="usecase-card card-eng">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Design Review Bot</div>
+      <p>Evaluates student engineering notebooks and design proposals against a rubric you define. Checks for completeness (Did they document their constraints? Did they consider alternative solutions?), provides feedback on the engineering design process, and flags common mistakes &mdash; like jumping to a solution before properly defining the problem.</p>
+    </div>
+
+    <div class="usecase-card card-general">
+      <div class="card-icon">📝</div>
+      <div class="card-title">Adaptive Quiz Generator</div>
+      <p>Creates quizzes tailored to your specific curriculum, standards, and difficulty level. Unlike generic quiz makers, an agentic version can adapt: if a student gets a question wrong, the next question targets the same concept at a simpler level. It exports clean formats ready for Google Forms or your LMS.</p>
+    </div>
+
+    <div class="usecase-card card-general2">
+      <div class="card-icon">📚</div>
+      <div class="card-title">Lesson Plan Assistant</div>
+      <p>Given your state standards, grade level, and time constraints, the agent drafts lesson plans complete with learning objectives (mapped to standards), warm-up activities, direct instruction outlines, guided practice ideas, and exit ticket questions. You review and modify &mdash; it handles the first draft so you can focus on refinement.</p>
+    </div>
+
+    <div class="usecase-card card-general3">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Differentiation Helper</div>
+      <p>Takes any assignment or reading and produces differentiated versions: a scaffolded version for students who need extra support, an on-level version, and an enriched version for students ready for a challenge. Maintains the same core learning objectives across all levels while adjusting vocabulary, complexity, and support structures.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Choose your project now</div>
+    <p>As you read through these use cases, start thinking about <strong>which one you'd like to build today</strong>. This afternoon, you'll design and deploy your own agent. It doesn't have to match these examples exactly &mdash; they're here to spark ideas. The best project is one that solves a real problem in <em>your</em> classroom.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 7. TECH STACK ════════════════════════════════════════ -->
+<section class="section" id="tech-stack">
+  <h2>7. The Technology Stack We'll Use Today</h2>
+
+  <p>Today's build uses four tools, stacked on top of each other. Each one is free (or has a generous free tier), well-documented, and beginner-friendly. Here's how they fit together:</p>
+
+  <!-- Tech Stack Diagram -->
+  <div class="tech-stack">
+    <div class="tech-box">
+      <div class="tech-icon">🐍</div>
+      <div class="tech-name">Python</div>
+      <div class="tech-role">The programming language</div>
+    </div>
+    <div class="tech-arrow">&rarr;</div>
+    <div class="tech-box">
+      <div class="tech-icon">🧠</div>
+      <div class="tech-name">Anthropic API</div>
+      <div class="tech-role">The AI brain (Claude)</div>
+    </div>
+    <div class="tech-arrow">&rarr;</div>
+    <div class="tech-box">
+      <div class="tech-icon">🖥️</div>
+      <div class="tech-name">Streamlit</div>
+      <div class="tech-role">The web interface</div>
+    </div>
+    <div class="tech-arrow">&rarr;</div>
+    <div class="tech-box">
+      <div class="tech-icon">☁️</div>
+      <div class="tech-name">Streamlit Cloud</div>
+      <div class="tech-role">Free deployment / hosting</div>
+    </div>
+  </div>
+
+  <h3>Why These Tools?</h3>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>What It Does</th>
+        <th>Why We Chose It</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Python</strong></td>
+        <td>A general-purpose programming language. It's the "glue" that connects everything together. You'll write about 50 lines of it today.</td>
+        <td>The most popular language for AI work. Reads almost like English. Enormous community and free learning resources. If you Google any problem, you'll find an answer.</td>
+      </tr>
+      <tr>
+        <td><strong>Anthropic API</strong></td>
+        <td>A service that lets your Python code send prompts to Claude (an LLM) and get responses back. Think of it as a phone line to the AI's brain.</td>
+        <td>Excellent documentation, strong safety features, competitive pricing. Workshop API credits are provided at no cost to you.</td>
+      </tr>
+      <tr>
+        <td><strong>Streamlit</strong></td>
+        <td>A Python library that turns your code into a web application with just a few lines. No HTML, CSS, or JavaScript knowledge needed.</td>
+        <td>Dramatically lowers the barrier to building web apps. You write Python, and Streamlit handles all the web stuff. Chat interfaces are built-in.</td>
+      </tr>
+      <tr>
+        <td><strong>Streamlit Cloud</strong></td>
+        <td>A free hosting service that takes your code from GitHub and makes it available at a public URL. Anyone with the link can use your app.</td>
+        <td>Completely free for public apps. Deploy with one click. No servers to manage, no DevOps skills needed. Connects directly to GitHub.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-concept">
+    <div class="callout-title">You don't need to master any of these</div>
+    <p>Today's goal is not to become a Python developer. It's to understand the <em>architecture</em> &mdash; how these pieces fit together &mdash; and to have a working template you can modify and extend over time. Think of it like learning to drive a car: you don't need to understand the engine to get where you're going. We'll give you a working car; you'll learn to steer it.</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Pre-flight check</div>
+    <p>Before the coding sessions start, make sure you have: (1) A <strong>GitHub account</strong> (free), (2) A <strong>Streamlit Cloud account</strong> (free, sign in with GitHub), and (3) the <strong>workshop API key</strong> (provided on your table's card). If you're missing any of these, raise your hand now &mdash; a facilitator will help you.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 8. RESPONSIBLE AI ════════════════════════════════════════ -->
+<section class="section" id="responsible-ai">
+  <h2>8. Responsible AI in Education</h2>
+
+  <p>Before we start building, we need to talk about <strong>responsibility</strong>. AI tools are powerful, and with that power comes an obligation to use them thoughtfully &mdash; especially when our students are involved.</p>
+
+  <p>This isn't about fear. It's about professionalism. Just as you would vet a new textbook or evaluate a guest speaker before bringing them into your classroom, you should approach AI tools with informed judgment.</p>
+
+  <ul class="checklist">
+    <li data-icon="👀">
+      <strong>Always review AI output before sharing with students.</strong>
+      AI-generated content can contain errors, biases, or inappropriate material. You are the quality control. Treat AI output as a <em>first draft</em> that needs your expert review, never as a finished product.
+    </li>
+    <li data-icon="🔒">
+      <strong>Never input student PII into AI systems.</strong>
+      Student names, grades, IDs, health information, behavioral records, IEP details &mdash; none of this belongs in a prompt to any AI system. Use anonymized data or fictional examples. Your school's FERPA obligations apply to AI tools just as they do to any other technology.
+    </li>
+    <li data-icon="🤝">
+      <strong>AI is your assistant, not a replacement for teacher judgment.</strong>
+      No AI can replicate the relationships you build with students, the contextual knowledge you have about their lives, or the professional judgment you bring to your classroom. Use AI to handle routine tasks so you have more time for the irreplaceable human parts of teaching.
+    </li>
+    <li data-icon="🎓">
+      <strong>Teach students about AI limitations.</strong>
+      Your students will use AI throughout their lives and careers. Teaching them about hallucination, bias, and the difference between correlation and understanding is one of the most valuable things you can do. Help them become critical consumers of AI, not passive users.
+    </li>
+    <li data-icon="📋">
+      <strong>Know your school's AI policy &mdash; or help create one.</strong>
+      Many districts are still developing their AI policies. Find out where yours stands. If no policy exists, that's an opportunity. The best policies are written with teacher input, not handed down from above. Your experience from today's workshop makes you a valuable voice in that conversation.
+    </li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">A note on bias</div>
+    <p>LLMs learn from internet text, which contains societal biases &mdash; around race, gender, socioeconomic status, and more. These biases can surface in AI output in subtle ways: defaulting to male pronouns for scientists, generating examples that assume certain cultural contexts, or producing recommendations that work better for some student populations than others. Be vigilant. If something feels off, it probably is.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ 9. YOUR JOURNEY ════════════════════════════════════════ -->
+<section class="section" id="journey">
+  <h2>9. Your AI Journey Starts Now</h2>
+
+  <p>Take a moment to appreciate where you are right now. Sixty minutes ago, some of you may not have known what an LLM was. Now you understand:</p>
+
+  <ul>
+    <li>How AI evolved from rigid rules to flexible, language-based reasoning</li>
+    <li>What large language models actually do (and what they don't)</li>
+    <li>The critical difference between a chatbot and an agent</li>
+    <li>The five pillars that make AI "agentic"</li>
+    <li>Concrete ways agents can support your STEM teaching</li>
+    <li>The four tools you'll use to build your own agent today</li>
+    <li>How to use AI responsibly in an educational setting</li>
+  </ul>
+
+  <p>That's a lot. And it's just the beginning.</p>
+
+  <div class="takeaway">
+    <h3>What Comes Next</h3>
+    <p>After our break, we'll move from concepts to practice. You'll learn how to <strong>craft effective prompts</strong>, then you'll <strong>write your first AI-powered application</strong> with guided, step-by-step support. By the end of the afternoon, you'll have a <strong>live AI teaching assistant on the internet</strong> with your name on it.</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">You belong here</div>
+    <p>If at any point today you feel overwhelmed, remember: this workshop was designed specifically for educators with no technical background. Every person in this room is learning something new. There are no silly questions, and there is no falling behind. The facilitators are here to help &mdash; raise your hand, ask a neighbor, or just take a breath and re-read at your own pace. You've got this.</p>
+  </div>
+
+  <p class="muted" style="text-align:center; margin-top:2rem;">
+    &mdash; End of Morning Session 1 &mdash;<br>
+    Break: 10:00 &ndash; 10:15 AM &bull; Next: Interactive Prompting Lesson
+  </p>
+</section>
+
+</main>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&uarr;</button>
+
+<script>
+// Back-to-top button visibility
+const btn = document.getElementById('backToTop');
+let ticking = false;
+window.addEventListener('scroll', function() {
+  if (!ticking) {
+    window.requestAnimationFrame(function() {
+      if (window.scrollY > 400) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+// Smooth scroll for TOC links
+document.querySelectorAll('.toc-inner a').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+# ════════════════════════════════════════════════════════════
+#  NEVER commit secrets — API keys must stay on your computer
+# ════════════════════════════════════════════════════════════
+.env
+**/.env
+.streamlit/secrets.toml
+**/.streamlit/secrets.toml
+
+# Python virtual environments
+venv/
+**/venv/
+.venv/
+env/
+
+# Python caches
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# OS / editor junk
+.DS_Store
+**/.DS_Store
+.vscode/
+.idea/

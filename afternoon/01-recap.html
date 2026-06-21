@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afternoon Recap &mdash; Agentic AI for STEM Teachers | CSPD 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.7; }
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+  color: #fff;
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+}
+.header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: .35rem; }
+.header .subtitle { font-size: 1.15rem; opacity: .92; font-weight: 400; }
+.header .badge {
+  display: inline-block;
+  margin-top: 1rem;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 999px;
+  padding: .35rem 1.2rem;
+  font-size: .95rem;
+  letter-spacing: .02em;
+}
+
+/* ── Main container ── */
+.container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── Cards ── */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.card h2 {
+  color: #1e40af;
+  font-size: 1.5rem;
+  margin-bottom: .75rem;
+  padding-bottom: .5rem;
+  border-bottom: 2px solid #dbeafe;
+}
+.card h3 {
+  color: #334155;
+  font-size: 1.15rem;
+  margin: 1.25rem 0 .5rem;
+}
+
+/* ── Callout boxes ── */
+.callout { border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+.callout-blue   { border-left: 4px solid #2563eb; background: #eff6ff; }
+.callout-green  { border-left: 4px solid #10b981; background: #f0fdf4; }
+.callout-amber  { border-left: 4px solid #f59e0b; background: #fffbeb; }
+
+/* ────────────────────────────
+   Section 1 — Word Cloud
+   ──────────────────────────── */
+.word-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(135deg, #eff6ff 0%, #ecfdf5 100%);
+  border-radius: 10px;
+  margin: 1rem 0 1.5rem;
+}
+.word-cloud span {
+  display: inline-block;
+  font-weight: 600;
+  padding: .2rem .6rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: transform .15s;
+}
+.word-cloud span:hover { transform: scale(1.12); }
+
+/* sizes & colours for word-cloud items */
+.wc-xl  { font-size: 2.4rem; }
+.wc-lg  { font-size: 1.85rem; }
+.wc-md  { font-size: 1.45rem; }
+.wc-sm  { font-size: 1.1rem; }
+.wc-xs  { font-size: 1rem; }
+
+.wc-c1 { color: #1e40af; }
+.wc-c2 { color: #0891b2; }
+.wc-c3 { color: #2563eb; }
+.wc-c4 { color: #0d9488; }
+.wc-c5 { color: #1d4ed8; }
+.wc-c6 { color: #0e7490; }
+.wc-c7 { color: #3b82f6; }
+
+/* ────────────────────────────
+   Agent Loop Diagram (CSS)
+   ──────────────────────────── */
+.agent-loop-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+.agent-loop {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+.loop-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: .85rem; text-align: center;
+  box-shadow: 0 4px 15px rgba(30,64,175,.3);
+  z-index: 2;
+}
+.loop-node {
+  position: absolute;
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 600; text-align: center;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  z-index: 2;
+  line-height: 1.2;
+}
+/* positions around a circle (170px radius from center) */
+.loop-n1 { top:  4px; left: 50%; transform: translateX(-50%); background: #2563eb; }
+.loop-n2 { top:  62px; right: 12px; background: #0891b2; }
+.loop-n3 { bottom: 62px; right: 12px; background: #0d9488; }
+.loop-n4 { bottom: 4px; left: 50%; transform: translateX(-50%); background: #10b981; }
+.loop-n5 { bottom: 62px; left: 12px; background: #0e7490; }
+.loop-n6 { top:  62px; left: 12px; background: #1d4ed8; }
+
+/* Arrows rendered as curved pseudo-elements are complex;
+   use a simple SVG ring arrow instead */
+.loop-ring {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+/* ────────────────────────────
+   Tech Stack Visual
+   ──────────────────────────── */
+.tech-stack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+.tech-box {
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: #fff;
+  padding: .65rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .95rem;
+  text-align: center;
+  white-space: nowrap;
+}
+.tech-box.alt1 { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+.tech-box.alt2 { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.tech-box.alt3 { background: linear-gradient(135deg, #10b981, #34d399); }
+.tech-arrow {
+  font-size: 1.5rem;
+  color: #94a3b8;
+  padding: 0 .5rem;
+  font-weight: 700;
+}
+
+/* ────────────────────────────
+   Section 2 — Timeline
+   ──────────────────────────── */
+.timeline {
+  position: relative;
+  padding: .5rem 0 .5rem 2.5rem;
+  margin: 1rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, #2563eb, #0891b2, #10b981);
+  border-radius: 3px;
+}
+.tl-item {
+  position: relative;
+  padding: .6rem 0 1.2rem 1.2rem;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot {
+  position: absolute;
+  left: -2.5rem;
+  top: .75rem;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #2563eb, 0 2px 6px rgba(0,0,0,.12);
+  z-index: 1;
+}
+.tl-dot.blue   { background: #2563eb; box-shadow: 0 0 0 2px #2563eb, 0 2px 6px rgba(0,0,0,.12); }
+.tl-dot.cyan   { background: #0891b2; box-shadow: 0 0 0 2px #0891b2, 0 2px 6px rgba(0,0,0,.12); }
+.tl-dot.teal   { background: #0d9488; box-shadow: 0 0 0 2px #0d9488, 0 2px 6px rgba(0,0,0,.12); }
+.tl-dot.green  { background: #10b981; box-shadow: 0 0 0 2px #10b981, 0 2px 6px rgba(0,0,0,.12); }
+.tl-dot.amber  { background: #f59e0b; box-shadow: 0 0 0 2px #f59e0b, 0 2px 6px rgba(0,0,0,.12); }
+.tl-dot.purple { background: #7c3aed; box-shadow: 0 0 0 2px #7c3aed, 0 2px 6px rgba(0,0,0,.12); }
+
+.tl-time {
+  font-weight: 700;
+  color: #1e40af;
+  font-size: .95rem;
+  margin-bottom: .15rem;
+}
+.tl-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #1e293b;
+}
+.tl-desc {
+  font-size: .9rem;
+  color: #64748b;
+  margin-top: .15rem;
+}
+.tl-item.break-item .tl-title { color: #f59e0b; }
+
+/* ────────────────────────────
+   Section 3 — Code Reference
+   ──────────────────────────── */
+.ref-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+  font-size: .95rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.ref-table thead th {
+  background: #1e40af;
+  color: #fff;
+  padding: .75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: .9rem;
+}
+.ref-table tbody td {
+  padding: .7rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+.ref-table tbody tr:last-child td { border-bottom: none; }
+.ref-table tbody tr:nth-child(even) { background: #f8fafc; }
+.ref-table tbody tr:hover { background: #eff6ff; }
+
+.ref-table .concept {
+  font-weight: 600;
+  color: #1e40af;
+  white-space: nowrap;
+  width: 130px;
+}
+.ref-table code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  background: #f1f5f9;
+  padding: .15rem .45rem;
+  border-radius: 4px;
+  font-size: .88rem;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+/* ── Back-to-top button ── */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40af, #0891b2);
+  color: #fff;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(30,64,175,.35);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, transform .25s;
+  z-index: 100;
+}
+.back-to-top.visible { opacity: 1; pointer-events: auto; }
+.back-to-top:hover { transform: scale(1.1); }
+
+/* ── Print ── */
+@media print {
+  .back-to-top { display: none; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #e2e8f0; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .header h1 { font-size: 1.5rem; }
+  .card { padding: 1.25rem; }
+  .agent-loop { width: 280px; height: 280px; }
+  .loop-node { width: 72px; height: 72px; font-size: .68rem; }
+  .loop-center { width: 72px; height: 72px; font-size: .75rem; }
+  .loop-n2, .loop-n3 { right: 4px; }
+  .loop-n5, .loop-n6 { left: 4px; }
+  .tech-stack { gap: 0; }
+  .tech-box { font-size: .82rem; padding: .5rem .8rem; }
+  .ref-table { font-size: .85rem; }
+  .ref-table .concept { width: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="header" id="top">
+  <h1>Agentic AI for STEM Teachers</h1>
+  <div class="subtitle">Afternoon Session &mdash; Quick-Reference Recap</div>
+  <div class="badge">CSPD 2026 &bull; Arizona CS Professional Development Week &bull; 1:00&ndash;1:15 PM</div>
+</header>
+
+<div class="container">
+
+<!-- ═══════════ SECTION 1: MORNING IN 60 SECONDS ═══════════ -->
+<div class="card">
+  <h2>&#9201; Morning in 60 Seconds</h2>
+  <p style="color:#64748b; margin-bottom: .75rem;">Everything we covered this morning, at a glance.</p>
+
+  <!-- Word Cloud -->
+  <h3>Key Terms You Now Know</h3>
+  <div class="word-cloud">
+    <span class="wc-xl wc-c1">AI</span>
+    <span class="wc-lg wc-c2">LLM</span>
+    <span class="wc-xl wc-c3">Agent</span>
+    <span class="wc-md wc-c4">Token</span>
+    <span class="wc-lg wc-c5">Context Window</span>
+    <span class="wc-sm wc-c6">Temperature</span>
+    <span class="wc-md wc-c2">API</span>
+    <span class="wc-lg wc-c1">Prompt</span>
+    <span class="wc-xl wc-c4">Tool Use</span>
+    <span class="wc-md wc-c7">Planning</span>
+    <span class="wc-lg wc-c6">Memory</span>
+    <span class="wc-md wc-c3">Reflection</span>
+    <span class="wc-lg wc-c5">Autonomy</span>
+  </div>
+
+  <!-- Agent Loop Diagram -->
+  <h3>The Agent Loop</h3>
+  <div class="callout callout-blue">
+    <strong>Remember:</strong> An AI agent is just an LLM running in a loop &mdash; perceiving, planning, acting, observing, and reflecting before deciding the next step.
+  </div>
+  <div class="agent-loop-wrap">
+    <div class="agent-loop">
+      <!-- SVG ring with arrows -->
+      <svg class="loop-ring" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ah" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/>
+          </marker>
+        </defs>
+        <!-- Circular path arrows between nodes -->
+        <path d="M 195 28 A 145 145 0 0 1 290 100" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M 305 160 A 145 145 0 0 1 290 240" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M 260 290 A 145 145 0 0 1 195 315" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M 145 315 A 145 145 0 0 1 55 245" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M 35 175 A 145 145 0 0 1 55 100" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M 80 52 A 145 145 0 0 1 145 28" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>
+      </svg>
+      <!-- Center -->
+      <div class="loop-center">Agent<br>Loop</div>
+      <!-- Nodes -->
+      <div class="loop-node loop-n1">&#128065;<br>Perceive</div>
+      <div class="loop-node loop-n2">&#128204;<br>Plan</div>
+      <div class="loop-node loop-n3">&#9889;<br>Act</div>
+      <div class="loop-node loop-n4">&#128269;<br>Observe</div>
+      <div class="loop-node loop-n5">&#129504;<br>Reflect</div>
+      <div class="loop-node loop-n6">&#128257;<br>Repeat</div>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <h3>Our Tech Stack</h3>
+  <div class="callout callout-green">
+    <strong>Four tools, infinite possibilities.</strong> This is the complete toolkit you need to build and deploy an AI-powered STEM app today.
+  </div>
+  <div class="tech-stack">
+    <div class="tech-box">&#128013; Python</div>
+    <span class="tech-arrow">&rarr;</span>
+    <div class="tech-box alt1">&#129302; Anthropic API</div>
+    <span class="tech-arrow">&rarr;</span>
+    <div class="tech-box alt2">&#127912; Streamlit</div>
+    <span class="tech-arrow">&rarr;</span>
+    <div class="tech-box alt3">&#9729;&#65039; Streamlit Cloud</div>
+  </div>
+  <p style="text-align:center; color:#64748b; font-size:.9rem; margin-top:.5rem;">
+    Write code &rarr; Connect to AI &rarr; Build the interface &rarr; Share with the world
+  </p>
+</div>
+
+<!-- ═══════════ SECTION 2: AFTERNOON GAME PLAN ═══════════ -->
+<div class="card">
+  <h2>&#128197; Afternoon Game Plan</h2>
+  <p style="color:#64748b; margin-bottom: .5rem;">Here's what we're building together this afternoon. Three real projects, deployed live!</p>
+
+  <div class="callout callout-green">
+    <strong>&#127919; Goal:</strong> By 4:00 PM, you'll have built and deployed three working AI-powered STEM tools that your students can use tomorrow.
+  </div>
+
+  <div class="timeline">
+    <!-- 1:15 -->
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-time">1:15 PM</div>
+      <div class="tl-title">&#128194; Clone the Starter Project</div>
+      <div class="tl-desc">Fork the template repo and set up your development environment</div>
+    </div>
+    <!-- 1:30 -->
+    <div class="tl-item">
+      <div class="tl-dot cyan"></div>
+      <div class="tl-time">1:30 PM</div>
+      <div class="tl-title">&#129514; Build: Lab Report Feedback Agent</div>
+      <div class="tl-desc">An AI that reads student lab reports and gives structured, encouraging feedback</div>
+    </div>
+    <!-- 2:15 -->
+    <div class="tl-item">
+      <div class="tl-dot teal"></div>
+      <div class="tl-time">2:15 PM</div>
+      <div class="tl-title">&#129504; Build: Quiz Generator Agent</div>
+      <div class="tl-desc">Paste any topic and get a standards-aligned quiz with answer key instantly</div>
+    </div>
+    <!-- 2:45 -->
+    <div class="tl-item break-item">
+      <div class="tl-dot amber"></div>
+      <div class="tl-time">2:45 PM</div>
+      <div class="tl-title">&#9749; Break</div>
+      <div class="tl-desc">Stretch, refill your coffee, chat with fellow teachers</div>
+    </div>
+    <!-- 3:00 -->
+    <div class="tl-item">
+      <div class="tl-dot purple"></div>
+      <div class="tl-time">3:00 PM</div>
+      <div class="tl-title">&#129782; Build: Socratic Math Tutor</div>
+      <div class="tl-desc">An AI that guides students through problems with questions, not answers</div>
+    </div>
+    <!-- 3:30 -->
+    <div class="tl-item">
+      <div class="tl-dot green"></div>
+      <div class="tl-time">3:30 PM</div>
+      <div class="tl-title">&#128640; Deploy to Streamlit Cloud</div>
+      <div class="tl-desc">Push your app live &mdash; get a shareable URL anyone can visit</div>
+    </div>
+    <!-- 3:45 -->
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-time">3:45 PM</div>
+      <div class="tl-title">&#128694; Gallery Walk &amp; Share</div>
+      <div class="tl-desc">Visit each other's deployed apps, try them out, give feedback</div>
+    </div>
+    <!-- 4:00 -->
+    <div class="tl-item">
+      <div class="tl-dot cyan"></div>
+      <div class="tl-time">4:00 PM</div>
+      <div class="tl-title">&#127937; Wrap Up &amp; Next Steps</div>
+      <div class="tl-desc">Resources, community links, and where to go from here</div>
+    </div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>&#128161; Don't worry about keeping up!</strong> Every step has starter code ready to go. If you get stuck, just raise your hand &mdash; that's what we're here for.
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 3: QUICK REFERENCE CARD ═══════════ -->
+<div class="card">
+  <h2>&#128203; Quick Reference Card &mdash; Python Basics</h2>
+  <p style="color:#64748b; margin-bottom: .75rem;">
+    The only Python patterns you need for this afternoon. Keep this open as a cheat sheet!
+  </p>
+
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th>Concept</th>
+        <th>Pattern</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="concept">&#128204; Variables</td>
+        <td>
+          <code>name = "Physics"</code><br>
+          <code>count = 25</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#128172; f-strings</td>
+        <td>
+          <code>f"Hello {name}, you have {count} students"</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#9881;&#65039; Functions</td>
+        <td>
+          <code>def greet(name):</code><br>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;return f"Hello {name}"</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#128256; if / else</td>
+        <td>
+          <code>if score >= 90:</code><br>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;grade = "A"</code><br>
+          <code>else:</code><br>
+          <code>&nbsp;&nbsp;&nbsp;&nbsp;grade = "Keep going!"</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#128218; Lists</td>
+        <td>
+          <code>subjects = ["math", "science", "engineering"]</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#128214; Dictionaries</td>
+        <td>
+          <code>student = {"name": "Alex", "grade": 10}</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#128230; Importing</td>
+        <td>
+          <code>import streamlit as st</code><br>
+          <code>import anthropic</code>
+        </td>
+      </tr>
+      <tr>
+        <td class="concept">&#127912; Streamlit Basics</td>
+        <td>
+          <code>st.title("My App")</code><br>
+          <code>st.text_input("Enter:")</code><br>
+          <code>st.button("Go")</code><br>
+          <code>st.write("Hello!")</code>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-blue">
+    <strong>&#128161; Pro tip:</strong> You don't need to memorize any of this. The starter code already has these patterns &mdash; you'll mostly be modifying prompts and labels, not writing Python from scratch.
+  </div>
+
+  <div class="callout callout-green">
+    <strong>&#10024; The secret:</strong> Building an AI agent is 90% writing good prompts and 10% Python glue code. Your expertise as a teacher <em>is</em> the hard part &mdash; the code is the easy part.
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">&uarr;</button>
+
+<script>
+// Back-to-top visibility
+(function() {
+  var btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+# ── NEVER commit these ──
+# Real secrets / API keys
+.streamlit/secrets.toml
+.env
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
