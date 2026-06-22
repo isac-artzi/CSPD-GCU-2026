@@ -194,6 +194,62 @@ You'll see a short form. Fill it in like this:
 
 4. Click **"Save"** to close the Advanced settings.
 
+### How the secret actually reaches your app 🔌
+
+It's worth understanding *why* that one line makes the AI work — it's the link
+between your key and the code, and the #1 source of "why won't it work?" problems.
+
+Inside the app, the file `utils/ai_helper.py` asks Streamlit for the key by name:
+
+```python
+api_key = st.secrets.get("ANTHROPIC_API_KEY", None)   # looks up the name "ANTHROPIC_API_KEY"
+```
+
+`st.secrets` is Streamlit's built-in, private vault. Whatever you paste into the
+**Secrets** box becomes available to your code through `st.secrets`. So:
+
+> ⚠️ **The name on the left must match exactly.** The Secrets box says
+> `ANTHROPIC_API_KEY` and the code asks for `ANTHROPIC_API_KEY`. If you rename one
+> (a typo, lowercase, extra spaces), they stop matching and the app can't find the
+> key — even though the key itself is perfectly valid. This is the most common
+> deployment mistake.
+
+```
+   Secrets box on Streamlit Cloud          Your code
+   ─────────────────────────────          ─────────────────────────────────
+   ANTHROPIC_API_KEY = "sk-ant-…"  ─────►  st.secrets["ANTHROPIC_API_KEY"]
+        (the name must be identical on both sides)
+```
+
+You do **not** edit any code to make this work — the app is already written to read
+`st.secrets`. You only provide the value, in the Secrets box.
+
+#### Running locally? Same key, two easy options
+
+When you run the app on **your own computer** (not Streamlit Cloud), there's no
+online Secrets box — so the app reads the key one of two ways instead. Pick either:
+
+**Option 1 — a local secrets file** (mirrors how Cloud works). In your project,
+create the file `.streamlit/secrets.toml` and put the same line in it:
+
+```toml
+ANTHROPIC_API_KEY = "sk-ant-your-real-key-here"
+```
+
+There's a ready-made template at `.streamlit/secrets.toml.example` — copy it,
+rename the copy to `secrets.toml`, and paste your key in.
+
+**Option 2 — a `.env` file** (what we used in the workshop). Create a file named
+`.env` with:
+
+```
+ANTHROPIC_API_KEY=sk-ant-your-real-key-here
+```
+
+> 🔑 **Both files are already in `.gitignore`**, so neither one is ever uploaded to
+> GitHub. Your local key stays on your computer; the Cloud key stays in the Secrets
+> box. The same code works in all three places without any changes.
+
 ### Step 3.4 — Deploy!
 
 Click the big **"Deploy"** button.
