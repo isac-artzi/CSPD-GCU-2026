@@ -135,6 +135,10 @@ always runs the latest version.
 
 You can ignore this whole section if you're using the website or GitHub Desktop.
 
+> 💻 **First, install Git** — `xcode-select --install` on a Mac, or the Git for
+> Windows installer on Windows. Step-by-step for both is in the
+> [Setup Guide — Mac vs Windows](00-setup-mac-vs-windows.md) (Part 1.3).
+
 ```bash
 # One time, on a new computer — tell Git who you are
 git config --global user.name "Your Name"
