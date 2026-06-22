@@ -26,7 +26,7 @@ By the end you will have:
 
 ### Key documents to open
 
-- 💻 **Setup guide — Mac vs Windows (installing VS Code, Python, Git, Claude Code)** → [`afternoon/00-setup-mac-vs-windows.md`](afternoon/00-setup-mac-vs-windows.md)
+- 💻 **Setup guide — Mac vs Windows (installing VS Code, Python, Git, Claude Code)** → `afternoon/00-setup-mac-vs-windows.html` *(double-click to open it in your web browser)*
 - 📘 **Building guide** → `afternoon/02-step-by-step-guide.html`
   *(double-click to open it in your web browser)*
 - 🐙 **GitHub basics primer (new to GitHub? start here)** → [`afternoon/04-github-basics-primer.md`](afternoon/04-github-basics-primer.md)

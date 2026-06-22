@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Guide — Mac vs Windows | CSPD 2026</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+            color: #fff;
+            padding: 48px 24px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; }
+        .header .subtitle { font-size: 1.2rem; opacity: 0.92; font-weight: 400; }
+        .header .badge {
+            display: inline-block;
+            margin-top: 16px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* ── Legend bar ── */
+        .legend-bar {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+            font-size: 0.92rem;
+            color: #475569;
+        }
+        .legend-bar .os-chip {
+            display: inline-block;
+            margin: 0 8px;
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-weight: 600;
+        }
+        .legend-bar .mac { background: #eff6ff; color: #1e40af; }
+        .legend-bar .win { background: #f0fdf4; color: #166534; }
+
+        /* ── Main content ── */
+        .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+        .intro-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border-left: 5px solid #2563eb;
+        }
+        .intro-box h2 { color: #1e40af; margin-bottom: 12px; font-size: 1.5rem; }
+        .intro-box p { margin-bottom: 10px; }
+
+        /* ── Sections ── */
+        .section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            scroll-margin-top: 70px;
+        }
+        .section > h2 {
+            font-size: 1.55rem;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .section > .section-sub {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .substep { margin-bottom: 24px; }
+        .substep h3 {
+            font-size: 1.12rem;
+            color: #1e40af;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #eff6ff;
+        }
+        .substep p, .substep li { margin-bottom: 8px; }
+        .substep ul, .substep ol { padding-left: 24px; margin-bottom: 12px; }
+        .os-tag { font-weight: 700; }
+        .os-tag.mac { color: #1e40af; }
+        .os-tag.win { color: #166534; }
+
+        /* ── Code blocks ── */
+        .code-block { margin: 12px 0 16px; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .code-label {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-btn {
+            background: rgba(255,255,255,0.1);
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+        .copy-btn.copied { background: #059669; color: #fff; border-color: #059669; }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 0.88em;
+        }
+        pre code { background: none; color: inherit; padding: 0; }
+
+        /* ── Info boxes ── */
+        .info-box { border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 0.92rem; }
+        .info-box.tip { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; }
+        .info-box.warning { background: #fefce8; border-left: 4px solid #eab308; color: #854d0e; }
+        .info-box.info { background: #eff6ff; border-left: 4px solid #2563eb; color: #1e40af; }
+        .info-box strong { display: block; margin-bottom: 4px; }
+        .info-box p { margin: 0; }
+        .info-box.inline strong { display: inline; }
+
+        /* ── Comparison tables ── */
+        .cmp-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+        .cmp-table th {
+            background: #eff6ff;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid #bfdbfe;
+            color: #1e40af;
+        }
+        .cmp-table th.mac-col { background: #eff6ff; }
+        .cmp-table th.win-col { background: #f0fdf4; color: #166534; border-bottom-color: #bbf7d0; }
+        .cmp-table td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+        .cmp-table tr:last-child td { border-bottom: none; }
+        .cmp-table code { font-size: 0.85em; }
+
+        /* ── Links / nav ── */
+        a { color: #2563eb; }
+        .backlink { display: inline-block; margin-top: 8px; font-size: 0.92rem; }
+
+        /* ── Footer ── */
+        .footer { text-align: center; padding: 32px; color: #94a3b8; font-size: 0.85rem; }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.8rem; }
+            .section, .intro-box { padding: 22px 18px; }
+            .legend-bar .os-chip { display: inline-block; margin: 4px; }
+        }
+        @media print {
+            .legend-bar { position: static; box-shadow: none; }
+            .copy-btn { display: none; }
+            .section { break-inside: avoid; box-shadow: none; border: 1px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<div class="header">
+    <h1>Setup Guide &mdash; Mac vs Windows</h1>
+    <div class="subtitle">Installing &amp; Using VS Code, Python, Git, and Claude Code</div>
+    <div class="badge">CSPD 2026 &bull; Agentic AI for STEM Teachers</div>
+</div>
+
+<!-- ═══════════════════════ LEGEND ═══════════════════════ -->
+<div class="legend-bar">
+    Pick your computer and follow that column:
+    <span class="os-chip mac">&#x1F34E; macOS</span>
+    <span class="os-chip win">&#x1FA9F; Windows</span>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════ INTRO ═══════════════════════ -->
+<div class="intro-box">
+    <h2>Read this before the building guide</h2>
+    <p>The workshop tools work the same on both Mac and Windows, but the <em>exact</em> commands and clicks differ. This guide gives you <strong>two columns &mdash; pick yours and ignore the other</strong>.</p>
+    <p><strong>Not sure which you have?</strong> &#x1F34E; An Apple menu in the top-left corner = Mac. &#x1FA9F; A Start button / Windows logo in the bottom-left = Windows.</p>
+    <a class="backlink" href="02-step-by-step-guide.html">&rarr; Already set up? Go to the Building Guide</a>
+</div>
+
+<!-- ═══════════════════════ CHEAT SHEET ═══════════════════════ -->
+<div class="section" id="cheat-sheet">
+    <h2>&#x1F511; The cheat sheet (keep this handy)</h2>
+    <div class="section-sub">These are the differences you'll bump into all day. The rest of this guide explains each one.</div>
+
+    <table class="cmp-table">
+        <tr>
+            <th>Thing</th>
+            <th class="mac-col">&#x1F34E; macOS</th>
+            <th class="win-col">&#x1FA9F; Windows</th>
+        </tr>
+        <tr><td>Terminal app</td><td><strong>Terminal</strong> (or iTerm)</td><td><strong>PowerShell</strong> (recommended) or Command Prompt</td></tr>
+        <tr><td>The "modifier" key in shortcuts</td><td><strong>Cmd</strong> (&#8984;)</td><td><strong>Ctrl</strong></td></tr>
+        <tr><td>Open terminal in VS Code</td><td><code>Cmd+`</code></td><td><code>Ctrl+`</code></td></tr>
+        <tr><td>Python command</td><td><code>python3</code> and <code>pip3</code></td><td><code>python</code> and <code>pip</code></td></tr>
+        <tr><td>Turn on the virtual environment</td><td><code>source venv/bin/activate</code></td><td><code>venv\Scripts\activate</code></td></tr>
+        <tr><td>Folder separator in paths</td><td>forward slash <code>/</code></td><td>backslash <code>\</code></td></tr>
+        <tr><td>Set an environment variable</td><td><code>export NAME="value"</code></td><td><code>$env:NAME="value"</code></td></tr>
+        <tr><td>Home folder</td><td><code>~</code> (e.g. <code>~/Desktop</code>)</td><td><code>%USERPROFILE%</code> (e.g. <code>%USERPROFILE%\Desktop</code>)</td></tr>
+    </table>
+
+    <div class="info-box tip">
+        <strong>Why <code>python3</code> on Mac but <code>python</code> on Windows?</strong>
+        <p>Macs historically shipped an old Python 2 as <code>python</code>, so the modern one is <code>python3</code>. On Windows the installer registers it as plain <code>python</code>. If one doesn't work, try the other &mdash; that's the single most common "it's not working" cause.</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════ PART 1 — INSTALL ═══════════════════════ -->
+<div class="section" id="install">
+    <h2>Part 1 &mdash; Install the tools</h2>
+    <div class="section-sub">You need three free tools: <strong>VS Code</strong> (the editor), <strong>Python</strong> (the language), and <strong>Git</strong> (for GitHub). Install them in this order.</div>
+
+    <div class="substep">
+        <h3>1.1 &mdash; VS Code</h3>
+        <p>VS Code is the program you'll write code in.</p>
+        <p><span class="os-tag mac">&#x1F34E; macOS</span></p>
+        <ol>
+            <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> and click <strong>Download for Mac</strong>.</li>
+            <li>Open the downloaded <code>.zip</code> &mdash; it becomes <strong>Visual Studio Code.app</strong>.</li>
+            <li><strong>Drag it into your Applications folder</strong> (important &mdash; don't run it from Downloads).</li>
+            <li>Open it from Applications (or press <code>Cmd+Space</code>, type "Visual Studio Code", Enter).</li>
+        </ol>
+        <p><span class="os-tag win">&#x1FA9F; Windows</span></p>
+        <ol>
+            <li>Go to <a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a> and click <strong>Download for Windows</strong>.</li>
+            <li>Run the downloaded installer (<code>VSCodeUserSetup-….exe</code>).</li>
+            <li>&#x2705; On the setup screens, <strong>check "Add to PATH"</strong> and <strong>"Add 'Open with Code' action"</strong> &mdash; these make life easier later.</li>
+            <li>Finish, then open VS Code from the Start menu.</li>
+        </ol>
+    </div>
+
+    <div class="substep">
+        <h3>1.2 &mdash; Python</h3>
+        <p><span class="os-tag mac">&#x1F34E; macOS</span></p>
+        <ol>
+            <li>Go to <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a> and click the big <strong>Download Python 3.x</strong> button.</li>
+            <li>Open the <code>.pkg</code> installer and click through (defaults are fine).</li>
+            <li>Verify &mdash; open <strong>Terminal</strong> and run:</li>
+        </ol>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>python3 --version</code></pre>
+        </div>
+        <p>You should see <code>Python 3.x.x</code>.</p>
+
+        <p><span class="os-tag win">&#x1FA9F; Windows</span></p>
+        <ol>
+            <li>Go to <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a> and click <strong>Download Python 3.x</strong>.</li>
+            <li>Run the installer, and on the <strong>first screen</strong> &#x2705; <strong>check "Add python.exe to PATH"</strong> at the bottom. <strong>This is the #1 thing Windows beginners forget</strong>, and skipping it causes "python is not recognized" errors.</li>
+            <li>Click <strong>"Install Now"</strong>, finish.</li>
+            <li>Verify &mdash; open <strong>PowerShell</strong> (right-click Start &rarr; "Windows PowerShell") and run:</li>
+        </ol>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>python --version</code></pre>
+        </div>
+        <div class="info-box warning">
+            <strong>&#x1FA9F; Forgot the "Add to PATH" checkbox?</strong>
+            <p>The easiest fix is to re-run the installer, choose <strong>Modify</strong>, and tick the PATH option &mdash; or uninstall Python and reinstall, being careful to check the box this time.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>1.3 &mdash; Git (needed for GitHub)</h3>
+        <p>Git is the tool that talks to GitHub. You can do a lot on the GitHub website without it (see the <a href="04-github-basics-primer.md">GitHub primer</a>), but installing Git unlocks the full workflow.</p>
+        <p><span class="os-tag mac">&#x1F34E; macOS</span> &mdash; Macs can install Git with one command. Open <strong>Terminal</strong> and run:</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>xcode-select --install</code></pre>
+        </div>
+        <p>A dialog pops up &mdash; click <strong>Install</strong>. Then verify with <code>git --version</code>.</p>
+
+        <p><span class="os-tag win">&#x1FA9F; Windows</span></p>
+        <ol>
+            <li>Go to <a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a> &mdash; the download starts automatically.</li>
+            <li>Run the installer. The defaults are fine &mdash; just keep clicking <strong>Next</strong>. It also installs <strong>Git Bash</strong> (a Mac-style terminal) and <strong>Git Credential Manager</strong> (handles your GitHub sign-in).</li>
+            <li>Verify &mdash; open a <strong>new</strong> PowerShell window and run <code>git --version</code>.</li>
+        </ol>
+        <div class="info-box info">
+            <strong>&#x1FA9F; Line endings (you can ignore this):</strong>
+            <p>The Git for Windows installer asks about "line endings." The default (<em>"Checkout Windows-style, commit Unix-style"</em>) is correct &mdash; leave it. It quietly prevents a common Mac&#8596;Windows formatting mismatch in shared files.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ PART 2 — USING ═══════════════════════ -->
+<div class="section" id="using">
+    <h2>Part 2 &mdash; Using the tools (the differences that bite)</h2>
+    <div class="section-sub">The <a href="02-step-by-step-guide.html">building guide</a> walks through the actual steps; this is the <strong>Mac-vs-Windows translation</strong> for each one.</div>
+
+    <div class="substep">
+        <h3>2.1 &mdash; Opening a terminal inside VS Code</h3>
+        <ul>
+            <li><span class="os-tag mac">&#x1F34E; Mac:</span> press <code>Cmd+`</code> (the key above Tab), or menu <strong>Terminal &rarr; New Terminal</strong>.</li>
+            <li><span class="os-tag win">&#x1FA9F; Windows:</span> press <code>Ctrl+`</code>, or menu <strong>Terminal &rarr; New Terminal</strong>. It usually opens <strong>PowerShell</strong> &mdash; you can tell because the prompt starts with <code>PS</code>.</li>
+        </ul>
+    </div>
+
+    <div class="substep">
+        <h3>2.2 &mdash; Telling VS Code which Python to use ("select interpreter")</h3>
+        <p>After you create your virtual environment (next step), point VS Code at it:</p>
+        <ol>
+            <li>Press <code>Cmd+Shift+P</code> (&#x1F34E;) / <code>Ctrl+Shift+P</code> (&#x1FA9F;) to open the <strong>Command Palette</strong>.</li>
+            <li>Type <strong>"Python: Select Interpreter"</strong> and press Enter.</li>
+            <li>Choose the one with <strong><code>venv</code></strong> in its name (your project's environment).</li>
+        </ol>
+        <p>Same idea on both systems &mdash; only the shortcut key differs.</p>
+    </div>
+
+    <div class="substep">
+        <h3>2.3 &mdash; Create &amp; activate the virtual environment</h3>
+        <p>A virtual environment ("venv") is a private toolbox of packages for this project.</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; macOS / Linux &mdash; Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>python3 -m venv venv
+source venv/bin/activate</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; Windows &mdash; PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>python -m venv venv
+venv\Scripts\activate</code></pre>
+        </div>
+        <div class="info-box tip"><strong>&#x2705; Both:</strong><p>When it works, your prompt shows <code>(venv)</code> at the start.</p></div>
+        <div class="info-box warning">
+            <strong>&#x1FA9F; If Windows says "running scripts is disabled on this system"</strong>
+            <p>Run this once, then try activating again:</p>
+        </div>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; PowerShell (one-time)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code></pre>
+        </div>
+        <p>(This permits scripts you create locally &mdash; a normal, safe setting for development.)</p>
+    </div>
+
+    <div class="substep">
+        <h3>2.4 &mdash; Install the packages (same on both)</h3>
+        <div class="code-block">
+            <div class="code-label"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </div>
+        <p>If <code>pip</code> isn't found, try <code>pip3</code> (&#x1F34E;) or <code>python -m pip install -r requirements.txt</code> (&#x1FA9F;).</p>
+    </div>
+
+    <div class="substep">
+        <h3>2.5 &mdash; Set your API key (for running locally in the terminal)</h3>
+        <p>This makes the key available for the current terminal session.</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; macOS / Linux</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>export ANTHROPIC_API_KEY="sk-ant-your-real-key-here"</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; Windows &mdash; PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>$env:ANTHROPIC_API_KEY="sk-ant-your-real-key-here"</code></pre>
+        </div>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; Windows &mdash; Command Prompt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>set ANTHROPIC_API_KEY=sk-ant-your-real-key-here</code></pre>
+        </div>
+        <div class="info-box tip">
+            <strong>A friendlier option for beginners:</strong>
+            <p>Instead of the command above, put the key in a <code>.env</code> file in your project (the workshop app reads it automatically). See the <a href="../completed-project/README.md">completed project README</a>. The <code>.env</code> approach works identically on Mac and Windows.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>2.6 &mdash; Run the app (same on both)</h3>
+        <div class="code-block">
+            <div class="code-label"><span>Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>streamlit run app.py</code></pre>
+        </div>
+        <p>Your browser opens to <code>http://localhost:8501</code>.</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════ PART 3 — GITHUB ═══════════════════════ -->
+<div class="section" id="github">
+    <h2>Part 3 &mdash; GitHub (per-OS notes)</h2>
+    <div class="section-sub">The <a href="04-github-basics-primer.md">GitHub primer</a> and <a href="03-streamlit-cloud-deployment-guide.md">deployment guide</a> cover GitHub in full. Here are the only real Mac-vs-Windows differences:</div>
+
+    <table class="cmp-table">
+        <tr>
+            <th>Step</th>
+            <th class="mac-col">&#x1F34E; macOS</th>
+            <th class="win-col">&#x1FA9F; Windows</th>
+        </tr>
+        <tr><td>Installing Git</td><td><code>xcode-select --install</code> (see 1.3)</td><td>Git for Windows installer (see 1.3)</td></tr>
+        <tr><td>Signing in on first <code>git push</code></td><td>A browser window opens; sign in to GitHub</td><td><strong>Git Credential Manager</strong> opens a browser; sign in once and it remembers you</td></tr>
+        <tr><td>The "no-command-line" path</td><td>Drag-and-drop upload on github.com works the same</td><td>Same &mdash; github.com in any browser</td></tr>
+    </table>
+
+    <div class="info-box tip">
+        <strong>&#x2705; Easiest for everyone, both OSes:</strong>
+        <p>You can do the entire workshop's GitHub work in your <strong>web browser</strong> (upload by drag-and-drop, edit with the pencil icon). No terminal required. The primer explains this path.</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════ PART 4 — CLAUDE CODE ═══════════════════════ -->
+<div class="section" id="claude-code">
+    <h2>Part 4 &mdash; Claude Code (optional / for the curious) &#x1F916;</h2>
+    <div class="section-sub"><strong>Claude Code</strong> is a separate, free tool: an AI coding assistant that runs in your terminal and can read, write, and run code for you. It's <strong>not required</strong> to build or deploy the workshop app &mdash; but here's the Mac-vs-Windows setup if you'd like to try it.</div>
+
+    <div class="info-box info">
+        <strong>&#x1F9ED; Workshop app vs. Claude Code &mdash; don't mix them up.</strong>
+        <p>The app you build uses the <strong>Anthropic API</strong> (your <code>sk-ant-…</code> key) from Python. <strong>Claude Code</strong> is a standalone assistant you talk to in the terminal. Different tools, both made by Anthropic.</p>
+    </div>
+
+    <div class="substep">
+        <h3>4.1 &mdash; Install Claude Code</h3>
+        <p><span class="os-tag mac">&#x1F34E; macOS</span> <em>(needs macOS 13 or newer)</em> &mdash; open <strong>Terminal</strong> and run:</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+        </div>
+        <p>(Prefer Homebrew? <code>brew install --cask claude-code</code> also works.)</p>
+
+        <p><span class="os-tag win">&#x1FA9F; Windows</span> <em>(needs 64-bit Windows 10 or newer)</em> &mdash; open <strong>PowerShell</strong> and run:</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1FA9F; PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+        </div>
+        <ul>
+            <li>After it finishes, <strong>close and reopen PowerShell</strong> so it recognizes the new <code>claude</code> command.</li>
+            <li>Optional but nice: installing <a href="https://git-scm.com/download/win" target="_blank">Git for Windows</a> first gives Claude Code a Bash shell to work in.</li>
+        </ul>
+        <div class="info-box warning">
+            <strong>&#x1FA9F; <code>irm</code> is not recognized?</strong>
+            <p>You're in <strong>Command Prompt</strong>, not PowerShell. PowerShell's prompt starts with <code>PS</code>. Close the window and open <em>Windows PowerShell</em> instead.</p>
+        </div>
+    </div>
+
+    <div class="substep">
+        <h3>4.2 &mdash; Start it</h3>
+        <p>In any project folder, just type:</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; Terminal / &#x1FA9F; PowerShell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>claude</code></pre>
+        </div>
+        <p>The first time, it opens your browser to <strong>sign in</strong> &mdash; log in with your Claude.ai account and you're ready. (You can also authenticate with an API key by setting <code>ANTHROPIC_API_KEY</code>, exactly like in 2.5.)</p>
+    </div>
+
+    <div class="substep">
+        <h3>4.3 &mdash; Using Claude Code inside VS Code</h3>
+        <ol>
+            <li>Open the Extensions panel: <code>Cmd+Shift+X</code> (&#x1F34E;) / <code>Ctrl+Shift+X</code> (&#x1FA9F;).</li>
+            <li>Search <strong>"Claude Code"</strong> and click <strong>Install</strong>.</li>
+        </ol>
+        <table class="cmp-table">
+            <tr>
+                <th>Action</th>
+                <th class="mac-col">&#x1F34E; macOS</th>
+                <th class="win-col">&#x1FA9F; Windows</th>
+            </tr>
+            <tr><td>Toggle the Claude panel</td><td><code>Cmd+Esc</code></td><td><code>Ctrl+Esc</code></td></tr>
+            <tr><td>Insert an @-mention of the current file/selection</td><td><code>Option+K</code></td><td><code>Alt+K</code></td></tr>
+            <tr><td>Command Palette (then type "Claude Code")</td><td><code>Cmd+Shift+P</code></td><td><code>Ctrl+Shift+P</code></td></tr>
+        </table>
+    </div>
+
+    <div class="substep">
+        <h3>4.4 &mdash; Common "command not found" fix</h3>
+        <p>If your terminal says <code>claude: command not found</code> (&#x1F34E;) or <code>claude is not recognized</code> (&#x1FA9F;) right after installing, the tool installed correctly but your terminal can't see it yet:</p>
+        <p><span class="os-tag mac">&#x1F34E; macOS</span> &mdash; add it to your PATH, then reopen Terminal:</p>
+        <div class="code-block">
+            <div class="code-label"><span>&#x1F34E; Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.zshrc
+source ~/.zshrc</code></pre>
+        </div>
+        <p><span class="os-tag win">&#x1FA9F; Windows</span> &mdash; the simplest fix is to <strong>restart your computer</strong> (Windows reads the PATH at startup). Then open a fresh PowerShell and run <code>claude --version</code>.</p>
+    </div>
+</div>
+
+<!-- ═══════════════════════ TROUBLESHOOTING ═══════════════════════ -->
+<div class="section" id="troubleshooting">
+    <h2>&#x1F198; Quick troubleshooting by symptom</h2>
+    <table class="cmp-table">
+        <tr>
+            <th>You see&hellip;</th>
+            <th class="mac-col">&#x1F34E; macOS fix</th>
+            <th class="win-col">&#x1FA9F; Windows fix</th>
+        </tr>
+        <tr><td><code>python: command not found</code> / <code>not recognized</code></td><td>Use <code>python3</code></td><td>Re-run the Python installer and &#x2705; check "Add to PATH"</td></tr>
+        <tr><td><code>pip: command not found</code></td><td>Use <code>pip3</code> or <code>python3 -m pip …</code></td><td>Use <code>python -m pip …</code></td></tr>
+        <tr><td><code>(venv)</code> never appears</td><td>Use <code>source venv/bin/activate</code></td><td>Use <code>venv\Scripts\activate</code>; if blocked, run the <code>Set-ExecutionPolicy</code> command in 2.3</td></tr>
+        <tr><td><code>git: command not found</code></td><td><code>xcode-select --install</code></td><td>Install Git for Windows (1.3)</td></tr>
+        <tr><td><code>claude: command not found</code></td><td>Add <code>~/.local/bin</code> to PATH (4.4)</td><td>Restart the computer (4.4)</td></tr>
+        <tr><td>Shortcut in a guide doesn't work</td><td>Replace <strong>Ctrl</strong> with <strong>Cmd</strong></td><td>Replace <strong>Cmd</strong> with <strong>Ctrl</strong></td></tr>
+    </table>
+    <a class="backlink" href="02-step-by-step-guide.html">&rarr; All set? Continue to the Building Guide</a>
+</div>
+
+</div><!-- /.container -->
+
+<div class="footer">
+    <p><strong>CSPD 2026</strong> &bull; Agentic AI for STEM Teachers &bull; Grand Canyon University</p>
+    <p>Built with Streamlit &bull; Powered by Claude AI</p>
+</div>
+
+<script>
+function copyCode(btn) {
+    const block = btn.closest('.code-block');
+    const pre = block.querySelector('pre');
+    const text = pre.innerText || pre.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
