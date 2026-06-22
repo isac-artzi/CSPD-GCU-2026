@@ -175,6 +175,27 @@ You'll see a short form. Fill it in like this:
 > **"Manage app permissions"** / refresh link, or just wait a few seconds and reload —
 > GitHub and Streamlit sometimes take a moment to sync.
 
+> 📁 **Is your `app.py` inside a sub-folder?** Then **Main file path** must include
+> that folder. If your app sits at the top level of the repo, `app.py` is correct.
+> But if you uploaded it inside a folder — for example the workshop's finished app
+> lives in `completed-project/` — set the path to that folder + the file:
+>
+> ```
+> completed-project/app.py
+> ```
+>
+> **How to tell:** look at your repo on GitHub. If you click into the repo and see
+> `app.py` right away, use `app.py`. If you have to click into a folder first to
+> find `app.py`, put `that-folder/app.py`.
+>
+> ⚠️ **One companion gotcha for sub-folder apps:** Streamlit Cloud reads
+> `.streamlit/config.toml` (your theme colors) from the **repository root**, not
+> from inside the sub-folder. If your app is in a sub-folder and you want the
+> custom theme, keep a copy of `.streamlit/config.toml` at the root of the repo
+> too. *(The workshop repo already does this — you don't need to fix anything; this
+> note is so your own projects behave the same.)* Everything else — `requirements.txt`,
+> the `pages/` folder, your code — works fine from the sub-folder.
+
 ### Step 3.3 — Add your secret API key (THE important step) 🔑
 
 **Do not click Deploy yet.** First:
