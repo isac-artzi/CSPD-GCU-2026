@@ -292,6 +292,36 @@ https://stem-ai-toolkit.streamlit.app
 Copy it from your browser's address bar and email it to a colleague. They can use all
 three tools right in their browser — **no installation needed on their end.** 🥳
 
+### Forgot to add your key in Advanced settings? (or need to change it later) 🔑
+
+**Very common — don't worry.** The "Advanced settings → Secrets" box only appears on the
+*first* deploy screen, and it's easy to click **Deploy** before noticing it. If you did,
+your app is live but every AI tool shows **"AI request failed."** You can add the key to
+the already-running app in under a minute — **no need to redeploy or change any code:**
+
+1. Open your live app (the `…streamlit.app` URL). Make sure you're signed in to
+   Streamlit with the **same GitHub account** that deployed it, or the admin controls
+   won't show.
+2. Click **"Manage app"** in the **bottom-right corner** of the page. A panel opens
+   (you'll see the build logs and a menu).
+3. In that menu, click **⚙️ Settings**. *(The menu also has Download log, Analytics,
+   Reboot app, Delete app, Your apps — Settings is the gear icon in the middle.)*
+4. In the Settings dialog, click the **"Secrets"** section.
+5. Paste your key (exactly this, with your real key between the quotes):
+   ```toml
+   ANTHROPIC_API_KEY = "sk-ant-your-real-key-here"
+   ```
+6. Click **"Save."** The app reboots automatically. If it doesn't within a few seconds,
+   open the **Manage app** menu again and click **🔄 Reboot app**.
+
+> 🔁 **Same steps to *change* a key later** (e.g. you rotated it). And there's a second
+> way in: from your dashboard at **[share.streamlit.io](https://share.streamlit.io)**,
+> click the **⋮** (three-dots) icon at the right of your app's row → **Settings** →
+> **Secrets**.
+
+**Verify:** open **📝 Lab Report Feedback**, paste any text, click **Get Feedback** — if
+you get AI feedback, the key is working. 🎉
+
 ---
 
 # 🛠️ When something goes wrong (it's okay — this is normal)
@@ -318,14 +348,15 @@ Streamlit didn't know it needed to install that package.
 
 ### The app loads, but a tool shows "AI request failed" or "Could not get feedback"
 
-This is almost always the **API key**.
-- **Fix:** In your live app, click **"Manage app" → "Settings" → "Secrets"** and confirm
-  the line is there and correct:
+This is almost always the **API key** — either it was never added, or there's a typo.
+- **Fix:** In your live app, click **"Manage app"** (bottom-right) → **⚙️ Settings** →
+  **"Secrets"**, and confirm the line is there and correct:
   ```toml
   ANTHROPIC_API_KEY = "sk-ant-..."
   ```
-  Common mistakes: missing quotes, a typo, an extra space, or pasting only part of the key.
-  Fix it, click **Save**, then **"Reboot app"** from the Manage menu.
+  Common mistakes: the key was never added (see *"Forgot to add your key"* in Step 3.5
+  above), missing quotes, a typo, an extra space, or pasting only part of the key.
+  Fix it, click **Save**, then **🔄 Reboot app** from the Manage menu.
 - Still failing? Your key may be expired or out of credit. See the API key section below.
 
 ### "The pages in the sidebar are missing!"

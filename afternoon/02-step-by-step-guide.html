@@ -1571,8 +1571,8 @@ git push</code></pre>
             <p><strong>"ModuleNotFoundError" in deployment logs</strong></p>
             <p>Make sure your <code>requirements.txt</code> file is in the root of the repository and includes both <code>streamlit</code> and <code>anthropic</code>.</p>
 
-            <p><strong>App crashes with "API key" error</strong></p>
-            <p>Check that you added the <code>ANTHROPIC_API_KEY</code> in the Advanced settings &rarr; Secrets section. Make sure the key is valid and has not expired.</p>
+            <p><strong>App crashes or shows "AI request failed" / "API key" error</strong></p>
+            <p>Check that you added the <code>ANTHROPIC_API_KEY</code> secret. Forgot it during deploy? The "Advanced settings" box only shows on the first deploy screen &mdash; add it afterward via <strong>Manage app</strong> (bottom-right of your live app) &rarr; <strong>&#x2699;&#xFE0F; Settings</strong> &rarr; <strong>Secrets</strong>, then <strong>Reboot app</strong>. Make sure the name is exactly <code>ANTHROPIC_API_KEY</code> and the key is valid and has not expired.</p>
 
             <p><strong>The app deploys but pages are missing</strong></p>
             <p>Make sure the <code>pages/</code> folder and all its files are committed and pushed to GitHub. Run <code>git status</code> to check.</p>
