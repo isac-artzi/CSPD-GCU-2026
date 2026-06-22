@@ -1,0 +1,13 @@
+# Repo-root Streamlit config.
+#
+# On Streamlit Community Cloud the working directory is always the REPOSITORY
+# ROOT, and the theme config must live here (not in completed-project/.streamlit/)
+# to be applied to a subdirectory app. This mirrors the theme in
+# completed-project/.streamlit/config.toml so the deployed app looks the same.
+
+[theme]
+primaryColor = "#2563eb"
+backgroundColor = "#f8fafc"
+secondaryBackgroundColor = "#eff6ff"
+textColor = "#1e293b"
+font = "sans serif"
